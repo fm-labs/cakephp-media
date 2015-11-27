@@ -16,7 +16,7 @@ class MediaManager
 
     protected $_path;
 
-    public static function create($configName)
+    public static function get($configName)
     {
         $configKey = 'Media.' . $configName;
         $config = Configure::read($configKey);
