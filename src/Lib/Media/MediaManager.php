@@ -53,6 +53,16 @@ class MediaManager
         return $this->_provider->listFiles($this->_path);
     }
 
+    public function listFileUrls()
+    {
+        $files = $this->listFiles();
+        $list = [];
+        array_walk($files, function ($val, $idx) use (&$list) {
+            $list[$val] = $this->getFileUrl($val);
+        });
+        return $list;
+    }
+
     public function listFilesRecursive($fullPath = false)
     {
         return $this->_provider->listFilesRecursive($this->_path, $fullPath);
