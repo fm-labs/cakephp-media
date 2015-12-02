@@ -65,6 +65,25 @@ class LocalStorageProvider extends MediaProvider
         return $dirs;
     }
 
+
+    public function listFoldersRecursive($path)
+    {
+        $_path = $this->_getRealPath($path);
+        $folder = new Folder($_path);
+        list($dirs,) = $folder->read();
+
+        $list = [];
+        array_walk($dirs, function (&$val, $idx) use (&$list, $path) {
+            $list[] = $path . DS . $val;
+
+            foreach ($this->listFoldersRecursive($path . DS . $val) as $dir) {
+                $list[] = $dir;
+            }
+        });
+        return $list;
+    }
+
+
     public function readFile($path)
     {
         // TODO: Implement readFile() method.

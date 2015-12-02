@@ -22,5 +22,7 @@ interface MediaProviderInterface
 
     public function listFolders($path);
 
+    public function listFoldersRecursive($path);
+
     public function readFile($path);
 }

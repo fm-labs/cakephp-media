@@ -73,6 +73,12 @@ class MediaManager
         return $this->_provider->listFolders($this->_path);
     }
 
+    public function listFoldersRecursive()
+    {
+        return $this->_provider->listFoldersRecursive($this->_path);
+    }
+
+
     public function readFile($path)
     {
         return $this->_provider->readFile($path);
@@ -129,6 +135,27 @@ class MediaManager
         array_walk($files, function ($val, $idx) use (&$list) {
             $list[$val] = $this->getFileUrl($val);
         });
+        return $list;
+    }
+
+    public function getSelectListRecursiveGrouped()
+    {
+        $folders = $this->listFoldersRecursive();
+        $list = [];
+
+        foreach ($folders as $folder) {
+            $this->open($folder);
+            $files = $this->listFiles();
+
+            if (empty($files)) {
+                continue;
+            }
+
+            $list[$folder] = [];
+            array_walk($files, function ($val, $idx) use (&$list, $folder) {
+                $list[$folder][$val] = $this->getFileUrl($val);
+            });
+        }
         return $list;
     }
 
