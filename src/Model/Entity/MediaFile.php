@@ -34,4 +34,9 @@ class MediaFile extends Entity
     {
         return basename($this->path);
     }
+
+    public function __toString()
+    {
+        return $this->path;
+    }
 }

@@ -1,9 +1,13 @@
 <?php
 namespace Media\Model\Behavior;
 
+use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Media\Model\Entity\MediaFile;
+use Media\Model\Entity\MediaFileCollection;
 
 class MediaBehavior extends \Cake\ORM\Behavior
 {
@@ -51,12 +55,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
      *
      * @param Event $event
      * @param Query $query
-     * @param ArrayObject $options
+     * @param array $options
      * @param $primary
      */
-    public function beforeFind(Event $event, Query $query, \ArrayObject $options, $primary)
+    public function beforeFind(Event $event, Query $query, $options, $primary)
     {
-        //debug("beforeFind");
         $mapper = function ($row, $key, MapReduce $mapReduce) {
 
             foreach ($this->_fields as $fieldName => $field) {
@@ -75,11 +78,18 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $query->mapReduce($mapper, $reducer);
     }
 
+    public function beforeSave(Event $event, Entity $entity, $options)
+    {
+        foreach ($this->_fields as $fieldName => $field) {
+            //if (is_object($entity->$fieldName)) {
+            //}
+        }
+    }
 
     /**
      * @param string $filePath Relative file path to configured dataDir
      * @param array $field Field config
-     * @return array|MediaFile
+     * @return array|MediaFile|Collection
      */
     protected function _resolveFile($filePath, $field)
     {
@@ -88,6 +98,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $resolver = function ($filePath) use ($field, $config) {
 
+            //debug("resolving " . $filePath);
             $file = new $field['entityClass']();
             $file->config = $field['config'];
             $file->path = $filePath;
@@ -96,13 +107,15 @@ class MediaBehavior extends \Cake\ORM\Behavior
         };
 
 
-        if ($field['multiple']) {
-            $paths = explode(',', $filePath);
+        if ($field['multiple'] || is_array($filePath)) {
             $files = [];
-            foreach ($paths as $_filePath) {
+            foreach ($filePath as $_filePath) {
                 $files[] = $resolver($_filePath);
             }
+            // The marshaller does not accept arrays,
+            // so we use a Collection -> solved by using a custom data type 'media_file'
             return $files;
+            //return new MediaFileCollection($files);
 
         } else {
             return $resolver($filePath);
