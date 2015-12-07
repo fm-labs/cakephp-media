@@ -20,6 +20,9 @@ class MediaManager
     {
         $configKey = 'Media.' . $configName;
         $config = Configure::read($configKey);
+        if (!$config) {
+            throw new \Exception(__('Media config {0} does not exist', $configName));
+        }
         $config = array_merge([
             'label' => 'Unlabeled',
             'name' => null,
