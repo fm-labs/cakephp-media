@@ -48,7 +48,7 @@ class LocalStorageProvider extends MediaProvider
         $files = $folder->findRecursive($pattern = '.*', $sort = true);
         if ($fullPath !== true) {
             array_walk($files, function (&$val, $idx) use ($_path) {
-                $val = substr($val, strlen($_path) - 1);
+                $val = substr($val, strlen($_path) + 1);
             });
         }
         return $files;
