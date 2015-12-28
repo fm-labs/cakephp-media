@@ -32,8 +32,9 @@ class LocalStorageProvider extends MediaProvider
 
     public function listFiles($path)
     {
-        $_path = $this->_getRealPath($path);
-        $folder = new Folder($_path);
+        $path = $this->_normalizePath($path);
+        $folderPath = $this->_getRealPath($path);
+        $folder = new Folder($folderPath);
         list(,$files) = $folder->read();
         array_walk($files, function (&$val, $idx) use ($path) {
             $val = $path . DS . $val;
@@ -43,12 +44,13 @@ class LocalStorageProvider extends MediaProvider
 
     public function listFilesRecursive($path, $fullPath = false)
     {
-        $_path = $this->_getRealPath($path);
-        $folder = new Folder($_path);
+        $path = $this->_normalizePath($path);
+        $folderPath = $this->_getRealPath($path);
+        $folder = new Folder($folderPath);
         $files = $folder->findRecursive($pattern = '.*', $sort = true);
         if ($fullPath !== true) {
-            array_walk($files, function (&$val, $idx) use ($_path) {
-                $val = substr($val, strlen($_path) + 1);
+            array_walk($files, function (&$val, $idx) use ($folderPath) {
+                $val = substr($val, strlen($folderPath));
             });
         }
         return $files;
@@ -56,8 +58,9 @@ class LocalStorageProvider extends MediaProvider
 
     public function listFolders($path)
     {
-        $_path = $this->_getRealPath($path);
-        $folder = new Folder($_path);
+        $path = $this->_normalizePath($path);
+        $folderPath = $this->_getRealPath($path);
+        $folder = new Folder($folderPath);
         list($dirs,) = $folder->read();
         array_walk($dirs, function (&$val, $idx) use ($path) {
             $val = $path . DS . $val;
@@ -68,8 +71,9 @@ class LocalStorageProvider extends MediaProvider
 
     public function listFoldersRecursive($path)
     {
-        $_path = $this->_getRealPath($path);
-        $folder = new Folder($_path);
+        $path = $this->_normalizePath($path);
+        $folderPath = $this->_getRealPath($path);
+        $folder = new Folder($folderPath);
         list($dirs,) = $folder->read();
 
         $list = [];
@@ -89,9 +93,17 @@ class LocalStorageProvider extends MediaProvider
         // TODO: Implement readFile() method.
     }
 
+    protected function _normalizePath($path)
+    {
+        $path = rtrim($path, '/');
+        return $path;
+    }
+
     protected function _getRealPath($path)
     {
         $path = rtrim($path, '/');
-        return $this->config('path') . DS . $path;
+        $realpath = $this->config('path') . DS . $path;
+
+        return realpath($realpath);
     }
 }
