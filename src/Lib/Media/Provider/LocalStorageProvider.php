@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 9/5/15
- * Time: 5:23 PM
- */
-
 namespace Media\Lib\Media\Provider;
 
 use Cake\Filesystem\Folder;
@@ -36,8 +29,8 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
         $folder = new Folder($folderPath);
         list(,$files) = $folder->read();
-        array_walk($files, function (&$val, $idx) use ($path) {
-            $val = $path . DS . $val;
+        array_walk($files, function (&$file, $idx) use ($path) {
+            $file = $path . $file;
         });
         return $files;
     }
@@ -48,9 +41,10 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
         $folder = new Folder($folderPath);
         $files = $folder->findRecursive($pattern = '.*', $sort = true);
+
         if ($fullPath !== true) {
-            array_walk($files, function (&$val, $idx) use ($folderPath) {
-                $val = substr($val, strlen($folderPath));
+            array_walk($files, function (&$file, $idx) use ($folderPath) {
+                $file = substr($file, strlen($folderPath));
             });
         }
         return $files;
@@ -62,8 +56,8 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
         $folder = new Folder($folderPath);
         list($dirs,) = $folder->read();
-        array_walk($dirs, function (&$val, $idx) use ($path) {
-            $val = $path . DS . $val;
+        array_walk($dirs, function (&$dir, $idx) use ($path) {
+            $dir = $path . $dir;
         });
         return $dirs;
     }
@@ -77,12 +71,13 @@ class LocalStorageProvider extends MediaProvider
         list($dirs,) = $folder->read();
 
         $list = [];
-        array_walk($dirs, function (&$val, $idx) use (&$list, $path) {
-            $list[] = $path . DS . $val;
+        array_walk($dirs, function (&$dir, $idx) use (&$list, $path) {
+            $list[] = ($path) ? $path . '/' . $dir : $dir;
 
-            foreach ($this->listFoldersRecursive($path . DS . $val) as $dir) {
+            foreach ($this->listFoldersRecursive($path . '/' . $dir) as $dir) {
                 $list[] = $dir;
             }
+
         });
         return $list;
     }
@@ -95,15 +90,16 @@ class LocalStorageProvider extends MediaProvider
 
     protected function _normalizePath($path)
     {
-        $path = rtrim($path, '/');
+        $path = trim($path, '/');
         return $path;
     }
 
     protected function _getRealPath($path)
     {
-        $path = rtrim($path, '/');
-        $realpath = $this->config('path') . DS . $path;
+        $path = $this->_normalizePath($path);
+        $realpath = ($path) ? $this->config('path') . $path . DS : $this->config('path');
 
-        return realpath($realpath);
+        //return realpath($realpath) . DS;
+        return $realpath;
     }
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 12/28/15
- * Time: 6:07 PM
- */
 
 namespace Media\Test\TestCase\Lib\Media\Provider;
 
@@ -47,26 +41,43 @@ class LocalStorageProviderTest extends MediaTestCase
     public function testListFiles()
     {
         $list = $this->provider->listFiles('/');
-        debug($list);
+        $this->assertEquals([
+            (int) 0 => 'file.txt'
+        ], $list);
     }
 
     public function testListFilesRecursive()
     {
         $list = $this->provider->listFilesRecursive('/');
-        debug($list);
+        $this->assertEquals([
+            (int) 0 => 'file.txt',
+            (int) 1 => 'dir1/file1.txt',
+            (int) 2 => 'dir1/file2.txt',
+            (int) 3 => 'dir2/image1.jpg',
+            (int) 4 => 'dir2/image2.png',
+            (int) 5 => 'dir2/dir3/hello.txt',
+            (int) 6 => 'dir2/dir3/world.txt'
+        ], $list);
     }
 
 
     public function testListFolders()
     {
         $list = $this->provider->listFolders('/');
-        debug($list);
+        $this->assertEquals([
+            (int) 0 => 'dir1',
+            (int) 1 => 'dir2',
+        ], $list);
     }
 
     public function testListFoldersRecursive()
     {
         $list = $this->provider->listFoldersRecursive('/');
-        debug($list);
+        $this->assertEquals([
+            (int) 0 => 'dir1',
+            (int) 1 => 'dir2',
+            (int) 2 => 'dir2/dir3',
+        ], $list);
     }
 
 
