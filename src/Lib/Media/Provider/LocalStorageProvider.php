@@ -30,7 +30,7 @@ class LocalStorageProvider extends MediaProvider
         $folder = new Folder($folderPath);
         list(,$files) = $folder->read();
         array_walk($files, function (&$file, $idx) use ($path) {
-            $file = $path . $file;
+            $file = ($path) ? $path . '/' . $file : $file;
         });
         return $files;
     }
