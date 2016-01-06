@@ -4,6 +4,7 @@ namespace Media\Model\Behavior;
 use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Event\Event;
+use Cake\Network\Exception\NotImplementedException;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Media\Model\Entity\MediaFile;
@@ -12,12 +13,18 @@ use Media\Model\Entity\MediaFileCollection;
 class MediaBehavior extends \Cake\ORM\Behavior
 {
 
+    const MODE_INLINE = 0;
+    const MODE_TABLE = 1;
+    const MODE_TEXT = 2;
+    const MODE_HTML = 4;
+
     protected $_defaultConfig = [
         // List of observable fields
         'fields' => [],
     ];
 
     protected $_defaultFieldConfig = [
+        'mode' => 0,
         // Media config name
         'config' => 'default',
         // Entity class location
@@ -46,7 +53,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             $this->_fields[$field] = $_config;
 
             // apply special field type to schema
-            if ($_config['multiple'] === true) {
+            if ($_config['multiple'] === true && $_config['mode'] !== self::MODE_TABLE) {
                 $this->_table->schema()->columnType($field, 'media_file');
             }
         }
@@ -69,9 +76,36 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $mapper = function ($row, $key, MapReduce $mapReduce) {
 
             foreach ($this->_fields as $fieldName => $field) {
-                if (isset($row[$fieldName]) && !empty($row[$fieldName])) {
-                    $row[$fieldName] = $this->_resolveFile($row[$fieldName], $field);
+
+
+                if ($field['mode'] == self::MODE_TABLE) {
+                    $row[$fieldName] = $this->_resolveFromTable($row, $fieldName, $field);
+
+                } elseif (isset($row[$fieldName]) && !empty($row[$fieldName])) {
+
+                    switch ($field['mode']) {
+                        case self::MODE_INLINE:
+                            $row[$fieldName] = $this->_resolveFromInline($row[$fieldName], $field);
+                            break;
+
+                        case self::MODE_TEXT:
+                        case self::MODE_HTML:
+                            throw new NotImplementedException('MediaBehavior: ' . $field['mode'] . ' not implemented yet for field: ' . $fieldName);
+                            break;
+
+                        case self::MODE_TABLE:
+                            throw new \LogicException('MediaBehavior: A media file in table mode can not have a field: ' . $fieldName);
+                            break;
+
+                        default:
+                            throw new \LogicException('MediaBehavior: Misconfigured field: ' . $fieldName);
+                            break;
+
+                    }
+
+                } else {
                 }
+
             }
 
             $mapReduce->emitIntermediate($row, $key);
@@ -97,7 +131,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param array $field Field config
      * @return array|MediaFile|Collection
      */
-    protected function _resolveFile($filePath, $field)
+    protected function _resolveFromInline($filePath, $field)
     {
         //debug("resolve media file " . $this->_table->alias() . ":" . $filePath);
         $config =& $this->_config;
@@ -126,5 +160,60 @@ class MediaBehavior extends \Cake\ORM\Behavior
             return $resolver($filePath);
         }
 
+    }
+
+
+    protected function _resolveFromTable($row, $fieldName, $field)
+    {
+        throw new NotImplementedException('MediaBehavior: Resolving media files from table is not implemented yet');
+        /*
+        //debug("Resolving db attachments for field " . $fieldName);
+        $Attachments = $this->_getAttachmentsModel($fieldName);
+        $params = [
+            'Attachments.model' => $this->_table->alias(),
+            'Attachments.modelid' => $row->id,
+            'Attachments.scope' => $fieldName,
+        ];
+        $query = $Attachments->find()->where($params);
+
+        //@TODO Keep it dry (possible duplicate in '_resolveInlineAttachment' method)
+        //@TODO Extract file extension
+        // Resolve DB Attachment
+        $config =& $this->_config;
+        $resolver = function ($attachment) use ($field, $config) {
+            if ($attachment === null) {
+                return;
+            }
+
+            $filePath = $attachment->filepath;
+            $sourcePath = $config['dataDir'] . $filePath;
+
+            $file = new $field['fileClass']();
+            $file->name = $filePath;
+            $file->source = $sourcePath;
+            $file->size = $attachment->filesize;
+            $file->basename = $attachment->filename;
+            $file->ext = null;
+            $file->desc = $attachment->desc_text;
+
+            if ($config['dataUrl']) {
+                $file->url = rtrim($config['dataUrl'], '/') . '/' . $filePath;
+            }
+
+            return $file;
+        };
+
+        if ($field['multiple']) {
+            $attachments = $query->all();
+            $files = [];
+            foreach ($attachments as $attachment) {
+                $files[] = $resolver($attachment);
+            }
+            return $files;
+        } else {
+            $attachment = $query->first();
+            return $resolver($attachment);
+        }
+        */
     }
 }

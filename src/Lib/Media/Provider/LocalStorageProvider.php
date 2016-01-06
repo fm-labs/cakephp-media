@@ -14,7 +14,7 @@ class LocalStorageProvider extends MediaProvider
     public function connect()
     {
         if (!is_dir($this->config('path')) || !is_readable($this->config('path'))) {
-            throw new MediaException(__("LocalStorage: Root path for *{0}* is not accessible", $this->config('label')));
+            throw new MediaException(__("LocalStorage: Root path *{0}* is not accessible", $this->config('path')));
         }
     }
 
@@ -81,7 +81,6 @@ class LocalStorageProvider extends MediaProvider
         });
         return $list;
     }
-
 
     public function readFile($path)
     {

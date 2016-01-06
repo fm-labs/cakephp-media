@@ -2,33 +2,25 @@
 
 namespace Media\Test\TestCase\Lib\Media\Provider;
 
+use Cake\Core\Configure;
 use Cake\Filesystem\Folder;
 use Media\Lib\Media\Provider\LocalStorageProvider;
 use Media\Test\TestCase\MediaTestCase;
 
 class LocalStorageProviderTest extends MediaTestCase
 {
+    public static $setupTestFiles = true;
+
     /**
      * @var LocalStorageProvider
      */
     public $provider;
 
-    public static function setupBeforeClass()
-    {
-
-        parent::setUpTestFiles();
-    }
-
     public function setUp()
     {
         parent::setUp();
 
-
-        $config = [
-            'path' => self::$targetPath,
-            'url' => 'http://example.org/media/'
-        ];
-
+        $config = Configure::read('Media.test');
         $this->provider = new LocalStorageProvider($config);
     }
 
@@ -102,9 +94,5 @@ class LocalStorageProviderTest extends MediaTestCase
         parent::tearDown();
     }
 
-    public static function tearDownAfterClass()
-    {
-        parent::tearDownTestFiles();
-    }
 
 }

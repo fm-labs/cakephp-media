@@ -8,12 +8,15 @@
 
 namespace Media\Test\TestCase\Model\Behavior;
 
+use Cake\Core\Configure;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Media\Test\TestCase\MediaTestCase;
 
 class MediaBehaviorTest extends MediaTestCase
 {
+    public static $setupTestFiles = true;
+
     /**
      * fixtures
      *
@@ -39,8 +42,10 @@ class MediaBehaviorTest extends MediaTestCase
         $this->table->addBehavior('Media.Media', [
             'fields' => [
                 'image' => [
+                    'config' => 'test'
                 ],
                 'images' => [
+                    'config' => 'test',
                     'multiple' => true,
                 ]
             ]
@@ -53,13 +58,30 @@ class MediaBehaviorTest extends MediaTestCase
         $post = $this->table->get(1);
 
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->image);
+
+        //debug($post->image);
+        //debug($post->image->realpath);
     }
 
     public function testImageFieldToMediaFileMultiple()
     {
         $post = $this->table->get(2);
 
-        //$this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images);
+        $this->assertInternalType('array', $post->images);
+        $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[0]);
+        $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[1]);
+    }
+
+    public function testSaveText()
+    {
+        $text = 'Test Media Path in Text: /media/dir2/image1.jpg';
+
+        $entity = $this->table->newEntity();
+        $entity->text = $text;
+
+        $this->assertEquals($text, $entity->text);
+
+        $this->table->save($entity);
     }
 
     public function tearDown()

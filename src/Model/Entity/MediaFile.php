@@ -21,9 +21,15 @@ class MediaFile extends Entity
         }
     }
 
-    protected function _getRealPath() {
+    protected function _getRealpath() {
         return MediaManager::get($this->config)->getPath() . $this->path;
     }
+
+    /*
+    protected function _getFilepath() {
+        return MediaManager::get($this->config)->getFilePath($this->path);
+    }
+    */
 
     protected function _getUrl()
     {
