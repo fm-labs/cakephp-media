@@ -44,7 +44,13 @@ class MediaBehavior extends \Cake\ORM\Behavior
             }
             $_config = array_merge($this->_defaultFieldConfig, $_config);
             $this->_fields[$field] = $_config;
+
+            // apply special field type to schema
+            if ($_config['multiple'] === true) {
+                $this->_table->schema()->columnType($field, 'media_file');
+            }
         }
+
     }
 
     /**
@@ -106,8 +112,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             return $file;
         };
 
-
-        if ($field['multiple'] || is_array($filePath)) {
+        if ($field['multiple'] && is_array($filePath)) {
             $files = [];
             foreach ($filePath as $_filePath) {
                 $files[] = $resolver($_filePath);

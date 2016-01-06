@@ -46,6 +46,11 @@ class MediaManager
         $this->open('/');
     }
 
+    public function config($key)
+    {
+        return $this->_provider->config($key);
+    }
+
     public function open($path)
     {
         $this->setPath($path);
