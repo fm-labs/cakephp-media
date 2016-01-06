@@ -31,5 +31,11 @@ class MediaFileTest extends MediaTestCase
         $entity->path = 'dir2/image1.jpg';
 
         $this->assertEquals('/media/test/dir2/image1.jpg', $entity->url);
+
+
+        $entity->config = null;
+        $entity->path = 'media://test/dir2/image1.jpg';
+
+        $this->assertEquals('/media/test/dir2/image1.jpg', $entity->url);
     }
 }

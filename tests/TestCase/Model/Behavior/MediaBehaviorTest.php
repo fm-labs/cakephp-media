@@ -11,6 +11,7 @@ namespace Media\Test\TestCase\Model\Behavior;
 use Cake\Core\Configure;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Media\Model\Behavior\MediaBehavior;
 use Media\Test\TestCase\MediaTestCase;
 
 class MediaBehaviorTest extends MediaTestCase
@@ -47,7 +48,15 @@ class MediaBehaviorTest extends MediaTestCase
                 'images' => [
                     'config' => 'test',
                     'multiple' => true,
-                ]
+                ],
+                'text' => [
+                    'config' => 'test',
+                    'mode' => MediaBehavior::MODE_TEXT
+                ],
+                'html' => [
+                    'config' => 'test',
+                    'mode' => MediaBehavior::MODE_HTML
+                ],
             ]
         ]);
         //$this->table->validator();
