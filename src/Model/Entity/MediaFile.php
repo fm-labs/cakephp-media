@@ -14,6 +14,16 @@ class MediaFile extends Entity
         'filesize' => false,
     ];
 
+    protected function _setPath($path)
+    {
+        if (preg_match('|media\:\/\/([\w\_]+)\/(.*)$|', $path, $matches)) {
+            $this->set('config', $matches[1]);
+            return $matches[2];
+        }
+
+        return $path;
+    }
+
     protected function _getFilesize()
     {
         if (is_file($this->path)) {
@@ -21,15 +31,16 @@ class MediaFile extends Entity
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function _getRealpath() {
-        return MediaManager::get($this->config)->getPath() . $this->path;
+        return $this->_getFilepath();
     }
 
-    /*
     protected function _getFilepath() {
-        return MediaManager::get($this->config)->getFilePath($this->path);
+        return MediaManager::get($this->config)->getPath() . $this->path;
     }
-    */
 
     protected function _getUrl()
     {

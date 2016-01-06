@@ -13,10 +13,10 @@ use Media\Model\Entity\MediaFileCollection;
 class MediaBehavior extends \Cake\ORM\Behavior
 {
 
-    const MODE_INLINE = 0;
-    const MODE_TABLE = 1;
-    const MODE_TEXT = 2;
-    const MODE_HTML = 4;
+    const MODE_INLINE = 'inline';
+    const MODE_TABLE = 'table';
+    const MODE_TEXT = 'text';
+    const MODE_HTML = 'html';
 
     protected $_defaultConfig = [
         // List of observable fields
@@ -24,7 +24,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     ];
 
     protected $_defaultFieldConfig = [
-        'mode' => 0,
+        'mode' => 'inline',
         // Media config name
         'config' => 'default',
         // Entity class location
