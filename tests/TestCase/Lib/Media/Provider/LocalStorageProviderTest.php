@@ -74,6 +74,11 @@ class LocalStorageProviderTest extends MediaTestCase
             (int) 0 => 'dir1',
             (int) 1 => 'dir2',
         ], $list);
+
+        $list = $this->provider->listFolders('dir2/');
+        $this->assertEquals([
+            (int) 0 => 'dir3',
+        ], $list);
     }
 
     public function testListFoldersRecursive()

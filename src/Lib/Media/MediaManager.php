@@ -99,13 +99,19 @@ class MediaManager
 
     public function setPath($path)
     {
-        $path = trim($path, '/');
+        $path .= '/';
+        $path = preg_replace('|([\/])?\.\.\/|', '/', $path); // clean path patterns like '/../../'
+        $path = preg_replace('|([\/])?\.\/|', '/', $path); // clean path patterns like '/././'
+        $path = preg_replace('|[\/]+|', '/', $path); // clean path patterns like '/////path///to//dir///'
+        $path = ltrim($path, '/');
+        $path = ($path == '/') ? '' : $path;
+
         $this->_path = $path;
     }
 
     public function getPath()
     {
-        return $this->_path . '/';
+        return $this->_path;
     }
 
     public function getParentPath()
