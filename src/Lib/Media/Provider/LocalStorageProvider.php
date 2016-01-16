@@ -69,7 +69,7 @@ class LocalStorageProvider extends MediaProvider
     }
 
 
-    public function listFoldersRecursive($path)
+    public function listFoldersRecursive($path, $depth = -1)
     {
         $path = $this->_normalizePath($path);
         $folderPath = $this->_getRealPath($path);
@@ -78,11 +78,15 @@ class LocalStorageProvider extends MediaProvider
         list($dirs,) = $folder->read();
 
         $list = [];
-        array_walk($dirs, function (&$dir, $idx) use (&$list, $path) {
+        array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
             $_dir = $path . $dir;
             $list[] = $_dir;
 
-            foreach ($this->listFoldersRecursive($_dir) as $dir) {
+            if ($depth > -1 && $depth == 0) {
+                return;
+            }
+
+            foreach ($this->listFoldersRecursive($_dir, $depth - 1) as $dir) {
                 $list[] = $dir;
             }
 
@@ -121,7 +125,7 @@ class LocalStorageProvider extends MediaProvider
         $path = $this->_normalizePath($path);
         $realpath = $this->config('path') . $path;
 
-        //return realpath($realpath) . DS;
+        //return realpath($realpath);
         return $realpath;
     }
 }

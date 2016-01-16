@@ -32,7 +32,7 @@ class TestProvider implements MediaProviderInterface
     {
     }
 
-    public function listFoldersRecursive($path)
+    public function listFoldersRecursive($path, $depth = -1)
     {
     }
 

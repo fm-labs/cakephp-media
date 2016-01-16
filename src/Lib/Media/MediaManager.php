@@ -81,9 +81,9 @@ class MediaManager
         return $this->_provider->listFolders($this->_path);
     }
 
-    public function listFoldersRecursive()
+    public function listFoldersRecursive($depth = -1)
     {
-        return $this->_provider->listFoldersRecursive($this->_path);
+        return $this->_provider->listFoldersRecursive($this->_path, $depth);
     }
 
 
@@ -105,6 +105,8 @@ class MediaManager
         $path = preg_replace('|[\/]+|', '/', $path); // clean path patterns like '/////path///to//dir///'
         $path = ltrim($path, '/');
         $path = ($path == '/') ? '' : $path;
+
+        //debug("entering path $path");
 
         $this->_path = $path;
     }
