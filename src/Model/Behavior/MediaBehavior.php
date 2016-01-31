@@ -7,8 +7,10 @@ use Cake\Event\Event;
 use Cake\Network\Exception\NotImplementedException;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 use Media\Model\Entity\MediaFile;
 use Media\Model\Entity\MediaFileCollection;
+use Media\Model\Table\MediaAttachmentsTable;
 
 class MediaBehavior extends \Cake\ORM\Behavior
 {
@@ -19,18 +21,26 @@ class MediaBehavior extends \Cake\ORM\Behavior
     const MODE_HTML = 'html';
 
     protected $_defaultConfig = [
+        // Reference Model
+        'model' => null,
         // List of observable fields
         'fields' => [],
     ];
 
     protected $_defaultFieldConfig = [
+        // Storage Mode
         'mode' => 'inline',
         // Media config name
         'config' => 'default',
         // Entity class location
         'entityClass' => '\\Media\\Model\\Entity\\MediaFile',
         // Multiple
-        'multiple' => false
+        'multiple' => false,
+        //### MODE TABLE CONFIG OPTIONS ###
+        // Attachments table class. Defaults to 'Media.MediaAttachments'
+        'attachmentsTable' => 'Media.MediaAttachments',
+        // Use i18n mode
+        'i18n' => false,
     ];
 
 
@@ -44,6 +54,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function initialize(array $config)
     {
+        $this->_config['model'] = ($this->_config['model']) ?: $this->_table->alias();
+
         foreach ($this->_config['fields'] as $field => $_config) {
             if (is_numeric($field)) {
                 $field = $_config;
@@ -51,6 +63,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             }
             $_config = array_merge($this->_defaultFieldConfig, $_config);
             $this->_fields[$field] = $_config;
+            $this->_fields[$field]['model'] = $this->_config['model'];
 
             // apply special field type to schema
             if ($_config['multiple'] === true && $_config['mode'] !== self::MODE_TABLE) {
@@ -58,6 +71,13 @@ class MediaBehavior extends \Cake\ORM\Behavior
             }
         }
 
+    }
+
+
+    public function findMedia(Query $query, array $options)
+    {
+        $options = array_merge(['media' => true], $options);
+        return $query->applyOptions($options);
     }
 
     /**
@@ -73,10 +93,27 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function beforeFind(Event $event, Query $query, $options, $primary)
     {
-        $mapper = function ($row, $key, MapReduce $mapReduce) {
+        if (!isset($options['media']) || $options['media'] === false) {
+            return;
+        }
+
+        $fields = [];
+        if ($options['media'] === true) {
+            $fields = array_keys($this->_fields);
+        } else {
+            $fields = (array) $options['media'];
+        }
+
+
+        $mapper = function ($row, $key, MapReduce $mapReduce) use ($fields) {
+
 
             foreach ($this->_fields as $fieldName => $field) {
 
+
+                if (!in_array($fieldName, $fields)) {
+                    continue;
+                }
 
                 if ($field['mode'] == self::MODE_TABLE) {
                     $row[$fieldName] = $this->_resolveFromTable($row, $fieldName, $field);
@@ -165,30 +202,36 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     protected function _resolveFromTable($row, $fieldName, $field)
     {
-        throw new NotImplementedException('MediaBehavior: Resolving media files from table is not implemented yet');
-        /*
+
         //debug("Resolving db attachments for field " . $fieldName);
+        $config =& $this->_config;
         $Attachments = $this->_getAttachmentsModel($fieldName);
         $params = [
-            'Attachments.model' => $this->_table->alias(),
-            'Attachments.modelid' => $row->id,
-            'Attachments.scope' => $fieldName,
+            'MediaAttachments.model' => $config['model'],
+            'MediaAttachments.modelid' => $row->id,
+            'MediaAttachments.scope' => $fieldName,
         ];
         $query = $Attachments->find()->where($params);
 
         //@TODO Keep it dry (possible duplicate in '_resolveInlineAttachment' method)
         //@TODO Extract file extension
         // Resolve DB Attachment
-        $config =& $this->_config;
         $resolver = function ($attachment) use ($field, $config) {
             if ($attachment === null) {
                 return;
             }
 
             $filePath = $attachment->filepath;
-            $sourcePath = $config['dataDir'] . $filePath;
+            //$sourcePath = $config['dataDir'] . $filePath;
 
-            $file = new $field['fileClass']();
+
+            $file = new $field['entityClass']();
+            $file->config = $field['config'];
+            $file->path = $filePath;
+            $file->desc = $attachment->desc_text;
+
+            /*
+            $file = new $field['entityClass']();
             $file->name = $filePath;
             $file->source = $sourcePath;
             $file->size = $attachment->filesize;
@@ -199,6 +242,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             if ($config['dataUrl']) {
                 $file->url = rtrim($config['dataUrl'], '/') . '/' . $filePath;
             }
+            */
 
             return $file;
         };
@@ -214,6 +258,21 @@ class MediaBehavior extends \Cake\ORM\Behavior
             $attachment = $query->first();
             return $resolver($attachment);
         }
-        */
+
+    }
+
+    /**
+     * @param $field
+     * @return MediaAttachmentsTable
+     */
+    protected function _getAttachmentsModel($field)
+    {
+        $Model = TableRegistry::get($this->_fields[$field]['attachmentsTable']);
+        if ($this->_fields[$field]['i18n'] && $this->_table && $this->_table->hasBehavior('Translate')) {
+            $parentLocale = $this->_table->locale();
+            $Model->enableI18n();
+            $Model->locale($parentLocale);
+        }
+        return $Model;
     }
 }
