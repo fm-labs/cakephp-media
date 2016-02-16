@@ -2,9 +2,9 @@
 
 namespace Media\Controller\Admin;
 
-use Backend\Controller\Admin\AbstractBackendController;
+use App\Controller\Admin\AppController as BaseAdminAppController;
 
-class AppController extends AbstractBackendController
+class AppController extends BaseAdminAppController
 {
 
     public static function backendMenu()
