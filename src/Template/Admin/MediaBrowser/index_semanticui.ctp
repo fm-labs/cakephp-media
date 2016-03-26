@@ -1,3 +1,4 @@
+<?= $this->Html->css('Backend.jstree/themes/default/style.min', ['block' => true]); ?>
 <?= $this->Html->css('Backend.filebrowser', ['block' => true]); ?>
 <?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
@@ -22,17 +23,21 @@
                 </a>
             </div>
         </div>
-        <h4 id="browser-path"></h4>
+        <h4 id="browser-path" class="ui top attached header">
+            <div class="ui active small inline loader"></div> Loading
+        </h4>
 
         <div id="browser-container" class="ui attached segment">
-            <div class="row">
-                <div class="col-md-3">
-                    <div id="browser-folders">
-                        Folders
+            <div class="ui grid">
+                <div class="row">
+                    <div class="four wide column">
+                        <div id="browser-folders">
+                            Folders
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-9">
-                    <div id="browser-files">
+                    <div class="twelve wide column">
+                        <div id="browser-files">
+                        </div>
                     </div>
                 </div>
             </div>
