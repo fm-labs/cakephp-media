@@ -7,6 +7,13 @@ use App\Controller\Admin\AppController as BaseAdminAppController;
 class AppController extends BaseAdminAppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+
+        //$this->viewBuilder()->layout('media');
+    }
+
     public static function backendMenu()
     {
         return [
