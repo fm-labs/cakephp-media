@@ -6,24 +6,21 @@
 
     <div id="browser-wrapper">
 
-        <div id="browser-toolbar" class="actions">
-            <div class="ui labeled icon menu">
-                <a class="item">
-                    <i class="outline folder icon"></i>
-                    New Folder
-                </a>
-                <a class="item">
-                    <i class="outline file icon"></i>
-                    New File
-                </a>
-                <a class="item">
-                    <i class="upload icon"></i>
-                    Upload files
-                </a>
-            </div>
-        </div>
-        <h4 id="browser-path"></h4>
 
+        <h4 id="browser-path">/</h4>
+
+        <div id="browser-toolbar" class="actions">
+            <?= $this->Html->link(__('New Folder'),
+                ['action' => 'add', 'type' => 'folder'],
+                ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']); ?>
+            <?= $this->Html->link(__('New File'),
+                ['action' => 'add', 'type' => 'file'],
+                ['data-icon' => 'file', 'class' => 'file-add btn btn-default']); ?>
+            <?= $this->Html->link(__('Upload'),
+                ['action' => 'upload'],
+                ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']); ?>
+        </div>
+        <hr />
         <div id="browser-container" class="ui attached segment">
             <div class="row">
                 <div class="col-md-3">
@@ -37,7 +34,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>
