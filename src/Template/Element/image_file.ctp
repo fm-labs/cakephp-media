@@ -13,17 +13,28 @@
 if (!isset($imageOptions)) $imageOptions = [];
 if (!isset($actions)) $actions = [];
 ?>
-<?php if (isset($label)): ?>
-    <h4><?= $label ;?></h4>
-<?php endif; ?>
-<?php
-if ($image) {
-    echo $this->Html->image($image->url, $imageOptions) . '<br />';
-    echo h($image->basename) . '<br />';
-}
-?>
-<?php
-foreach ($actions as $action):
-    echo $this->Ui->link($action[0], $action[1], $action[2]);
-endforeach;
-?>
+<div class="row">
+    <div class="col-sm-12">
+        <?= (isset($label)) ? '<h4>' . $label . '</h4>' : ''; ?>
+        <div class="thumbnail">
+            <?php
+            if ($image) {
+                echo $this->Html->image($image->url, $imageOptions);
+            } else {
+                //echo '<img src="" alt="No image set" />';
+            }
+            ?>
+            <div class="caption">
+                <h5><?= ($image) ? h($image->basename) : "No Image selected"; ?></h5>
+                <p><small><?= ($image) ? h($image->path) : ""; ?></small></p>
+                <p>
+                    <?php
+                    foreach ($actions as $action):
+                        echo $this->Ui->link($action[0], $action[1], $action[2]) . "\n";
+                    endforeach;
+                    ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
