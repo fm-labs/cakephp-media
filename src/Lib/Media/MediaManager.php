@@ -54,6 +54,7 @@ class MediaManager
     public function open($path)
     {
         $this->setPath($path);
+        return $this;
     }
 
     public function listFiles()
@@ -154,6 +155,16 @@ class MediaManager
         return $list;
     }
 
+    public function getSelectFolderListRecursive()
+    {
+        $files = $this->listFoldersRecursive();
+        $list = [];
+        array_walk($files, function ($val, $idx) use (&$list) {
+            $list[$val] = $val;
+        });
+        return $list;
+    }
+
     public function getSelectListRecursiveGrouped()
     {
         $folders = $this->listFoldersRecursive();
@@ -174,6 +185,8 @@ class MediaManager
         }
         return $list;
     }
+
+
 
     /**
      * Mount a media provider with a name
