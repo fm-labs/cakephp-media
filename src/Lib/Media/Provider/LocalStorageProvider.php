@@ -2,6 +2,7 @@
 namespace Media\Lib\Media\Provider;
 
 use Cake\Filesystem\Folder;
+use Cake\Routing\Router;
 use Media\Lib\Media\MediaException;
 
 /**
@@ -27,6 +28,19 @@ class LocalStorageProvider extends MediaProvider
 
     public function disconnect()
     {
+    }
+
+    public function basePath() {
+        return $this->_getRealPath('');
+    }
+
+    public function baseUrl($full = false)
+    {
+        $baseUrl = $this->config('url');
+        if (!$baseUrl) {
+            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
+        }
+        return Router::url($baseUrl, $full);
     }
 
     public function listFiles($path)

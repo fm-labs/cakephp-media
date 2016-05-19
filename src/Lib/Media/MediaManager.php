@@ -130,6 +130,11 @@ class MediaManager
         return join('/', $parts);
     }
 
+    public function getBasePath()
+    {
+        return realpath($this->_provider->basePath()) . DS;
+    }
+
     public function getBaseUrl()
     {
         return rtrim($this->_provider->baseUrl(), '/');

@@ -19,14 +19,4 @@ abstract class MediaProvider implements MediaProviderInterface
     {
         $this->config($config);
     }
-
-    public function baseUrl($full = false)
-    {
-        $baseUrl = $this->config('url');
-        if (!$baseUrl) {
-            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
-        }
-        return Router::url($baseUrl, $full);
-    }
-
 }

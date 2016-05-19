@@ -10,6 +10,8 @@ namespace Media\Lib\Media\Provider;
 
 interface MediaProviderInterface
 {
+    public function basePath();
+
     public function baseUrl();
 
     public function connect();
