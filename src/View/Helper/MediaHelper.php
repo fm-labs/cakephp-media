@@ -3,13 +3,14 @@
 namespace Media\View\Helper;
 
 use Cake\Core\Plugin;
+use Cake\Routing\Router;
 use Cake\View\Helper;
 use Cake\View\View;
 use Media\Lib\Image\ImageProcessor;
 
 class MediaHelper extends Helper
 {
-    public $helpers = ['Html'];
+    public $helpers = ['Html', 'Url'];
 
     /**
      * @var ImageProcessor
@@ -27,6 +28,16 @@ class MediaHelper extends Helper
         }
     }
 
+    public function thumbnailUrl($source, $options = [], $full = false)
+    {
+        $path = $this->_generateThumbnail($source, $options);
+        if ($full) {
+            return $this->Url->build($path, $full);
+        }
+
+        return $path;
+    }
+
     public function thumbnail($source, $options = [], $attr = [])
     {
         $source = $this->_generateThumbnail($source, $options);
@@ -36,10 +47,12 @@ class MediaHelper extends Helper
     protected function _generateThumbnail($source, $options = []) {
 
         if (!$this->_processor) {
+            debug("Image process not loaded");
             return $source;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
+            debug("Image not found");
             return $source;
         }
 
