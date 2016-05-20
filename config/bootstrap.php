@@ -23,8 +23,8 @@ if (Plugin::loaded('Backend')) {
 // Register MediaFileType
 Type::map('media_file', 'Media\Database\Type\MediaFileType');
 
-$listener = new LocalFileStorageListener();
-EventManager::instance()->on($listener);
+//$listener = new LocalFileStorageListener();
+//EventManager::instance()->on($listener);
 
 // For automated image processing you'll have to attach this listener as well
 //$listener = new ImageProcessingListener();
