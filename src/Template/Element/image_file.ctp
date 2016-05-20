@@ -33,6 +33,13 @@ if (!isset($imageActions)) $imageActions = [];
         <?php else: ?>
             <div class="thumbnail">
                 <?= "No Image selected" ?>
+                <p>
+                    <?php
+                    foreach ($imageActions as $action):
+                        echo $this->Ui->link($action[0], $action[1], $action[2]) . "\n";
+                    endforeach;
+                    ?>
+                </p>
             </div>
         <?php endif; ?>
     </div>
