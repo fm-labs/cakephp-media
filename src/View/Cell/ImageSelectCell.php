@@ -27,7 +27,14 @@ class ImageSelectCell extends Cell
 
     public function display($params = [])
     {
-        $params += ['config' => 'images', 'model' => null, 'id' => null, 'scope' => 'image', 'label' => null];
+        $params += [
+            'config' => 'images',
+            'model' => null,
+            'id' => null,
+            'scope' => 'image',
+            'label' => null,
+            'multiple' => false,
+        ];
 
         $Model = TableRegistry::get($params['model']);
 
@@ -55,10 +62,21 @@ class ImageSelectCell extends Cell
         }
         */
 
+
         $mm = MediaManager::get($params['config']);
         $files = $mm->getSelectListRecursiveGrouped();
         $this->set('imageFiles', $files);
 
         $this->set($params);
+
+        /**
+         * Workaround for a strange/unresolved bug:
+         * If this is set before imageFiles, the height option is not present in template !?!?!?!
+         */
+        $imageOptions = [
+            'width' => 200,
+            'height' => 200
+        ];
+        $this->set('imageOptions', $imageOptions);
     }
 }
