@@ -1,11 +1,10 @@
-<?= $this->Html->css('Backend.filebrowser', ['block' => true]); ?>
+<?= $this->Html->css('Media.filebrowser', ['block' => true]); ?>
 <?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <div class="index">
 
     <div id="browser-wrapper">
-
 
         <h4 id="browser-path">/</h4>
 
