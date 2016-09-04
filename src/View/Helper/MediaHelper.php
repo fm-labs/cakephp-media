@@ -47,12 +47,12 @@ class MediaHelper extends Helper
     protected function _generateThumbnail($source, $options = []) {
 
         if (!$this->_processor) {
-            debug("Image process not loaded");
+            debug("Image processor not loaded");
             return $source;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
-            debug("Image not found");
+            debug("Image not found at " . $source);
             return $source;
         }
 
