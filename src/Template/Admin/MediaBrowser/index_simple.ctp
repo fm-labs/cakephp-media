@@ -1,11 +1,11 @@
 <?php use Cake\Core\Configure;
-$this->loadHelper('Backend.Ui');
+$this->loadHelper('Bootstrap.Ui');
 ?>
-<?= $this->Toolbar->addLink('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'icon' => 'folder']) ?>
+<?= $this->Toolbar->addLink('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'folder']) ?>
 
-<?= $this->Toolbar->addLink('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'icon' => 'file']); ?>
+<?= $this->Toolbar->addLink('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
 
-<?= $this->Toolbar->addLink('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'icon' => 'file']); ?>
+<?= $this->Toolbar->addLink('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
 
 
 <div class="file-manager index">
@@ -36,13 +36,13 @@ $this->loadHelper('Backend.Ui');
                     <!--
                     <div class="ui secondary menu">
                         <div class="item">
-                            <?= $this->Ui->link('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'icon' => 'folder']); ?>
+                            <?= $this->Ui->link('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'folder']); ?>
                         </div>
                         <div class="item">
-                            <?= $this->Ui->link('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'icon' => 'file']); ?>
+                            <?= $this->Ui->link('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
                         </div>
                         <div class="item">
-                            <?= $this->Ui->link('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'icon' => 'file']); ?>
+                            <?= $this->Ui->link('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
                         </div>
                     </div>
                     -->

@@ -34,7 +34,7 @@ class MediaManagerController extends AppController
         /*
         $files = $mm->listFiles();
         array_walk($files, function ($val) use (&$treeData, &$mm, &$parent) {
-            $treeData[] = ['id' => $val, 'text' => basename($val), 'children' => false, 'type' => 'file', 'icon' => $mm->getFileUrl($val)];
+            $treeData[] = ['id' => $val, 'text' => basename($val), 'children' => false, 'type' => 'file', 'data-icon' => $mm->getFileUrl($val)];
         });
         */
 
@@ -75,7 +75,7 @@ class MediaManagerController extends AppController
                 'text' => basename($val),
                 'children' => false,
                 'type' => 'file',
-                'icon' => $icon
+                'data-icon' => $icon
             ];
         });
 

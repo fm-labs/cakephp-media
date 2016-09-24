@@ -20,7 +20,7 @@ class AppController extends BaseAdminAppController
             'plugin.media' => [
                 'title' => 'Media',
                 'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
-                'icon' => 'file image outline'
+                'data-icon' => 'file image outline'
             ],
         ];
     }

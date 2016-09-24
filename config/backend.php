@@ -3,6 +3,6 @@ return [
     'Backend.Plugin.Media.Menu' => [
         'title' => 'Media',
         'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
-        'icon' => 'file image outline'
+        'data-icon' => 'file image outline'
     ],
 ];

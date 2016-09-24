@@ -128,7 +128,7 @@ class MediaBrowserController extends AppController
         /*
         $files = $mm->listFiles();
         array_walk($files, function ($val) use (&$treeData, &$mm, &$parent) {
-            $treeData[] = ['id' => $val, 'text' => basename($val), 'children' => false, 'type' => 'file', 'icon' => $mm->getFileUrl($val)];
+            $treeData[] = ['id' => $val, 'text' => basename($val), 'children' => false, 'type' => 'file', 'data-icon' => $mm->getFileUrl($val)];
         });
         */
 
@@ -167,12 +167,12 @@ class MediaBrowserController extends AppController
                 'text' => basename($val),
                 'children' => false,
                 'type' => 'file',
-                'icon' => $icon,
+                'data-icon' => $icon,
                 'actions' => [
-                    //['title' => 'View', 'icon' => 'eye', 'url' => Router::url(['action' => 'view', 'path' => $val ])],
-                    //['title' => 'Edit', 'icon' => 'edit', 'url' => Router::url(['action' => 'edit', 'path' => $val ])],
-                    ['title' => 'Download', 'icon' => 'download', 'url' => Router::url(['action' => 'download', 'path' => $val ])],
-                    //['title' => 'Download', 'icon' => 'download', 'action' => 'download' ])]
+                    //['title' => 'View', 'data-icon' => 'eye', 'url' => Router::url(['action' => 'view', 'path' => $val ])],
+                    //['title' => 'Edit', 'data-icon' => 'edit', 'url' => Router::url(['action' => 'edit', 'path' => $val ])],
+                    ['title' => 'Download', 'data-icon' => 'download', 'url' => Router::url(['action' => 'download', 'path' => $val ])],
+                    //['title' => 'Download', 'data-icon' => 'download', 'action' => 'download' ])]
                 ]
             ];
         });
@@ -210,7 +210,7 @@ class MediaBrowserController extends AppController
 
         $treeData = [];
         array_walk($files, function ($val) use (&$treeData) {
-            $treeData[] = ['id' => $val, 'text' => basename($val), 'icon' => 'file'];
+            $treeData[] = ['id' => $val, 'text' => basename($val), 'data-icon' => 'file'];
         });
 
         $this->set('treeData', $treeData);
