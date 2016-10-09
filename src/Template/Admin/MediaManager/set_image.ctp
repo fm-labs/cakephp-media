@@ -1,5 +1,6 @@
 <?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
+<?= $this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <style>
     #is-selected img {
@@ -23,7 +24,7 @@
         </div>
         <div class="col-sm-3">
 
-            <?= $this->Form->create($content, ['url' => [
+            <?= $this->Form->create($content, ['_url' => [
                 'action' => 'setImage',
                 'scope' => $scope,
                 'multiple' => $multiple,
@@ -129,6 +130,8 @@
 
                         },
                         success: function(data) {
+
+                            console.log(data);
 
                             $isPath.html("<i class=\"ui green outline folder icon\" />&nbsp;" + path);
 

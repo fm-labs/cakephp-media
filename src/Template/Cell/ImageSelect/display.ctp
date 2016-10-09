@@ -28,7 +28,7 @@ if ($multiple) {
             [
                 __d('banana','Select Image'),
                 ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
-                ['class' => 'btn btn-sm btn-default link-frame-modal', 'data-icon' => 'folder', 'role' => 'button']
+                ['class' => 'btn btn-sm btn-default link-modal', 'data-icon' => 'folder', 'role' => 'button']
             ]
         ]
     ]);

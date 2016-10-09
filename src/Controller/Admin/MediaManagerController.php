@@ -75,7 +75,7 @@ class MediaManagerController extends AppController
                 'text' => basename($val),
                 'children' => false,
                 'type' => 'file',
-                'data-icon' => $icon
+                'icon' => $icon
             ];
         });
 
@@ -124,6 +124,10 @@ class MediaManagerController extends AppController
         $this->set('_serialize', ['content']);
     }
 
+    public function imageSelect()
+    {
+
+    }
 
 
     public function deleteImage()
