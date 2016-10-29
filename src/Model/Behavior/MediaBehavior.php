@@ -175,6 +175,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $resolver = function ($filePath) use ($field, $config) {
 
+            if (!$filePath) return;
+
             //debug("resolving " . $filePath);
             $file = new $field['entityClass']();
             $file->config = $field['config'];

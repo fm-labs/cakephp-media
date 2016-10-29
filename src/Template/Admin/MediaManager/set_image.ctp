@@ -77,6 +77,11 @@
     });
 
     $(document).ready(function() {
+
+        if (!$.fn.imagepicker) {
+            console.warn("Image Picker not loaded");
+        }
+
         var $isContainer = $('#is-container');
         var $isPath = $('#is-path');
         var $isTree = $('#is-tree');

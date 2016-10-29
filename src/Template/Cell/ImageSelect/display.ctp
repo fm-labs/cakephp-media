@@ -1,17 +1,4 @@
 <?php
-$imageActions = [
-    [
-        __d('banana','Select Image'),
-        ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
-        ['class' => 'btn btn-sm btn-default link-frame-modal', 'data-icon' => 'folder', 'role' => 'button']
-    ],
-    [
-        __d('banana','Remove Image'),
-        ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'deleteImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
-        ['class' => 'btn btn-sm btn-danger', 'data-icon' => 'remove', 'role' => 'button']
-    ]
-];
-
 if ($multiple) {
     $out = $this->element('Media.image_files', [
         'label' => $label,
@@ -20,15 +7,15 @@ if ($multiple) {
         'imageActions' => [
             [
                 __d('banana','Remove Image'),
-                ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'deleteImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
+                ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'deleteImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config, 'multiple' => true ],
                 ['class' => 'btn btn-sm btn-danger', 'data-icon' => 'remove', 'role' => 'button']
             ]
         ],
         'actions' => [
             [
-                __d('banana','Select Image'),
-                ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
-                ['class' => 'btn btn-sm btn-default link-modal', 'data-icon' => 'folder', 'role' => 'button']
+                __d('banana','Add Image'),
+                ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config, 'multiple' => true ],
+                ['class' => 'btn btn-sm btn-default link-frame-modal', 'data-icon' => 'folder', 'role' => 'button']
             ]
         ]
     ]);

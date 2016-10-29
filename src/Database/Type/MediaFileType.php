@@ -22,6 +22,11 @@ class MediaFileType extends Type
             return null;
         }
 
+        $value = trim($value);
+        if (!$value) {
+            return [];
+        }
+
         return explode(',', $value);
     }
 
@@ -31,8 +36,8 @@ class MediaFileType extends Type
             return $value;
         }
 
-        if (is_string($value)) {
-            return explode(',', $value);
+        if (is_string($value) && strlen(trim($value)) > 0) {
+            $value = explode(',', trim($value));
         }
 
         return $value;

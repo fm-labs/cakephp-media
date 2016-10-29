@@ -100,8 +100,24 @@ class MediaManagerController extends AppController
             'media' => true,
         ]);
 
+        $file = $content->get($scope);
+
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $content = $Table->patchEntity($content, $this->request->data);
+            $patchFile = $this->request->data($scope);
+            debug($file);
+            debug($patchFile);
+            if (is_array($patchFile)) {
+                $patchFile = $patchFile[0];
+            }
+            if (is_array($file)) {
+                //$files = explode(',', $file);
+                $file[] = $patchFile;
+                $patchFile = join(',', $file);
+            }
+            debug($patchFile);
+
+            $content = $Table->patchEntity($content, [$scope => $patchFile]);
             //$content->$scope = $this->request->data[$scope];
             if ($Table->save($content)) {
                 $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
@@ -136,6 +152,7 @@ class MediaManagerController extends AppController
         $multiple = $this->request->query('multiple');
         $model = $this->request->query('model');
         $id = $this->request->query('id');
+        $iid = base64_decode($this->request->query('iid'));
         $referer = ($this->request->query('ref')) ?: $this->referer();
 
         $Table = TableRegistry::get($model);
@@ -150,8 +167,19 @@ class MediaManagerController extends AppController
         //    throw new BadRequestException('Invalid scope');
         //}
 
+        $updated = '';
+        if ($multiple) {
+            $file = $content->get($scope);
+            if (is_array($file)) {
+                $filtered = array_filter($file, function() use ($file) {
+                   return false;
+                });
+            }
+            $updated = join(',', $filtered);
+        }
+
         $content->accessible($scope, true);
-        $content->set($scope, '');
+        $content->set($scope, $updated);
 
         if ($Table->save($content)) {
             $this->Flash->success(__d('banana','The {0} has been removed.', $scope));

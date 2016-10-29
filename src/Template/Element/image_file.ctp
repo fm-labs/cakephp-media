@@ -13,6 +13,7 @@
 if (!isset($imageOptions)) $imageOptions = [];
 if (!isset($imageActions)) $imageActions = [];
 ?>
+<div class="media select file image">
 <div class="row">
     <div class="col-sm-12">
         <?= (isset($label)) ? '<label>' . $label . '</label>' : ''; ?>
@@ -43,4 +44,5 @@ if (!isset($imageActions)) $imageActions = [];
             </div>
         <?php endif; ?>
     </div>
+</div>
 </div>
