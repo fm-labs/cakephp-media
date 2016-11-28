@@ -12,6 +12,7 @@
  */
 if (!isset($imageOptions)) $imageOptions = [];
 if (!isset($imageActions)) $imageActions = [];
+if (!isset($idx)) $idx = 0;
 ?>
 <div class="media select file image">
 <div class="row">
@@ -25,7 +26,7 @@ if (!isset($imageActions)) $imageActions = [];
                     <p>
                         <?php
                         foreach ($imageActions as $action):
-                            echo $this->Ui->link($action[0], $action[1], $action[2]) . "\n";
+                            echo $this->Ui->link($action[0], $action[1] + ['idx' => $idx, 'img' => base64_encode($image->originalpath)], $action[2]) . "\n";
                         endforeach;
                         ?>
                     </p>

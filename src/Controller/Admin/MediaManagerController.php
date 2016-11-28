@@ -2,6 +2,7 @@
 namespace Media\Controller\Admin;
 
 
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Media\Lib\Media\MediaManager;
 
@@ -152,7 +153,8 @@ class MediaManagerController extends AppController
         $multiple = $this->request->query('multiple');
         $model = $this->request->query('model');
         $id = $this->request->query('id');
-        $iid = base64_decode($this->request->query('iid'));
+        $pathEncoded = $this->request->query('img');
+        $pathDecoded = base64_decode($pathEncoded);
         $referer = ($this->request->query('ref')) ?: $this->referer();
 
         $Table = TableRegistry::get($model);
@@ -171,8 +173,12 @@ class MediaManagerController extends AppController
         if ($multiple) {
             $file = $content->get($scope);
             if (is_array($file)) {
-                $filtered = array_filter($file, function() use ($file) {
-                   return false;
+                $filtered = array_filter($file, function($filepath) use ($pathEncoded) {
+                    //Log::debug('Filter ' . $filepath . '[' . base64_encode($filepath) . '] => ' . $pathEncoded);
+                    if (base64_encode($filepath) == $pathEncoded) {
+                        return false;
+                    }
+                   return true;
                 });
             }
             $updated = join(',', $filtered);

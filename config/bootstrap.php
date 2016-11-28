@@ -18,7 +18,16 @@ if (!Configure::read('Media')) {
 // Banana Hook
 if (Plugin::loaded('Backend')) {
     Backend::hookPlugin('Media');
+
+    \Backend\View\Helper\FormatterHelper::register('media_file', function($val, $extra, $params) {
+        return h($val);
+    });
+
+    \Backend\View\Helper\FormatterHelper::register('media_files', function($val, $extra, $params) {
+        return h($val);
+    });
 }
+
 
 // Register MediaFileType
 Type::map('media_file', 'Media\Database\Type\MediaFileType');

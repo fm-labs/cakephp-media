@@ -10,8 +10,9 @@ if (!isset($actions)) $actions = [];
 <?php endif; ?>
 <?php
 if (!empty($images)) {
-    foreach ($images as $imageFile) {
+    foreach ($images as $idx => $imageFile) {
         echo $this->element('Media.image_file', [
+            'idx' => $idx,
             'label' => false,
             'image' => $imageFile,
             'imageOptions' => $imageOptions,

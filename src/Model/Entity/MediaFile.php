@@ -9,6 +9,7 @@ class MediaFile extends Entity
     protected $_accessible = [
         'config' => true,
         'path' => true,
+        'originalpath' => false,
         'realpath' => false,
         'basename' => false,
         'filesize' => false,
@@ -16,6 +17,8 @@ class MediaFile extends Entity
 
     protected function _setPath($path)
     {
+        $this->_properties['originalpath'] = $path;
+
         if (preg_match('|^media\:\/\/([\w\_]+)\/(.*)$|', $path, $matches)) {
             $this->set('config', $matches[1]);
             return $matches[2];
