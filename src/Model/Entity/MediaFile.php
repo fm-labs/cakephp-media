@@ -15,6 +15,11 @@ class MediaFile extends Entity
         'filesize' => false,
     ];
 
+    protected $_virtual = [
+        'url',
+        'filepath'
+    ];
+
     protected function _setPath($path)
     {
         $this->_properties['originalpath'] = $path;

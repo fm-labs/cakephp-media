@@ -5,12 +5,22 @@ namespace Media\View\Helper;
 use Cake\Core\Plugin;
 use Cake\Routing\Router;
 use Cake\View\Helper;
+use Cake\View\Helper\FormHelper;
+use Cake\View\Helper\HtmlHelper;
+use Cake\View\Helper\UrlHelper;
 use Cake\View\View;
 use Media\Lib\Image\ImageProcessor;
 
+/**
+ * Class MediaHelper
+ * @package Media\View\Helper
+ * @property HtmlHelper $Html
+ * @property UrlHelper $Url
+ * @property FormHelper $Form
+ */
 class MediaHelper extends Helper
 {
-    public $helpers = ['Html', 'Url'];
+    public $helpers = ['Html', 'Url', 'Form'];
 
     /**
      * @var ImageProcessor
@@ -26,6 +36,19 @@ class MediaHelper extends Helper
         if ($processor->imagine() !== null) {
             $this->_processor = $processor;
         }
+
+        $widgets = [
+            'media_picker' => ['Media\View\Widget\MediaPickerWidget']
+        ];
+        foreach ($widgets as $type => $config) {
+            $this->Form->addWidget($type, $config);
+        }
+
+        //@todo remove the dependency on Backend plugin
+        $this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]);
+        $this->Html->script('Backend.jstree/jstree.min', ['block' => true]);
+        $this->Html->css('Media.mediapicker', ['block' => true]);
+        $this->Html->script('Media.mediapicker', ['block' => true]);
     }
 
     public function thumbnailUrl($source, $options = [], $full = false)

@@ -1,0 +1,70 @@
+
+.mediapicker-wrapper {
+
+}
+
+.mediapicker-preview-placeholder {
+    display: block;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.mediapicker-wrapper .mediapicker-item {
+    height: 50px;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+}
+
+.mediapicker-wrapper .mediapicker-item:hover {
+    background-color: #f7f7f7;
+}
+
+.mediapicker-wrapper .mediapicker-item img.mediapicker-item-preview {
+    max-width: 45px;
+    max-height: 40px;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 5px;
+    border: 1px solid #CCC;
+}
+
+.mediapicker-wrapper .mediapicker-item span.mediapicker-item-name {
+    display: inline-block;
+    margin-left: 60px;
+    padding: 15px 0 0 0;
+}
+
+.mediapicker-wrapper .mediapicker-item.selected {
+    background-color: #337ab7;
+    color: #FFF;
+}
+
+.mediapicker-wrapper .mediapicker-preview {
+    border: 1px solid #CCC;
+    padding: 1rem;
+    background-color: #FFF;
+    text-align: center;
+}
+
+.mediapicker-wrapper .mediapicker-preview img.mediapicker-preview-img {
+    max-width: 100%;
+    max-height: 175px;
+}
+
+.mediapicker-wrapper .mediapicker-preview .mediapicker-preview-label {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.mediapicker-wrapper .mediapicker-actions {
+    text-align: center;
+}
+
+.mediapicker-wrapper .mediapicker-actions a {
+    padding: 0;
+    margin: 0 5px;
+    border-bottom: 1px dotted #CCC;
+    text-decoration: none;
+    cursor: pointer;
+}
