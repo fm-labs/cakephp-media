@@ -1,14 +1,9 @@
 <?php
 
-use Backend\Lib\Backend;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Database\Type;
 use Cake\Event\EventManager;
-use Burzum\FileStorage\Lib\FileStorageUtils;
-use Burzum\FileStorage\Lib\StorageManager;
-use Burzum\FileStorage\Event\ImageProcessingListener;
-use Burzum\FileStorage\Event\LocalFileStorageListener;
 
 // Check Media configuration
 if (!Configure::read('Media')) {
@@ -17,7 +12,7 @@ if (!Configure::read('Media')) {
 
 // Banana Hook
 if (Plugin::loaded('Backend')) {
-    Backend::hookPlugin('Media');
+    \Backend\Lib\Backend::hookPlugin('Media');
 
     \Backend\View\Helper\FormatterHelper::register('media_file', function($val, $extra, $params) {
         return h($val);

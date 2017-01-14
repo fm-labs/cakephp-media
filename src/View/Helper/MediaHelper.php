@@ -3,6 +3,7 @@
 namespace Media\View\Helper;
 
 use Cake\Core\Plugin;
+use Cake\Log\Log;
 use Cake\Routing\Router;
 use Cake\View\Helper;
 use Cake\View\Helper\FormHelper;
@@ -32,10 +33,18 @@ class MediaHelper extends Helper
         parent::__construct($View, $config);
 
         // Load ImageProcessor if Imagine is available
-        $processor = new ImageProcessor();
-        if ($processor->imagine() !== null) {
-            $this->_processor = $processor;
+        /*
+        try {
+
+            $processor = new ImageProcessor();
+            if ($processor->imagine() !== null) {
+                $this->_processor = $processor;
+            }
+
+        } catch (\Exception $ex) {
+            Log::warning('MediaHelper: ' . $ex->getMessage());
         }
+        */
 
         $widgets = [
             'media_picker' => ['Media\View\Widget\MediaPickerWidget']
