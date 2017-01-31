@@ -3,6 +3,7 @@ namespace Media\Model\Behavior;
 
 use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotImplementedException;
 use Cake\ORM\Entity;
@@ -107,22 +108,22 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $mapper = function ($row, $key, MapReduce $mapReduce) use ($fields) {
 
-
             foreach ($this->_fields as $fieldName => $field) {
-
 
                 if (!in_array($fieldName, $fields)) {
                     continue;
                 }
 
+                $rowData = null;
+
                 if ($field['mode'] == self::MODE_TABLE) {
-                    $row[$fieldName] = $this->_resolveFromTable($row, $fieldName, $field);
+                    $rowData = $this->_resolveFromTable($row, $fieldName, $field);
 
                 } elseif (isset($row[$fieldName]) && !empty($row[$fieldName])) {
 
                     switch ($field['mode']) {
                         case self::MODE_INLINE:
-                            $row[$fieldName] = $this->_resolveFromInline($row[$fieldName], $field);
+                            $rowData = $this->_resolveFromInline($row[$fieldName], $field);
                             break;
 
                         case self::MODE_TEXT:
@@ -140,9 +141,14 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
                     }
 
-                } else {
                 }
 
+                if ($row instanceof EntityInterface) {
+                    $row->set($fieldName, $rowData);
+                    $row->dirty($fieldName, false);
+                } else {
+                    $row[$fieldName] = $rowData;
+                }
             }
 
             $mapReduce->emitIntermediate($row, $key);

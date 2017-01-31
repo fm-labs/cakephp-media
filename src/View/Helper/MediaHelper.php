@@ -33,7 +33,6 @@ class MediaHelper extends Helper
         parent::__construct($View, $config);
 
         // Load ImageProcessor if Imagine is available
-        /*
         try {
 
             $processor = new ImageProcessor();
@@ -44,7 +43,7 @@ class MediaHelper extends Helper
         } catch (\Exception $ex) {
             Log::warning('MediaHelper: ' . $ex->getMessage());
         }
-        */
+
 
         $widgets = [
             'media_picker' => ['Media\View\Widget\MediaPickerWidget']
@@ -54,10 +53,15 @@ class MediaHelper extends Helper
         }
 
         //@todo remove the dependency on Backend plugin
-        $this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]);
-        $this->Html->script('Backend.jstree/jstree.min', ['block' => true]);
+        //$this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]);
+        //$this->Html->script('Backend.jstree/jstree.min', ['block' => true]);
+        $this->_View->loadHelper('Backend.JsTree');
+
+        $this->Html->script('/backend/libs/underscore/underscore-min', ['block' => 'script']);
+        $this->Html->script('/backend/libs/backbone/backbone-min', ['block' => 'script']);
+
         $this->Html->css('Media.mediapicker', ['block' => true]);
-        $this->Html->script('Media.mediapicker', ['block' => true]);
+        $this->Html->script('Media.mediapicker', ['block' => 'script']);
     }
 
     public function thumbnailUrl($source, $options = [], $full = false)

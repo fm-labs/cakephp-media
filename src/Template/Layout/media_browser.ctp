@@ -26,6 +26,6 @@
         <?= $this->fetch('content'); ?>
     </div>
     <?= $this->fetch('scriptBackend'); ?>
-    <?= $this->fetch('scriptBottom'); ?>
+    <?= $this->fetch('script'); ?>
 </body>
 </html>

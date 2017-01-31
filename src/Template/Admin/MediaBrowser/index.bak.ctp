@@ -7,6 +7,7 @@
 
     <div id="browser-wrapper">
 
+
         <div id="browser-toolbar" class="actions">
             <?= $this->Html->link(__('New Folder'),
                 ['action' => 'add', 'type' => 'folder'],

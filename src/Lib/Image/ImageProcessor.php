@@ -2,6 +2,7 @@
 namespace Media\Lib\Image;
 
 use Cake\Core\InstanceConfigTrait;
+use Imagine\Gd\Imagine;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use Imagine\Image\Box;
@@ -59,8 +60,10 @@ class ImageProcessor {
     public function imagine($renew = false) {
         if (empty($this->_imagine) || $renew === true) {
             $class = '\Imagine\\' . $this->config('engine') . '\Imagine';
+            if (!class_exists($class)) {
+                throw new \RuntimeException('Class ' . $class . ' not found');
+            }
             $this->_imagine = new $class();
-            return $this->_imagine;
         }
         return $this->_imagine;
     }
