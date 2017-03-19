@@ -2,9 +2,7 @@
 
 namespace Media\View\Helper;
 
-use Cake\Core\Plugin;
 use Cake\Log\Log;
-use Cake\Routing\Router;
 use Cake\View\Helper;
 use Cake\View\Helper\FormHelper;
 use Cake\View\Helper\HtmlHelper;
@@ -15,6 +13,7 @@ use Media\Lib\Image\ImageProcessor;
 /**
  * Class MediaHelper
  * @package Media\View\Helper
+ *
  * @property HtmlHelper $Html
  * @property UrlHelper $Url
  * @property FormHelper $Form
@@ -41,27 +40,8 @@ class MediaHelper extends Helper
             }
 
         } catch (\Exception $ex) {
-            Log::warning('MediaHelper: ' . $ex->getMessage());
+            Log::warning('MediaHelper: ' . $ex->getMessage(), ['media']);
         }
-
-
-        $widgets = [
-            'media_picker' => ['Media\View\Widget\MediaPickerWidget']
-        ];
-        foreach ($widgets as $type => $config) {
-            $this->Form->addWidget($type, $config);
-        }
-
-        //@todo remove the dependency on Backend plugin
-        //$this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]);
-        //$this->Html->script('Backend.jstree/jstree.min', ['block' => true]);
-        $this->_View->loadHelper('Backend.JsTree');
-
-        $this->Html->script('/backend/libs/underscore/underscore-min', ['block' => 'script']);
-        $this->Html->script('/backend/libs/backbone/backbone-min', ['block' => 'script']);
-
-        $this->Html->css('Media.mediapicker', ['block' => true]);
-        $this->Html->script('Media.mediapicker', ['block' => 'script']);
     }
 
     public function thumbnailUrl($source, $options = [], $full = false)
@@ -83,12 +63,12 @@ class MediaHelper extends Helper
     protected function _generateThumbnail($source, $options = []) {
 
         if (!$this->_processor) {
-            debug("Image processor not loaded");
+            debug("Media image processor not loaded");
             return $source;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
-            debug("Image not found at " . $source);
+            debug("Source image not found at " . $source);
             return $source;
         }
 
@@ -113,6 +93,7 @@ class MediaHelper extends Helper
 
         } catch (\Exception $ex) {
             debug($ex->getMessage());
+            Log::warning('MediaHelper: Thumb generation failed:' . $ex->getMessage(), ['media']);
         }
 
         return $source;

@@ -94,7 +94,10 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function beforeFind(Event $event, Query $query, $options, $primary)
     {
-        if (!isset($options['media']) || $options['media'] === false) {
+        if (!isset($options['media'])) {
+            $options['media'] = true; //@TODO Make eager-loading configurable
+        }
+        elseif (isset($options['media']) && $options['media'] === false) {
             return;
         }
 

@@ -1,6 +1,7 @@
 <?php
 return [
     'Media' => [
+        /*
         'default' => [
             'label' => 'All Media',
             'provider' => 'Media.LocalStorage',
@@ -8,7 +9,6 @@ return [
             'public' => true,
             'url' => '/media',
         ],
-        /*
         'gallery' => [
             'label' => 'Products Gallery',
             'provider' => 'Media.LocalStorage',

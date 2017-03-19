@@ -3,7 +3,7 @@ use Cake\Routing\Router;
 
 // Media admin routes
 Router::scope(
-    '/mediacontrol',
+    '/mediaadmin',
     ['plugin' => 'Media', 'prefix' => 'admin', '_namePrefix' => 'media:'],
     function ($routes) {
 
