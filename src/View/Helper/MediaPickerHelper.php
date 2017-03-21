@@ -8,7 +8,7 @@ use Cake\View\View;
 
 class MediaPickerHelper extends MediaHelper
 {
-    public $helpers = ['Html', 'Form'];
+    public $helpers = ['Html', 'Form', 'Url'];
 
     public function __construct(View $View, array $config = [])
     {
