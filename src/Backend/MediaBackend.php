@@ -28,7 +28,7 @@ class MediaBackend implements EventListenerInterface
     public function initializeBackendView(Event $event)
     {
         $event->subject()->loadHelper('Media.Media');
-        $event->subject()->loadHelper('Media.MediaPicker'); //@TODO Register mediapicker widget instead, which implicitly loads MediaPickerHelper when needed
+        $event->subject()->loadHelper('Media.MediaPicker');
     }
 
     public function getBackendMenu(Event $event)

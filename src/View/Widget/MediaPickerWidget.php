@@ -3,6 +3,7 @@
 namespace Media\View\Widget;
 
 use Cake\View\Helper\FormHelper;
+use Cake\View\View;
 use Cake\View\Widget\BasicWidget;
 use Cake\View\Widget\DateTimeWidget as CakeDateTimeWidget;
 use Cake\View\Form\ContextInterface;
@@ -10,11 +11,24 @@ use Cake\View\StringTemplate;
 use DateTime;
 use Media\Model\Entity\MediaFile;
 
+/**
+ * Class MediaPickerWidget
+ *
+ * @package Media\View\Widget
+ */
 class MediaPickerWidget extends BasicWidget
 {
-    public function __construct(StringTemplate $templates)
+    public function __construct(StringTemplate $templates, View $view)
     {
         parent::__construct($templates);
+
+        // make sure the MediaPickerHelper is attached to the current view
+        if (!$view->helpers()->has('MediaPicker')) {
+            $view->loadHelper('Media.MediaPicker');
+        }
+
+        // lazy load helper, css and script dependencies via MediaPickerHelper
+        $view->MediaPicker->loadDependencies();
     }
 
     public function render(array $data, ContextInterface $context)
