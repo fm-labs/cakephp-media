@@ -33,18 +33,6 @@ class MediaPickerHelper extends MediaHelper
         $this->Html->css('Media.mediapicker', ['block' => true]);
         $this->Html->script('Media.mediapicker', ['block' => 'script']);
 
-        $treeUrl =['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => 'images', '_ext' => 'json'];
-        $filesUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'filesData', 'config' => 'images', '_ext' => 'json'];
-
-        $mediapicker = [
-            'modal' => true,
-            'treeUrl' => $this->Html->Url->build($treeUrl),
-            'filesUrl' => $this->Html->Url->build($filesUrl)
-        ];
-        $template = "$(document).ready(function() { console.log('media picker loading'); $('.media-picker').mediapicker(%s); });";
-        $script = sprintf($template, json_encode($mediapicker));
-        $this->Html->scriptBlock($script, ['block' => true]);
-
         $this->_assetsLoaded = true;
     }
 

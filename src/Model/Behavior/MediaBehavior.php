@@ -5,6 +5,7 @@ use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Log\Log;
 use Cake\Network\Exception\NotImplementedException;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
@@ -94,10 +95,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function beforeFind(Event $event, Query $query, $options, $primary)
     {
-        if (!isset($options['media'])) {
-            $options['media'] = true; //@TODO Make eager-loading configurable
-        }
-        elseif (isset($options['media']) && $options['media'] === false) {
+        //if (!isset($options['media']) && $primary) {
+        //    $options['media'] = true; //@TODO Make eager-loading configurable
+        //}
+
+        if (!isset($options['media']) || isset($options['media']) && $options['media'] === false) {
             return;
         }
 
@@ -107,7 +109,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
         } else {
             $fields = (array) $options['media'];
         }
-
 
         $mapper = function ($row, $key, MapReduce $mapReduce) use ($fields) {
 
@@ -164,12 +165,60 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $query->mapReduce($mapper, $reducer);
     }
 
-    public function beforeSave(Event $event, Entity $entity, $options)
+    public function afterSave(Event $event, Entity $entity, $options)
     {
-        foreach ($this->_fields as $fieldName => $field) {
-            //if (is_object($entity->$fieldName)) {
-            //}
+        if ($entity->isNew()) {
+            return true;
         }
+
+        foreach ($this->_fields as $fieldName => $field) {
+
+            if ($entity->get($fieldName) && $field['mode'] === "table") {
+                debug($entity->get($fieldName));
+
+                $attachment = $this->_getAttachmentsModel($fieldName)->find()->where([
+                    'model' => $this->_modelName(),
+                    'modelid' => $entity->id,
+                    'scope' => $fieldName
+                ])->first();
+
+                if (!$attachment) {
+                    $attachment = $this->_getAttachmentsModel($fieldName)->newEntity();
+                    $attachment->model = $this->_modelName();
+                    $attachment->modelid = $entity->id;
+                    $attachment->scope = $fieldName;
+                }
+
+                $attachment->filepath = $entity->get($fieldName);
+
+                if (!$this->_getAttachmentsModel($fieldName)->save($attachment)) {
+                    Log::error('MediaBehavior:afterSave: Failed to save attachment: ' . json_encode($attachment->errors()));
+                }
+            }
+        }
+    }
+
+    /**
+     * Return model alias including plugin prefix with dot notation.
+     * Compatible with TableRegistry::get()
+     *
+     * Example: Plugin Blog has a model table named PostsTable
+     *   The function would return 'Blog.Posts'
+     *
+     * @return null|string Model alias with plugin prefix (e.g. 'Blog.Posts')
+     */
+    protected function _modelName()
+    {
+        $plugin = null;
+        $tableName = $this->_table->alias();
+        list($namespace,) = namespaceSplit(get_class($this->_table));
+        if ($namespace && (($pos = strpos($namespace, '\\')) !== false)) {
+            $plugin = substr($namespace, 0, $pos);
+            if ($plugin == 'App' || $plugin == 'Cake') {
+                return $tableName;
+            }
+        }
+        return join('.', [$plugin, $tableName]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Media\View\Widget;
 
+use Cake\Routing\Router;
 use Cake\View\Helper\FormHelper;
 use Cake\View\View;
 use Cake\View\Widget\BasicWidget;
@@ -33,15 +34,17 @@ class MediaPickerWidget extends BasicWidget
 
     public function render(array $data, ContextInterface $context)
     {
+
         $data += [
+            'config' => 'images',
             'name' => '',
             'val' => null,
-            'type' => 'text',
             'escape' => true,
             'templateVars' => [],
             'class' => null,
         ];
 
+        $data['id'] = (isset($data['id'])) ? $data['id'] : uniqid('mediapicker');
         $data['type'] = 'text';
 
         $class = 'form-control media-picker';
@@ -53,8 +56,22 @@ class MediaPickerWidget extends BasicWidget
             $data['data-filename'] = $data['val']->basename;
             $data['data-fileurl'] = $data['val']->url;
         }
+        $out = parent::render($data, $context);
 
-        return parent::render($data, $context);
+
+        $treeUrl =['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => $data['config'], '_ext' => 'json'];
+        $filesUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'filesData', 'config' => $data['config'], '_ext' => 'json'];
+
+        $mediapicker = [
+            'modal' => true,
+            'treeUrl' => Router::url($treeUrl),
+            'filesUrl' => Router::url($filesUrl)
+        ];
+        $template = "$(document).ready(function() { $('#%s').mediapicker(%s); });";
+        $script = sprintf($template, $data['id'], json_encode($mediapicker));
+
+
+        return $out . '<script>' . $script . '</script>';
     }
 
 }

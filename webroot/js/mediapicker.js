@@ -32,6 +32,7 @@
             var self = this;
             var value = $(this).val();
             var url = $(this).data('url');
+            var id = $(this).attr('id');
 
             // Wrapper
             var $wrapper = $("<div class='mediapicker-wrapper'></div>");
@@ -64,7 +65,7 @@
 
             // Modal
             if (settings.modal) {
-                var modalId = 'media-picker-modal-' + pickerCount++;
+                var modalId = 'media-picker-modal-' + id;
 
                 var modalTemplate = '<div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
                 <div class="modal-dialog modal-lg" role="document" style="width: 80%;"> \
@@ -101,13 +102,14 @@
                 // Add select action with event handler
                 .append($('<a>', { href: '#', class: 'mediapicker-action-select'}).html(settings.textSelect))
                 .on('click', '.mediapicker-action-select', function(ev) {
-                    $(self).trigger('click');
                     ev.preventDefault();
+                    $(self).trigger('click');
                     return false;
                 })
                 // Add remove action with event handler
                 .append($('<a>', { href: '#', class: 'mediapicker-action-remove'}).html(settings.textRemove))
                 .on('click', '.mediapicker-action-remove', function(ev) {
+                    ev.preventDefault();
                     $(self)
                         .val('')
                         .data({
@@ -116,7 +118,6 @@
                             fileurl: null
                         })
                         .trigger('change');
-                    ev.preventDefault();
                     return false;
                 });
 
@@ -199,7 +200,7 @@
                                         'data-img-src': file.icon,
                                         'data-id': file.id,
                                         'data-name': file.text,
-                                        'data-src': file.icon,
+                                        'data-src': file.thumbUrl, // file.icon,
                                         'class': 'mediapicker-item'
 
                                     })
@@ -211,6 +212,8 @@
                                 // Capture click events on media items
                                 $filesContainer.off('click', '.mediapicker-item');
                                 $filesContainer.on('click', '.mediapicker-item', function(ev) {
+                                    ev.preventDefault();
+
                                     var id = $(this).data('id');
                                     var name = $(this).data('name');
                                     var src = $(this).data('src');
@@ -222,8 +225,13 @@
                                     // mark current item as selected
                                     $(this).addClass('selected');
                                     // show preview of selected item in selectedContainer
-                                    $selectedContainer
-                                        .html($('<img>', { class: 'selected', src: src, title: name, style: 'max-width: 100%;'}));
+                                    if (src) {
+                                        $selectedContainer
+                                            .html($('<img>', { class: 'selected', src: src, title: name, style: 'max-width: 100%;'}));
+                                    } else {
+                                        $selectedContainer.html(name);
+                                    }
+
                                     // update the original input field and trigger 'change'
                                     $(self)
                                         .val(id)
@@ -231,7 +239,10 @@
                                         .data('fileid', id)
                                         .data('filename', name)
                                         .data('fileurl', src)
-                                        .trigger('change');
+                                        .trigger('change')
+                                        ;
+
+                                    return false;
                                 });
 
                             }
