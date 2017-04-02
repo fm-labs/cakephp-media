@@ -36,7 +36,7 @@ class MediaPickerWidget extends BasicWidget
     {
 
         $data += [
-            'config' => 'images',
+            'config' => 'default',
             'name' => '',
             'val' => null,
             'escape' => true,

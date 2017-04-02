@@ -62,10 +62,11 @@ class MediaManagerController extends AppController
         array_walk($files, function ($val) use (&$treeData, &$mm, &$parent) {
 
             $icon = true;
+            $thumbUrl = null;
             $filename = basename($val);
             if (preg_match('/^(.*)\.(jpg|gif|jpeg|png)$/i', $filename)) {
                 // use thumbnail as icon
-                $icon = $mm->getFileUrl($val);
+                $icon = $thumbUrl = $mm->getFileUrl($val);
             } elseif (preg_match('/^\./', $filename)) {
                 // ignore dot-files
                 return;
@@ -76,7 +77,8 @@ class MediaManagerController extends AppController
                 'text' => basename($val),
                 'children' => false,
                 'type' => 'file',
-                'icon' => $icon
+                'icon' => $icon,
+                'thumbUrl' => $thumbUrl,
             ];
         });
 
