@@ -16,7 +16,9 @@ class MediaPickerHelper extends MediaHelper
     {
         parent::__construct($View, $config);
 
-        $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view']);
+        $this->Form->templater()->load('Media.form_templates');
+        $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button']);
+
     }
 
     public function loadDependencies()
