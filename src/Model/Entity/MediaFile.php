@@ -2,6 +2,7 @@
 namespace Media\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
 
 class MediaFile extends Entity
@@ -16,7 +17,14 @@ class MediaFile extends Entity
     ];
 
     protected $_virtual = [
-        'url',
+        'basename',
+        'url', 'full_url',
+        'filepath'
+    ];
+
+    protected $_hidden = [
+        'config',
+        'originalpath',
         'filepath'
     ];
 
@@ -52,12 +60,26 @@ class MediaFile extends Entity
 
     protected function _getUrl()
     {
-        return MediaManager::get($this->config)->getFileUrl($this->path);
+        return $this->getUrl();
+    }
+
+    protected function _getFullUrl()
+    {
+        return $this->getUrl(true);
     }
 
     protected function _getBasename()
     {
         return basename($this->path);
+    }
+
+    public function getUrl($full = false)
+    {
+        $url = MediaManager::get($this->config)->getFileUrl($this->path);
+        if ($full) {
+            $url = Router::url($url, $full);
+        }
+        return $url;
     }
 
     public function __toString()

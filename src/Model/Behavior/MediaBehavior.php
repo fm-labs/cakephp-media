@@ -75,7 +75,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     }
 
-
+    /**
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
     public function findMedia(Query $query, array $options)
     {
         $options = array_merge(['media' => true], $options);
@@ -111,23 +115,22 @@ class MediaBehavior extends \Cake\ORM\Behavior
         }
 
         $mapper = function ($row, $key, MapReduce $mapReduce) use ($fields) {
-
             foreach ($this->_fields as $fieldName => $field) {
 
                 if (!in_array($fieldName, $fields)) {
                     continue;
                 }
 
-                $rowData = null;
+                $fieldMedia = null;
 
                 if ($field['mode'] == self::MODE_TABLE) {
-                    $rowData = $this->_resolveFromTable($row, $fieldName, $field);
+                    $fieldMedia = $this->_resolveFromTable($row, $fieldName, $field);
 
                 } elseif (isset($row[$fieldName]) && !empty($row[$fieldName])) {
 
                     switch ($field['mode']) {
                         case self::MODE_INLINE:
-                            $rowData = $this->_resolveFromInline($row[$fieldName], $field);
+                            $fieldMedia = $this->_resolveFromInline($row[$fieldName], $field);
                             break;
 
                         case self::MODE_TEXT:
@@ -148,10 +151,26 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 }
 
                 if ($row instanceof EntityInterface) {
-                    $row->set($fieldName, $rowData);
+                    $row->set($fieldName, $fieldMedia);
                     $row->dirty($fieldName, false);
+
+                    /*
+                    //@TODO Refactor media url injection, as this is qNd and has bad performance (read vproperties for every field is bad)
+                    if ($fieldMedia && !$field['multiple']) {
+                        $virtualUrlField = $fieldName . '_url';
+
+                        $_virtual = $row->virtualProperties();
+                        $_virtual[] = $virtualUrlField;
+                        $row->virtualProperties($_virtual);
+
+                        $row->accessible($virtualUrlField, true);
+                        $row->set($virtualUrlField, $fieldMedia->getUrl(true));
+                        $row->dirty($virtualUrlField, false);
+                    }
+                    */
+
                 } else {
-                    $row[$fieldName] = $rowData;
+                    $row[$fieldName] = $fieldMedia;
                 }
             }
 
