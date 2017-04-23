@@ -70,7 +70,7 @@ class MediaPickerWidget extends BasicWidget
         $wrap = $data['wrap'];
         unset($data['wrap']);
 
-        $defaultClass = 'form-control media-picker ';
+        $defaultClass = 'form-control mediapicker-control ';
         $data['class'] = ($data['class']) ? $defaultClass . $data['class'] : trim($defaultClass);
 
         //$data['readonly'] = 'readonly';
@@ -112,7 +112,7 @@ class MediaPickerWidget extends BasicWidget
         $wrap = (is_bool($wrap)) ? [] : $wrap;
         $wrap = array_merge([
             'id' => $data['id'] . '-wrapper',
-            'class' => 'media-picker-container',
+            'class' => 'mediapicker-control-group',
             'data-name' => $data['name'],
             'data-input' => $data['id'],
         ], $wrap);

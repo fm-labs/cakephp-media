@@ -43,8 +43,8 @@
                 .html($('<i>', {class: 'fa fa-4x fa-plus'}))
                 .appendTo($previewContainer)
                 .hide()
-                .on('click', function() {
-                    $(self).trigger('click');
+                .on('click', function(ev) {
+                    $(self).trigger('mediapicker.open', ev);
                 });
             var $previewImg = $('<img>', { class: 'mediapicker-preview-img', 'data-fileid': null, 'data-filename': null, 'data-url': null})
                 .appendTo($previewContainer)
@@ -72,7 +72,7 @@
                 <div class="modal-content"> \
                 <div class="modal-header"> \
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
-            <h4 class="modal-title" id="myModalLabel">Media Picker></h4> \
+            <h4 class="modal-title" id="myModalLabel">Media Gallery</h4> \
             </div> \
             <div class="modal-body"><%= modalBody %></div>  \
             <!-- <div class="modal-footer"> \
@@ -87,73 +87,40 @@
                     modalId: modalId,
                     modalBody: containerHtml
                 });
-                $(this).click(function(ev) {
+                $(this).on('mediapicker.open', function(ev) {
                     $('#' + modalId).modal({
                         keyboard: true,
                         show: true,
                         backdrop: true,
-                    })
+                    }).on('shown.bs.modal', function() {
+
+                        $('#' + modalId + ' .mediapicker-tree').jstree({
+                            "core" : {
+                                "themes" : {
+                                    //"variant" : "large"
+                                },
+                                'data' : {
+                                    'url': function (node) {
+                                        return settings.treeUrl;
+                                    },
+                                    'data': function (node) {
+                                        return {'id': node.id};
+                                    }
+                                }
+                            },
+                            "checkbox" : {
+                                "keep_selected_style" : false
+                            },
+                            "plugins" : [ "wholerow", "changed" ] // , "checkbox"
+                        });
+                    });
+
+
+
+
                 })
             }
             $container.html(containerHtml);
-
-            // Actions
-            var $actionsContainer = $('<div>', {class: 'mediapicker-actions'})
-                // Add select action with event handler
-                .append($('<a>', { href: '#', class: 'mediapicker-action-select'}).html(settings.textSelect))
-                .on('click', '.mediapicker-action-select', function(ev) {
-                    ev.preventDefault();
-                    $(self).trigger('click');
-                    return false;
-                })
-                // Add remove action with event handler
-                .append($('<a>', { href: '#', class: 'mediapicker-action-remove'}).html(settings.textRemove))
-                .on('click', '.mediapicker-action-remove', function(ev) {
-                    ev.preventDefault();
-                    $(self)
-                        .val('')
-                        .data({
-                            fileid: null,
-                            filename: null,
-                            fileurl: null
-                        })
-                        .trigger('change');
-                    return false;
-                });
-
-            // modify DOM
-            $(this)
-                .wrap( $wrapper )
-                .before($previewContainer)
-                .after($container)
-                .after($actionsContainer)
-                .attr('type', 'hidden');
-
-            $(this).on('change', function(ev) {
-                console.log("[mediapicker] Input has been updated", $(this).data());
-
-                var val = $(this).val();
-                var data = $(this).data();
-                if (val && data && data.fileurl && data.fileid && data.filename) {
-                    $previewContainer
-                        .find('.mediapicker-preview-img')
-                        .data(data)
-                        .attr('src', data.fileurl)
-                        .show();
-                    $previewContainer
-                        .find('.mediapicker-preview-label')
-                        .html(data.filename)
-                        .show();
-                    $previewContainer.find('.mediapicker-preview-placeholder').hide();
-                    $actionsContainer.find('.mediapicker-action-remove').show();
-                } else {
-                    $previewContainer.find('.mediapicker-preview-placeholder').show();
-                    $previewContainer.find('.mediapicker-preview-img').hide();
-                    $previewContainer.find('.mediapicker-preview-label').hide();
-                    $actionsContainer.find('.mediapicker-action-remove').hide();
-                }
-            });
-            $(this).trigger('change');
 
             // Sub Containers
             var $treeContainer = $container.find('.mediapicker-tree-container').first();
@@ -240,7 +207,7 @@
                                         .data('filename', name)
                                         .data('fileurl', src)
                                         .trigger('change')
-                                        ;
+                                    ;
 
                                     return false;
                                 });
@@ -251,26 +218,68 @@
                     }
 
                 })
-                .appendTo($treeContainer)
-                .jstree({
-                    "core" : {
-                        "themes" : {
-                            //"variant" : "large"
-                        },
-                        'data' : {
-                            'url': function (node) {
-                                return settings.treeUrl;
-                            },
-                            'data': function (node) {
-                                return {'id': node.id};
-                            }
-                        }
-                    },
-                    "checkbox" : {
-                        "keep_selected_style" : false
-                    },
-                    "plugins" : [ "wholerow", "changed" ] // , "checkbox"
+                .appendTo($treeContainer);
+
+            // Actions
+            var $actionsContainer = $('<div>', {class: 'mediapicker-actions'})
+                // Add select action with event handler
+                .append($('<a>', { href: '#', class: 'btn btn-sm btn-default mediapicker-action-select'}).html(settings.textSelect))
+                .on('click', '.mediapicker-action-select', function(ev) {
+                    ev.preventDefault();
+                    $(self).trigger('mediapicker.open', ev);
+                    return false;
+                })
+                // Add remove action with event handler
+                .append($('<a>', { href: '#', class: 'btn btn-sm btn-default mediapicker-action-remove'}).html(settings.textRemove))
+                .on('click', '.mediapicker-action-remove', function(ev) {
+                    ev.preventDefault();
+                    $(self)
+                        .val('')
+                        .data({
+                            fileid: null,
+                            filename: null,
+                            fileurl: null
+                        })
+                        .trigger('change');
+                    return false;
                 });
+
+            // modify DOM
+            $(this)
+                .before($previewContainer)
+                .wrap( $wrapper )
+                .after($container)
+                .after($actionsContainer)
+                //.attr('type', 'hidden')
+            ;
+
+            $(this).on('change', function(ev) {
+                console.log("[mediapicker] Input has been updated", $(this).data());
+
+                var val = $(this).val();
+                var data = $(this).data();
+                if (val && data && data.fileurl && data.fileid && data.filename) {
+                    $previewContainer
+                        .find('.mediapicker-preview-img')
+                        .data(data)
+                        .attr('src', data.fileurl)
+                        .show();
+                    $previewContainer
+                        .find('.mediapicker-preview-label')
+                        .html(data.filename)
+                        .show();
+                    $previewContainer.find('.mediapicker-preview-placeholder').hide();
+                    $actionsContainer.find('.mediapicker-action-remove').show();
+                } else {
+                    $previewContainer.find('.mediapicker-preview-placeholder').show();
+                    $previewContainer.find('.mediapicker-preview-img').hide();
+                    $previewContainer.find('.mediapicker-preview-label').hide();
+                    $actionsContainer.find('.mediapicker-action-remove').hide();
+                }
+            });
+            $(this).trigger('change');
+
+
 
         });
 
