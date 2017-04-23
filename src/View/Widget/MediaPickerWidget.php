@@ -45,7 +45,7 @@ class MediaPickerWidget extends BasicWidget
 
 
         // lazy load helper, css and script dependencies via MediaPickerHelper
-        //$view->MediaPicker->loadDependencies();
+        $view->MediaPicker->loadDependencies();
     }
 
     public function render(array $data, ContextInterface $context)
@@ -89,12 +89,12 @@ class MediaPickerWidget extends BasicWidget
         }
 
         // actions html
-        $btnSelect = $this->button->render(['text' => 'Select File', 'class' => 'default media-picker-btn-select'], $context);
-        $btnRemove = $this->button->render(['text' => 'Remove', 'class' => 'danger media-picker-btn-remove'], $context);
-        $actions = $this->_templates->format('media_mediapicker_actions', [
-            'select' => $btnSelect,
-            'remove' => $btnRemove
-        ]);
+        //$btnSelect = $this->button->render(['text' => 'Select File', 'class' => 'default media-picker-btn-select'], $context);
+        //$btnRemove = $this->button->render(['text' => 'Remove', 'class' => 'danger media-picker-btn-remove'], $context);
+        //$actions = $this->_templates->format('media_mediapicker_actions', [
+        //    'select' => $btnSelect,
+        //    'remove' => $btnRemove
+        //]);
 
 
         // javascript
@@ -105,7 +105,7 @@ class MediaPickerWidget extends BasicWidget
             'treeUrl' => Router::url($treeUrl),
             'filesUrl' => Router::url($filesUrl)
         ];
-        $template = "$(document).ready(function() { $('#%s').mediapicker(%s); });";
+        $template = "$(document).ready(function() { if (typeof($.fn.mediapicker) === 'undefined') { console.warn('Mediapicker not initialized'); return false; } $('#%s').mediapicker(%s); });";
         $script = sprintf($template, $data['id'], json_encode($mediapicker));
 
         // wrapper
@@ -119,7 +119,7 @@ class MediaPickerWidget extends BasicWidget
         $html = $this->_templates->format('media_mediapicker', [
             'attrs' => $this->_templates->formatAttributes($wrap),
             'input' => $input,
-            'actions' => $actions,
+            //'actions' => $actions,
             'script' => $script
         ]);
         return $html;
