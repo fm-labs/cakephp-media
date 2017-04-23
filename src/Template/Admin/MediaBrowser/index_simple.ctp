@@ -1,11 +1,11 @@
 <?php use Cake\Core\Configure;
 $this->loadHelper('Bootstrap.Ui');
 ?>
-<?= $this->Toolbar->addLink('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'folder']) ?>
+<?php $this->Toolbar->addLink('New Folder', ['action' => 'dir_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'folder']) ?>
 
-<?= $this->Toolbar->addLink('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
+<?php $this->Toolbar->addLink('New File', ['action' => 'file_create', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
 
-<?= $this->Toolbar->addLink('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
+<?php $this->Toolbar->addLink('Upload Files', ['action' => 'upload', 'path' => $currentPath], ['class' => '', 'data-icon' => 'file']); ?>
 
 
 <div class="file-manager index">
