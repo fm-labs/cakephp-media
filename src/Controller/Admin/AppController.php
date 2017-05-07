@@ -2,16 +2,14 @@
 
 namespace Media\Controller\Admin;
 
-use App\Controller\Admin\AppController as BaseAdminAppController;
+use Cake\Controller\Controller;
 
-class AppController extends BaseAdminAppController
+class AppController extends Controller
 {
 
     public function initialize()
     {
-        parent::initialize();
-
-        //$this->viewBuilder()->layout('media');
+        $this->loadComponent('Backend.Backend');
     }
 
     public static function backendMenu()
