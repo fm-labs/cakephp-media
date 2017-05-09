@@ -10,7 +10,9 @@ use Cake\View\Widget\BasicWidget;
 use Cake\View\Widget\DateTimeWidget as CakeDateTimeWidget;
 use Cake\View\Form\ContextInterface;
 use Cake\View\StringTemplate;
+use Cake\View\Widget\SelectBoxWidget;
 use DateTime;
+use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 
 /**
@@ -30,12 +32,13 @@ class MediaPickerWidget extends BasicWidget
      */
     public $button;
 
-    public function __construct(StringTemplate $templates, View $view, ButtonWidget $button)
+    public function __construct(StringTemplate $templates, View $view, ButtonWidget $button, SelectBoxWidget $select)
     {
         parent::__construct($templates);
 
         $this->view = $view;
         $this->button = $button;
+        $this->select = $select;
 
         // make sure the MediaPickerHelper is attached to the current view
         if (!$this->view->helpers()->has('MediaPicker')) {
@@ -70,7 +73,7 @@ class MediaPickerWidget extends BasicWidget
         $wrap = $data['wrap'];
         unset($data['wrap']);
 
-        $defaultClass = 'form-control mediapicker-control ';
+        $defaultClass = 'mediapicker-control ';
         $data['class'] = ($data['class']) ? $defaultClass . $data['class'] : trim($defaultClass);
 
         //$data['readonly'] = 'readonly';
@@ -78,11 +81,26 @@ class MediaPickerWidget extends BasicWidget
         // input html
         // add some media file meta data as html data attributes
         if (is_object($data['val']) && $data['val'] instanceof MediaFile) {
-            $inputData['data-fileid'] = $data['val']->path;
-            $inputData['data-filename'] = $data['val']->basename;
-            $inputData['data-fileurl'] = $data['val']->url;
+            $data['data-fileid'] = $data['val']->path;
+            $data['data-filename'] = $data['val']->basename;
+            $data['data-fileurl'] = $data['val']->url;
+
+            $data['val'] = (string) $data['val'];
+            //unset($data['val']);
+
         }
+        $wrap = false;
+
+
+        $data['class'] = 'mediapicker-control form-control';
         $input = parent::render($data, $context);
+
+
+        //$files = MediaManager::get($config)->getSelectListRecursive();
+        //$files = [];
+        //$data['empty'] = true;
+        //$data['options'] = $files;
+        //$input = $this->select->render($data, $context);
 
         if ($wrap === false) {
             return $input;
@@ -120,7 +138,7 @@ class MediaPickerWidget extends BasicWidget
             'attrs' => $this->_templates->formatAttributes($wrap),
             'input' => $input,
             //'actions' => $actions,
-            'script' => $script
+            'script' => '' //$script
         ]);
         return $html;
     }
