@@ -150,6 +150,14 @@ class MediaManager
         return $this->getBaseUrl() . '/' . $filePath;
     }
 
+    public function getFileUrlEncoded($filePath)
+    {
+        $url = urlencode($filePath);
+        $url = preg_replace('/\%2F/', '/', $url);
+        $url = ltrim($url, '/');
+        return $this->getBaseUrl() . '/' . $url;
+    }
+
     public function getSelectListRecursive()
     {
         $files = $this->listFilesRecursive(false);

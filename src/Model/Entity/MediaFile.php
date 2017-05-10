@@ -18,14 +18,16 @@ class MediaFile extends Entity
 
     protected $_virtual = [
         'basename',
-        'url', 'full_url',
+        'url',
+        'full_url',
         'filepath'
     ];
 
     protected $_hidden = [
         'config',
         'originalpath',
-        'filepath'
+        'filepath',
+        'realpath'
     ];
 
     protected function _setPath($path)
@@ -73,9 +75,13 @@ class MediaFile extends Entity
         return basename($this->path);
     }
 
-    public function getUrl($full = false)
+    public function getUrl($full = false, $encoded = false)
     {
-        $url = MediaManager::get($this->config)->getFileUrl($this->path);
+        if ($encoded) {
+            $url = MediaManager::get($this->config)->getFileUrlEncoded($this->path);
+        } else {
+            $url = MediaManager::get($this->config)->getFileUrl($this->path);
+        }
         if ($full) {
             $url = Router::url($url, $full);
         }
