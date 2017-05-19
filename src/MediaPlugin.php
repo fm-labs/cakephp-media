@@ -1,12 +1,13 @@
 <?php
 
-namespace Media\Backend;
+namespace Media;
 
 
+use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 
-class MediaBackend implements EventListenerInterface
+class MediaPlugin implements EventListenerInterface
 {
 
     /**
@@ -27,6 +28,14 @@ class MediaBackend implements EventListenerInterface
 
     public function initializeBackendView(Event $event)
     {
+        \Backend\View\Helper\FormatterHelper::register('media_file', function($val, $extra, $params) {
+            return h($val);
+        });
+
+        \Backend\View\Helper\FormatterHelper::register('media_files', function($val, $extra, $params) {
+            return h($val);
+        });
+
         $event->subject()->loadHelper('Media.Media');
         $event->subject()->loadHelper('Media.MediaPicker');
     }
@@ -38,5 +47,9 @@ class MediaBackend implements EventListenerInterface
             'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
             'data-icon' => 'file image outline'
         ]);
+    }
+
+    public function __invoke()
+    {
     }
 }
