@@ -45,7 +45,7 @@ class MediaPlugin implements EventListenerInterface
         $event->subject()->addItem([
             'title' => 'Media',
             'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
-            'data-icon' => 'file image outline'
+            'data-icon' => 'picture-o'
         ]);
     }
 
