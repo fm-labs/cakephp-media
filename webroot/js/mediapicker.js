@@ -84,7 +84,8 @@
                 </div> \
                 <div class="modal-body"><%= modalBody %></div>  \
                 <div class="modal-footer"> \
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> \
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> \
+                    <button type="button" class="select btn btn-primary">Select</button> \
                 </div> \
                 </div> \
                 </div> \
@@ -274,9 +275,13 @@
                             },
                             "plugins" : [ "wholerow", "changed" ] // , "checkbox"
                         });
-                    }).on('hide.bs.modal', function() {
+                    });
+
+                    $('#' + modalId + " button.select").on('click', function() {
                         console.log("Update target " + target + " with value " + selected.join(','));
                         $(target).val(selected.join(','));
+
+                        $(this).closest('.modal').modal('hide');
                     });
 
                     ev.preventDefault();
