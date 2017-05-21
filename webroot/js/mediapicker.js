@@ -65,9 +65,9 @@
             var $container = $('<div>', { class: 'mediapicker-container'});
 
             var template = '<div class="row"> \
-                <div class="col-sm-3 mediapicker-tree-container"></div> \
-                <div class="col-sm-6 mediapicker-files-container"></div> \
-                <div class="col-sm-3 mediapicker-selected-container"></div> \
+                <div class="col-sm-4 mediapicker-tree-container"></div> \
+                <div class="col-sm-8 mediapicker-files-container"></div> \
+                <!-- <div class="col-sm-3 mediapicker-selected-container"></div> --> \
                 </div>';
             var containerHtml = _.template(template)();
 
