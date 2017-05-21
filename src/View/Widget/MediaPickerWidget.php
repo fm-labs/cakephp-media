@@ -61,7 +61,6 @@ class MediaPickerWidget extends BasicWidget
             'templateVars' => [],
             'class' => null,
             'type' => null,
-            'wrap' => [],
         ];
 
         $data['id'] = (isset($data['id'])) ? $data['id'] : uniqid('mediapicker');
@@ -70,13 +69,7 @@ class MediaPickerWidget extends BasicWidget
         $config = $data['config'];
         unset($data['config']);
 
-        $wrap = $data['wrap'];
-        unset($data['wrap']);
-
-        $defaultClass = 'mediapicker-control ';
-        $data['class'] = ($data['class']) ? $defaultClass . $data['class'] : trim($defaultClass);
-
-        //$data['readonly'] = 'readonly';
+        $input = $image = $button = $script = "";
 
         // input html
         // add some media file meta data as html data attributes
@@ -85,62 +78,43 @@ class MediaPickerWidget extends BasicWidget
             $data['data-filename'] = $data['val']->basename;
             $data['data-fileurl'] = $data['val']->url;
 
+
+            if ($data['val']->isImage())
+            $this->view->loadHelper('Html');
+            $image = $this->view->Html->image($data['val']->url, ['height' => 50]);
+
             $data['val'] = (string) $data['val'];
             //unset($data['val']);
-
         }
-        $wrap = false;
 
-
-        $data['class'] = 'mediapicker-control form-control';
+        $data['class'] = 'form-control';
         $input = parent::render($data, $context);
 
 
-        //$files = MediaManager::get($config)->getSelectListRecursive();
-        //$files = [];
-        //$data['empty'] = true;
-        //$data['options'] = $files;
-        //$input = $this->select->render($data, $context);
-
-        if ($wrap === false) {
-            return $input;
-        }
-
-        // actions html
-        //$btnSelect = $this->button->render(['text' => 'Select File', 'class' => 'default media-picker-btn-select'], $context);
-        //$btnRemove = $this->button->render(['text' => 'Remove', 'class' => 'danger media-picker-btn-remove'], $context);
-        //$actions = $this->_templates->format('media_mediapicker_actions', [
-        //    'select' => $btnSelect,
-        //    'remove' => $btnRemove
-        //]);
-
+        $buttonData = [
+            'id' => uniqid('mediapickerselect'),
+            'class' => 'mediapicker-select-control btn-default',
+            'data-target' => '#' . $data['id'],
+            'text' => __('Select Media'),
+            'type' => 'button',
+            'escape' => false,
+            'templateVars' => []
+        ];
+        $button = $this->button->render($buttonData, $context);
 
         // javascript
         $treeUrl =['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => $config, '_ext' => 'json'];
         $filesUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'filesData', 'config' => $config, '_ext' => 'json'];
         $mediapicker = [
+            'target' => '#' . $data['id'],
             'modal' => true,
             'treeUrl' => Router::url($treeUrl),
             'filesUrl' => Router::url($filesUrl)
         ];
         $template = "$(document).ready(function() { if (typeof($.fn.mediapicker) === 'undefined') { console.warn('Mediapicker not initialized'); return false; } $('#%s').mediapicker(%s); });";
-        $script = sprintf($template, $data['id'], json_encode($mediapicker));
+        $script = sprintf($template, $buttonData['id'], json_encode($mediapicker));
 
-        // wrapper
-        $wrap = (is_bool($wrap)) ? [] : $wrap;
-        $wrap = array_merge([
-            'id' => $data['id'] . '-wrapper',
-            'class' => 'mediapicker-control-group',
-            'data-name' => $data['name'],
-            'data-input' => $data['id'],
-        ], $wrap);
-        $html = $this->_templates->format('media_mediapicker', [
-            'attrs' => $this->_templates->formatAttributes($wrap),
-            'input' => $input,
-            //'actions' => $actions,
-            'script' => '' //$script
-        ]);
-        return $html;
+        return $input . $image . $button . '<script>' . $script . '</script>';
     }
 
 }

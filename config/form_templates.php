@@ -2,7 +2,6 @@
 return [
 
     // Media picker widget templates
-    'media_mediapicker' => '<div{{attrs}}>{{input}}{{actions}}</div><script>{{script}}</script>',
-    'media_mediapicker_actions' => '<div class="media-picker-actions">{{select}}&nbsp;{{remove}}</div>',
+    'media_mediapicker_control' => '<div class="form-control"><div class="col-sm-3">Image</div><div class="col-sm-9">{{input}}</div></div>',
 
 ];

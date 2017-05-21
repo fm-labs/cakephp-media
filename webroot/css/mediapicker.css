@@ -17,17 +17,17 @@
     cursor: pointer;
 }
 
-.mediapicker-wrapper .mediapicker-item {
+.mediapicker-files-container .mediapicker-item {
     height: 50px;
     border-bottom: 1px solid #CCC;
     position: relative;
 }
 
-.mediapicker-wrapper .mediapicker-item:hover {
+.mediapicker-files-container .mediapicker-item:hover {
     background-color: #f7f7f7;
 }
 
-.mediapicker-wrapper .mediapicker-item img.mediapicker-item-preview {
+.mediapicker-files-container .mediapicker-item img.mediapicker-item-preview {
     max-width: 45px;
     max-height: 40px;
     position: absolute;
@@ -36,13 +36,13 @@
     border: 1px solid #CCC;
 }
 
-.mediapicker-wrapper .mediapicker-item span.mediapicker-item-name {
+.mediapicker-files-container .mediapicker-item span.mediapicker-item-name {
     display: inline-block;
     margin-left: 60px;
     padding: 15px 0 0 0;
 }
 
-.mediapicker-wrapper .mediapicker-item.selected {
+.mediapicker-files-container .mediapicker-item.selected {
     background-color: #337ab7;
     color: #FFF;
 }
@@ -65,7 +65,7 @@
     word-break: break-all;
 }
 
-.mediapicker-wrapper .mediapicker-actions {
+.mediapicker-files-container .mediapicker-actions {
 }
 
 /*

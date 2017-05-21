@@ -9,13 +9,12 @@
 
         // This is the easiest way to have default options.
         var settings = $.extend({
-            multiple: false,
             modal: false,
             preview: true,
             treeUrl: null,
             filesUrl: null,
-            textSelect: 'Select', // @deprecated
-            textRemove: 'Remove' // @deprecated
+            textSelect: 'Select',
+            textRemove: 'Remove'
         }, options );
 
         var pickerCount = 0;
@@ -34,14 +33,9 @@
             var value = $(this).val();
             var url = $(this).data('url');
             var id = $(this).attr('id');
-            var target = $(this).data('target');
-
-            console.log("[mediapicker] init from button with id " + id + " with target " + target + " | modal: " + settings.modal);
-
-            var selected = {};
 
             // Wrapper
-            var $wrapper = $("<div class='_mediapicker-wrapper'></div>");
+            var $wrapper = $("<div class='mediapicker-wrapper'></div>");
 
             // Preview Container
             /*
@@ -60,7 +54,7 @@
                 .appendTo($previewContainer)
                 .hide();
             */
-
+            
             // MediaPicker container
             var $container = $('<div>', { class: 'mediapicker-container'});
 
@@ -72,30 +66,62 @@
             var containerHtml = _.template(template)();
 
             // Modal
-            //if (settings.modal) {
+            if (settings.modal) {
                 var modalId = 'media-picker-modal-' + id;
 
                 var modalTemplate = '<div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
-                    <div class="modal-dialog modal-lg" role="document" style="width: 80%;"> \
-                    <div class="modal-content"> \
-                    <div class="modal-header"> \
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
-                <h4 class="modal-title" id="myModalLabel">Media Gallery</h4> \
-                </div> \
-                <div class="modal-body"><%= modalBody %></div>  \
-                <div class="modal-footer"> \
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> \
-                </div> \
-                </div> \
-                </div> \
-                </div>';
+                <div class="modal-dialog modal-lg" role="document" style="width: 80%;"> \
+                <div class="modal-content"> \
+                <div class="modal-header"> \
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+            <h4 class="modal-title" id="myModalLabel">Media Gallery</h4> \
+            </div> \
+            <div class="modal-body"><%= modalBody %></div>  \
+            <!-- <div class="modal-footer"> \
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> \
+                <button type="button" class="btn btn-primary">Save changes</button> \
+            </div> --> \
+            </div> \
+            </div> \
+            </div>';
 
                 containerHtml = _.template(modalTemplate)({
                     modalId: modalId,
                     modalBody: containerHtml
                 });
+                $(this).on('mediapicker.open', function(ev) {
+                    $('#' + modalId).modal({
+                        keyboard: true,
+                        show: true,
+                        backdrop: true,
+                    }).on('shown.bs.modal', function() {
 
-            //}
+                        $('#' + modalId + ' .mediapicker-tree').jstree({
+                            "core" : {
+                                "themes" : {
+                                    //"variant" : "large"
+                                },
+                                'data' : {
+                                    'url': function (node) {
+                                        return settings.treeUrl;
+                                    },
+                                    'data': function (node) {
+                                        return {'id': node.id};
+                                    }
+                                }
+                            },
+                            "checkbox" : {
+                                "keep_selected_style" : false
+                            },
+                            "plugins" : [ "wholerow", "changed" ] // , "checkbox"
+                        });
+                    });
+
+
+
+
+                })
+            }
             $container.html(containerHtml);
 
             // Sub Containers
@@ -135,14 +161,11 @@
                                 }
 
                                 // list files
-
-                                var inputType = (settings.multiple === true) ? 'checkbox' : 'radio';
-
                                 $filesContainer.html("");
                                 for(var i in data) {
                                     var file = data[i];
                                     $('<div>', {
-                                        //'data-input': $(self).attr('id'),
+                                        'data-input': $(self).attr('id'),
                                         'data-img-src': file.icon,
                                         'data-id': file.id,
                                         'data-name': file.text,
@@ -150,31 +173,22 @@
                                         'class': 'mediapicker-item'
 
                                     })
-                                        .append($('<input>', { class: 'mediapicker-item-input', name: 'select', type: inputType, value: 1 }))
                                         .append($('<img>', { src: file.icon, class: 'mediapicker-item-preview' }))
                                         .append($('<span>', { class: 'mediapicker-item-name'}).html(file.text))
                                         .appendTo($filesContainer);
                                 }
 
                                 // Capture click events on media items
-                                $filesContainer.off('change', '.mediapicker-item-input');
-                                $filesContainer.on('change', '.mediapicker-item-input', function(ev) {
+                                $filesContainer.off('click', '.mediapicker-item');
+                                $filesContainer.on('click', '.mediapicker-item', function(ev) {
                                     ev.preventDefault();
 
-                                    var id = $(this).parent().data('id');
-                                    var name = $(this).parent().data('name');
-                                    var src = $(this).parent().data('src');
-                                    var val = !!$(this).attr('checked');
+                                    var id = $(this).data('id');
+                                    var name = $(this).data('name');
+                                    var src = $(this).data('src');
 
                                     console.log("Media Item selected: " + path + " -> " + id);
 
-                                    if (!settings.multiple) {
-                                        selected = [];
-                                    }
-                                    selected.push(id);
-                                    console.log("Selected", selected);
-
-                                    /*
                                     // remove selected class from previously selected items
                                     $filesContainer.find('.mediapicker-item.selected').removeClass('selected');
                                     // mark current item as selected
@@ -186,10 +200,8 @@
                                     } else {
                                         $selectedContainer.html(name);
                                     }
-                                    */
 
                                     // update the original input field and trigger 'change'
-                                    /*
                                     $(self)
                                         .val(id)
                                         //.attr('data-url', src)
@@ -198,9 +210,8 @@
                                         .data('fileurl', src)
                                         .trigger('change')
                                     ;
-                                    */
 
-                                    //return false;
+                                    return false;
                                 });
 
                             }
@@ -212,7 +223,6 @@
                 .appendTo($treeContainer);
 
             // Actions
-            /*
             var $actionsContainer = $('<div>', {class: 'mediapicker-actions'})
                 // Add select action with event handler
                 .append($('<a>', { href: '#', class: 'btn btn-sm btn-default mediapicker-action-select'}).html(settings.textSelect))
@@ -235,57 +245,16 @@
                         .trigger('change');
                     return false;
                 });
-            */
 
             // modify DOM
             $(this)
-                //.before($previewContainer)
+                .before($previewContainer)
                 .wrap( $wrapper )
                 .after($container)
-                //.after($actionsContainer)
-                .on('click', function(ev) {
-
-
-                    console.log("select media button for " + target + " clicked");
-
-                    console.log("[mediapicker] init modal " + modalId);
-                    $('#' + modalId).modal({
-                        keyboard: true,
-                        show: true,
-                        backdrop: true,
-                    }).on('shown.bs.modal', function() {
-
-                        $('#' + modalId + ' .mediapicker-tree').jstree({
-                            "core" : {
-                                "themes" : {
-                                    //"variant" : "large"
-                                },
-                                'data' : {
-                                    'url': function (node) {
-                                        return settings.treeUrl;
-                                    },
-                                    'data': function (node) {
-                                        return {'id': node.id};
-                                    }
-                                }
-                            },
-                            "checkbox" : {
-                                "keep_selected_style" : false
-                            },
-                            "plugins" : [ "wholerow", "changed" ] // , "checkbox"
-                        });
-                    }).on('hide.bs.modal', function() {
-                        console.log("Update target " + target + " with value " + selected.join(','));
-                        $(target).val(selected.join(','));
-                    });
-
-                    ev.preventDefault();
-                    return false;
-                })
+                .after($actionsContainer)
                 //.attr('type', 'hidden')
             ;
 
-            /*
             $(this).on('change', function(ev) {
                 console.log("[mediapicker] Input has been updated", $(this).data());
 
@@ -311,7 +280,7 @@
                 }
             });
             $(this).trigger('change');
-            */
+
 
 
         });
