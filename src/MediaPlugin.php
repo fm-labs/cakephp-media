@@ -6,6 +6,7 @@ namespace Media;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Routing\Router;
 
 class MediaPlugin implements EventListenerInterface
 {
@@ -22,7 +23,9 @@ class MediaPlugin implements EventListenerInterface
     {
         return [
             'Backend.Menu.get' => 'getBackendMenu',
-            'Backend.View.initialize' => 'initializeBackendView'
+            'Backend.View.initialize' => 'initializeBackendView',
+            'Backend.Routes.build' => 'buildBackendRoutes'
+
         ];
     }
 
@@ -38,6 +41,30 @@ class MediaPlugin implements EventListenerInterface
 
         $event->subject()->loadHelper('Media.Media');
         $event->subject()->loadHelper('Media.MediaPicker');
+    }
+
+    public function buildBackendRoutes()
+    {
+        Router::scope(
+            '/mediaadmin',
+            ['plugin' => 'Media', 'prefix' => 'admin', '_namePrefix' => 'media:admin:'],
+            function ($routes) {
+
+                $routes->extensions(['json']);
+
+                $routes->connect('/browser/',
+                    ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
+                );
+                $routes->connect('/browser/:config/',
+                    ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
+                );
+                $routes->connect('/browser/:config/:action',
+                    ['plugin' => 'Media', 'controller' => 'MediaBrowser']
+                );
+
+                $routes->connect('/:controller');
+                $routes->fallbacks('DashedRoute');
+            });
     }
 
     public function getBackendMenu(Event $event)
