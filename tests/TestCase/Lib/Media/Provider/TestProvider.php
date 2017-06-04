@@ -39,4 +39,9 @@ class TestProvider implements MediaProviderInterface
     public function readFile($path)
     {
     }
+
+    public function basePath()
+    {
+        // TODO: Implement basePath() method.
+    }
 }
