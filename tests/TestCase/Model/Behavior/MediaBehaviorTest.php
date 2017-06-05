@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 1/6/16
- * Time: 6:38 PM
- */
-
 namespace Media\Test\TestCase\Model\Behavior;
 
 use Cake\Core\Configure;
@@ -14,6 +7,11 @@ use Cake\ORM\TableRegistry;
 use Media\Model\Behavior\MediaBehavior;
 use Media\Test\TestCase\MediaTestCase;
 
+/**
+ * Class MediaBehaviorTest
+ *
+ * @package Media\Test\TestCase\Model\Behavior
+ */
 class MediaBehaviorTest extends MediaTestCase
 {
     public static $setupTestFiles = true;
@@ -64,17 +62,14 @@ class MediaBehaviorTest extends MediaTestCase
 
     public function testImageFieldToMediaFile()
     {
-        $post = $this->table->get(1);
+        $post = $this->table->get(1, ['media' => true]);
 
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->image);
-
-        //debug($post->image);
-        //debug($post->image->realpath);
     }
 
     public function testImageFieldToMediaFileMultiple()
     {
-        $post = $this->table->get(2);
+        $post = $this->table->get(2, ['media' => true]);
 
         $this->assertInternalType('array', $post->images);
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[0]);
@@ -98,5 +93,4 @@ class MediaBehaviorTest extends MediaTestCase
         parent::tearDown();
         TableRegistry::clear();
     }
-
 }
