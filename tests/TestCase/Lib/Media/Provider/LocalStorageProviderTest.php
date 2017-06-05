@@ -54,7 +54,8 @@ class LocalStorageProviderTest extends MediaTestCase
             (int) 3 => 'dir2/image1.jpg',
             (int) 4 => 'dir2/image2.png',
             (int) 5 => 'dir2/dir3/hello.txt',
-            (int) 6 => 'dir2/dir3/world.txt'
+            (int) 6 => 'dir2/dir3/world.txt',
+            (int) 7 => 'dir2/dir3/dir4/empty'
         ], $list);
 
         $list = $this->provider->listFilesRecursive('dir2/');
@@ -62,7 +63,8 @@ class LocalStorageProviderTest extends MediaTestCase
             (int) 0 => 'image1.jpg',
             (int) 1 => 'image2.png',
             (int) 2 => 'dir3/hello.txt',
-            (int) 3 => 'dir3/world.txt'
+            (int) 3 => 'dir3/world.txt',
+            (int) 4 => 'dir3/dir4/empty'
         ], $list);
     }
 
