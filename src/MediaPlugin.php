@@ -2,7 +2,6 @@
 
 namespace Media;
 
-
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -31,11 +30,11 @@ class MediaPlugin implements EventListenerInterface
 
     public function initializeBackendView(Event $event)
     {
-        \Backend\View\Helper\FormatterHelper::register('media_file', function($val, $extra, $params) {
+        \Backend\View\Helper\FormatterHelper::register('media_file', function ($val, $extra, $params) {
             return h($val);
         });
 
-        \Backend\View\Helper\FormatterHelper::register('media_files', function($val, $extra, $params) {
+        \Backend\View\Helper\FormatterHelper::register('media_files', function ($val, $extra, $params) {
             return h($val);
         });
 
@@ -52,19 +51,23 @@ class MediaPlugin implements EventListenerInterface
 
                 $routes->extensions(['json']);
 
-                $routes->connect('/browser/',
+                $routes->connect(
+                    '/browser/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
                 );
-                $routes->connect('/browser/:config/',
+                $routes->connect(
+                    '/browser/:config/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
                 );
-                $routes->connect('/browser/:config/:action',
+                $routes->connect(
+                    '/browser/:config/:action',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser']
                 );
 
                 $routes->connect('/:controller');
                 $routes->fallbacks('DashedRoute');
-            });
+            }
+        );
     }
 
     public function getBackendMenu(Event $event)

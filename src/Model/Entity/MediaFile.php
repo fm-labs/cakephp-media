@@ -36,6 +36,7 @@ class MediaFile extends Entity
 
         if (preg_match('|^media\:\/\/([\w\_]+)\/(.*)$|', $path, $matches)) {
             $this->set('config', $matches[1]);
+
             return $matches[2];
         }
 
@@ -52,11 +53,13 @@ class MediaFile extends Entity
     /**
      * @deprecated
      */
-    protected function _getRealpath() {
+    protected function _getRealpath()
+    {
         return $this->_getFilepath();
     }
 
-    protected function _getFilepath() {
+    protected function _getFilepath()
+    {
         return MediaManager::get($this->config)->getBasePath() . $this->path;
     }
 
@@ -85,12 +88,14 @@ class MediaFile extends Entity
         if ($full) {
             $url = Router::url($url, $full);
         }
+
         return $url;
     }
 
     public function isImage()
     {
         $basename = $this->_getBasename();
+
         return (preg_match('/\.(jpeg|jpg|gif|png)$/i', $basename));
     }
 

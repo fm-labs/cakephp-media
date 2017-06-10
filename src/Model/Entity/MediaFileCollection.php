@@ -10,7 +10,7 @@ class MediaFileCollection extends Collection
     {
         $paths = [];
 
-        foreach($this as $item) {
+        foreach ($this as $item) {
             $paths[] = $item->path;
         }
 
@@ -21,7 +21,7 @@ class MediaFileCollection extends Collection
     {
         $paths = [];
 
-        foreach($this as $item) {
+        foreach ($this as $item) {
             $paths[] = $item->path;
         }
 

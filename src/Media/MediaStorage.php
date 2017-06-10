@@ -6,7 +6,7 @@ class MediaStorage
 
     protected $_adapter;
 
-    static public function get($key)
+    public static function get($key)
     {
         $config = self::config($key);
         if (!$config) {
@@ -14,6 +14,7 @@ class MediaStorage
         }
 
         $adapter = new LocalStorage($config);
+
         return new self($adapter);
     }
 

@@ -86,7 +86,6 @@ class MediaBrowserController extends AppController
         $this->set('configExample', $configExample);
     }
 
-
     public function index()
     {
         $this->redirect(['action' => 'browse']);
@@ -132,11 +131,9 @@ class MediaBrowserController extends AppController
         });
         */
 
-
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
     }
-
 
     public function filesData()
     {
@@ -177,11 +174,9 @@ class MediaBrowserController extends AppController
             ];
         });
 
-
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
     }
-
 
     public function filepicker()
     {
@@ -192,7 +187,6 @@ class MediaBrowserController extends AppController
         $this->set('folders', $this->_mm->listFolders());
         $this->set('files', $this->_mm->listFiles());
     }
-
 
     /**
      * @deprecated
@@ -216,5 +210,4 @@ class MediaBrowserController extends AppController
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
     }
-
 }

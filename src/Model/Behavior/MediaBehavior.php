@@ -45,7 +45,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
         'i18n' => false,
     ];
 
-
     /**
      * @var array List of configured attachment fields
      */
@@ -72,7 +71,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 $this->_table->schema()->columnType($field, 'media_file');
             }
         }
-
     }
 
     /**
@@ -83,6 +81,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     public function findMedia(Query $query, array $options)
     {
         $options = array_merge(['media' => true], $options);
+
         return $query->applyOptions($options);
     }
 
@@ -111,12 +110,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
         if ($options['media'] === true) {
             $fields = array_keys($this->_fields);
         } else {
-            $fields = (array) $options['media'];
+            $fields = (array)$options['media'];
         }
 
         $mapper = function ($row, $key, MapReduce $mapReduce) use ($fields) {
             foreach ($this->_fields as $fieldName => $field) {
-
                 if (!in_array($fieldName, $fields)) {
                     continue;
                 }
@@ -125,9 +123,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
                 if ($field['mode'] == self::MODE_TABLE) {
                     $fieldMedia = $this->_resolveFromTable($row, $fieldName, $field);
-
                 } elseif (isset($row[$fieldName]) && !empty($row[$fieldName])) {
-
                     switch ($field['mode']) {
                         case self::MODE_INLINE:
                             $fieldMedia = $this->_resolveFromInline($row[$fieldName], $field);
@@ -145,9 +141,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                         default:
                             throw new \LogicException('MediaBehavior: Misconfigured field: ' . $fieldName);
                             break;
-
                     }
-
                 }
 
                 if ($row instanceof EntityInterface) {
@@ -168,7 +162,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
                         $row->dirty($virtualUrlField, false);
                     }
                     */
-
                 } else {
                     $row[$fieldName] = $fieldMedia;
                 }
@@ -191,7 +184,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
         }
 
         foreach ($this->_fields as $fieldName => $field) {
-
             if ($entity->get($fieldName) && $field['mode'] === "table") {
                 debug($entity->get($fieldName));
 
@@ -230,13 +222,14 @@ class MediaBehavior extends \Cake\ORM\Behavior
     {
         $plugin = null;
         $tableName = $this->_table->alias();
-        list($namespace,) = namespaceSplit(get_class($this->_table));
+        list($namespace, ) = namespaceSplit(get_class($this->_table));
         if ($namespace && (($pos = strpos($namespace, '\\')) !== false)) {
             $plugin = substr($namespace, 0, $pos);
             if ($plugin == 'App' || $plugin == 'Cake') {
                 return $tableName;
             }
         }
+
         return join('.', [$plugin, $tableName]);
     }
 
@@ -252,7 +245,9 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $resolver = function ($filePath) use ($field, $config) {
 
-            if (!$filePath) return;
+            if (!$filePath) {
+                return;
+            }
 
             //debug("resolving " . $filePath);
             $file = new $field['entityClass']();
@@ -271,13 +266,10 @@ class MediaBehavior extends \Cake\ORM\Behavior
             // so we use a Collection -> solved by using a custom data type 'media_file'
             return $files;
             //return new MediaFileCollection($files);
-
         } else {
             return $resolver($filePath);
         }
-
     }
-
 
     protected function _resolveFromTable($row, $fieldName, $field)
     {
@@ -332,12 +324,13 @@ class MediaBehavior extends \Cake\ORM\Behavior
             foreach ($attachments as $attachment) {
                 $files[] = $resolver($attachment);
             }
+
             return $files;
         } else {
             $attachment = $query->first();
+
             return $resolver($attachment);
         }
-
     }
 
     /**
@@ -352,6 +345,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             $Model->enableI18n();
             $Model->locale($parentLocale);
         }
+
         return $Model;
     }
 }

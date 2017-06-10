@@ -34,6 +34,7 @@ class MediaManager
         $provider = $config['provider'];
         $className = App::className($provider, 'Lib/Media/Provider', 'Provider');
         $providerIns = new $className($config);
+
         return new self($providerIns);
     }
 
@@ -54,6 +55,7 @@ class MediaManager
     public function open($path)
     {
         $this->setPath($path);
+
         return $this;
     }
 
@@ -69,6 +71,7 @@ class MediaManager
         array_walk($files, function ($val, $idx) use (&$list) {
             $list[$val] = $this->getFileUrl($val);
         });
+
         return $list;
     }
 
@@ -86,7 +89,6 @@ class MediaManager
     {
         return $this->_provider->listFoldersRecursive($this->_path, $depth);
     }
-
 
     public function readFile($path)
     {
@@ -127,6 +129,7 @@ class MediaManager
         }
 
         array_pop($parts);
+
         return join('/', $parts);
     }
 
@@ -147,6 +150,7 @@ class MediaManager
         //    return;
         //}
         $filePath = trim($filePath, '/');
+
         return $this->getBaseUrl() . '/' . $filePath;
     }
 
@@ -155,6 +159,7 @@ class MediaManager
         $url = urlencode($filePath);
         $url = preg_replace('/\%2F/', '/', $url);
         $url = ltrim($url, '/');
+
         return $this->getBaseUrl() . '/' . $url;
     }
 
@@ -165,6 +170,7 @@ class MediaManager
         array_walk($files, function ($val, $idx) use (&$list) {
             $list[$val] = $this->getFileUrl($val);
         });
+
         return $list;
     }
 
@@ -175,6 +181,7 @@ class MediaManager
         array_walk($files, function ($val, $idx) use (&$list) {
             $list[$val] = $val;
         });
+
         return $list;
     }
 
@@ -196,10 +203,9 @@ class MediaManager
                 $list[$folder][$val] = $this->getFileUrl($val);
             });
         }
+
         return $list;
     }
-
-
 
     /**
      * Mount a media provider with a name

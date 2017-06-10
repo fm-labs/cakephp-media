@@ -8,7 +8,6 @@
 
 namespace Media\Database\Type;
 
-
 use Cake\Database\Driver;
 use Cake\Database\Type;
 use PDO;
@@ -57,7 +56,7 @@ class MediaFileType extends Type
         if ($value === null) {
             return PDO::PARAM_NULL;
         }
+
         return PDO::PARAM_STR;
     }
-
 }

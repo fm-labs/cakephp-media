@@ -62,7 +62,6 @@ class ImageSelectCell extends Cell
         }
         */
 
-
         $mm = MediaManager::get($params['config']);
         $files = $mm->getSelectListRecursiveGrouped();
         $this->set('imageFiles', $files);

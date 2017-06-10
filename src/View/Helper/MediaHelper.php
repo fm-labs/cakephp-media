@@ -33,12 +33,10 @@ class MediaHelper extends Helper
 
         // Load ImageProcessor if Imagine is available
         try {
-
             $processor = new ImageProcessor();
             if ($processor->imagine() !== null) {
                 $this->_processor = $processor;
             }
-
         } catch (\Exception $ex) {
             Log::warning('MediaHelper: ' . $ex->getMessage(), ['media']);
         }
@@ -57,18 +55,22 @@ class MediaHelper extends Helper
     public function thumbnail($source, $options = [], $attr = [])
     {
         $source = $this->_generateThumbnail($source, $options);
+
         return $this->Html->image($source, $attr);
     }
 
-    protected function _generateThumbnail($source, $options = []) {
+    protected function _generateThumbnail($source, $options = [])
+    {
 
         if (!$this->_processor) {
             debug("Media image processor not loaded");
+
             return $source;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
             debug("Source image not found at " . $source);
+
             return $source;
         }
 
@@ -83,21 +85,17 @@ class MediaHelper extends Helper
         }
 
         try {
-
             $this->_processor
                 ->open($source)
                 ->thumbnail($options)
                 ->save($thumbPath);
 
             return $thumbUri;
-
         } catch (\Exception $ex) {
             debug($ex->getMessage());
             Log::warning('MediaHelper: Thumb generation failed:' . $ex->getMessage(), ['media']);
         }
 
         return $source;
-
-
     }
 }

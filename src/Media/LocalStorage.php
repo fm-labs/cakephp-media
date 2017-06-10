@@ -1,6 +1,7 @@
 <?php
 
-class LocalStorage {
+class LocalStorage
+{
 
     use \Cake\Core\InstanceConfigTrait;
 
@@ -36,5 +37,4 @@ class LocalStorage {
     {
         return 0;
     }
-
 }

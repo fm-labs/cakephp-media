@@ -1,7 +1,6 @@
 <?php
 namespace Media\Model\Table;
 
-
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;

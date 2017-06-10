@@ -1,7 +1,6 @@
 <?php
 namespace Media\Controller\Admin;
 
-
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Media\Lib\Media\MediaManager;
@@ -39,11 +38,9 @@ class MediaManagerController extends AppController
         });
         */
 
-
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
     }
-
 
     public function filesData()
     {
@@ -82,7 +79,6 @@ class MediaManagerController extends AppController
             ];
         });
 
-
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
     }
@@ -96,7 +92,7 @@ class MediaManagerController extends AppController
         $config = $this->request->query('config');
 
         $Table = TableRegistry::get($model);
-        
+
         $Table->behaviors()->unload('Media');
         $content = $Table->get($id, [
             'contain' => [],
@@ -104,7 +100,6 @@ class MediaManagerController extends AppController
         ]);
 
         $file = $content->get($scope);
-
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $patchFile = $this->request->data($scope);
@@ -123,9 +118,9 @@ class MediaManagerController extends AppController
             $content = $Table->patchEntity($content, [$scope => $patchFile]);
             //$content->$scope = $this->request->data[$scope];
             if ($Table->save($content)) {
-                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
+                $this->Flash->success(__d('banana', 'The {0} has been saved.', __d('banana', 'content')));
             } else {
-                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
+                $this->Flash->error(__d('banana', 'The {0} could not be saved. Please, try again.', __d('banana', 'content')));
             }
         } else {
         }
@@ -145,9 +140,7 @@ class MediaManagerController extends AppController
 
     public function imageSelect()
     {
-
     }
-
 
     public function deleteImage()
     {
@@ -175,12 +168,13 @@ class MediaManagerController extends AppController
         if ($multiple) {
             $file = $content->get($scope);
             if (is_array($file)) {
-                $filtered = array_filter($file, function($filepath) use ($pathEncoded) {
+                $filtered = array_filter($file, function ($filepath) use ($pathEncoded) {
                     //Log::debug('Filter ' . $filepath . '[' . base64_encode($filepath) . '] => ' . $pathEncoded);
                     if (base64_encode($filepath) == $pathEncoded) {
                         return false;
                     }
-                   return true;
+
+                    return true;
                 });
             }
             $updated = join(',', $filtered);
@@ -190,11 +184,11 @@ class MediaManagerController extends AppController
         $content->set($scope, $updated);
 
         if ($Table->save($content)) {
-            $this->Flash->success(__d('banana','The {0} has been removed.', $scope));
+            $this->Flash->success(__d('banana', 'The {0} has been removed.', $scope));
         } else {
-            $this->Flash->error(__d('banana','The {0} could not be removed. Please, try again.', $scope));
+            $this->Flash->error(__d('banana', 'The {0} could not be removed. Please, try again.', $scope));
         }
+
         return $this->redirect($referer);
     }
-    
 }

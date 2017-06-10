@@ -46,7 +46,6 @@ class MediaPickerWidget extends BasicWidget
             $this->view->loadHelper('Media.MediaPicker');
         }
 
-
         // lazy load helper, css and script dependencies via MediaPickerHelper
         $view->MediaPicker->loadDependencies();
     }
@@ -78,18 +77,17 @@ class MediaPickerWidget extends BasicWidget
             $data['data-filename'] = $data['val']->basename;
             $data['data-fileurl'] = $data['val']->url;
 
-
-            if ($data['val']->isImage())
-            $this->view->loadHelper('Html');
+            if ($data['val']->isImage()) {
+                $this->view->loadHelper('Html');
+            }
             $image = $this->view->Html->image($data['val']->url, ['height' => 50]);
 
-            $data['val'] = (string) $data['val'];
+            $data['val'] = (string)$data['val'];
             //unset($data['val']);
         }
 
         $data['class'] = 'form-control';
         $input = parent::render($data, $context);
-
 
         $buttonData = [
             'id' => uniqid('mediapickerselect'),
@@ -103,7 +101,7 @@ class MediaPickerWidget extends BasicWidget
         $button = $this->button->render($buttonData, $context);
 
         // javascript
-        $treeUrl =['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => $config, '_ext' => 'json'];
+        $treeUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => $config, '_ext' => 'json'];
         $filesUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'filesData', 'config' => $config, '_ext' => 'json'];
         $mediapicker = [
             'target' => '#' . $data['id'],
@@ -116,5 +114,4 @@ class MediaPickerWidget extends BasicWidget
 
         return $input . $image . $button . '<script>' . $script . '</script>';
     }
-
 }

@@ -30,7 +30,8 @@ class LocalStorageProvider extends MediaProvider
     {
     }
 
-    public function basePath() {
+    public function basePath()
+    {
         return $this->_getRealPath('');
     }
 
@@ -40,6 +41,7 @@ class LocalStorageProvider extends MediaProvider
         if (!$baseUrl) {
             $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
         }
+
         return Router::url($baseUrl, $full);
     }
 
@@ -49,10 +51,11 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
         $folder = new Folder($folderPath);
 
-        list(,$files) = $folder->read();
+        list(, $files) = $folder->read();
         array_walk($files, function (&$file, $idx) use ($path) {
             $file = $path . $file;
         });
+
         return $files;
     }
 
@@ -69,6 +72,7 @@ class LocalStorageProvider extends MediaProvider
                 $file = substr($file, strlen($folderPath));
             });
         }
+
         return $files;
     }
 
@@ -78,10 +82,10 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
 
         $folder = new Folder($folderPath);
-        list($dirs,) = $folder->read();
+        list($dirs, ) = $folder->read();
+
         return $dirs;
     }
-
 
     public function listFoldersRecursive($path, $depth = -1)
     {
@@ -89,7 +93,7 @@ class LocalStorageProvider extends MediaProvider
         $folderPath = $this->_getRealPath($path);
 
         $folder = new Folder($folderPath);
-        list($dirs,) = $folder->read();
+        list($dirs, ) = $folder->read();
 
         $list = [];
         array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
@@ -103,8 +107,8 @@ class LocalStorageProvider extends MediaProvider
             foreach ($this->listFoldersRecursive($_dir, $depth - 1) as $dir) {
                 $list[] = $dir;
             }
-
         });
+
         return $list;
     }
 
@@ -125,6 +129,7 @@ class LocalStorageProvider extends MediaProvider
     protected function _normalizePath($path)
     {
         $path = trim($path, '/');
+
         return ($path) ? $path . '/' : '';
     }
 
