@@ -10,6 +10,8 @@ use Cake\TestSuite\Fixture\TestFixture;
 class PostsFixture extends TestFixture
 {
 
+    public $table = 'media_posts';
+
     /**
      * Fields
      *

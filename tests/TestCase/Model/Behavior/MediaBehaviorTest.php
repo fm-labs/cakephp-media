@@ -34,7 +34,7 @@ class MediaBehaviorTest extends MediaTestCase
     {
         parent::setUp();
 
-        $this->table = TableRegistry::get('Media.Posts');
+        $this->table = TableRegistry::get('Media.Posts', ['table' => 'media_posts']);
         $this->table->primaryKey(['id']);
         //$this->table->entityClass('\\Attachment\\Test\\TestCase\\Model\\Entity\\ExampleEntity');
         //$this->table->schema()->columnType('images', 'media_file');
@@ -60,9 +60,16 @@ class MediaBehaviorTest extends MediaTestCase
         //$this->table->validator();
     }
 
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        TableRegistry::clear();
+    }
+
     public function testImageFieldToMediaFile()
     {
-        $post = $this->table->get(1, ['media' => true]);
+        $post = $this->table->get(1, ['media' => true, 'contain' => []]);
 
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->image);
     }
@@ -88,9 +95,4 @@ class MediaBehaviorTest extends MediaTestCase
         $this->table->save($entity);
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        TableRegistry::clear();
-    }
 }
