@@ -17,6 +17,8 @@ class MediaPickerHelper extends MediaHelper
 
         $this->Form->templater()->load('Media.form_templates');
         $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button', 'select']);
+
+        $this->loadDependencies();
     }
 
     public function loadDependencies()

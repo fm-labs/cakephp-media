@@ -27,6 +27,10 @@ class MediaBehavior extends \Cake\ORM\Behavior
         'model' => null,
         // List of observable fields
         'fields' => [],
+
+        'implementedMethods' => [
+            'getMediaFields' => 'getFields'
+        ]
     ];
 
     protected $_defaultFieldConfig = [
@@ -71,6 +75,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 $this->_table->schema()->columnType($field, 'media_file');
             }
         }
+    }
+
+    public function getFields()
+    {
+        return $this->_fields;
     }
 
     /**
