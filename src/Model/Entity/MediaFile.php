@@ -99,8 +99,10 @@ class MediaFile extends Entity
         return (preg_match('/\.(jpeg|jpg|gif|png)$/i', $basename));
     }
 
+    /*
     public function __toString()
     {
         return $this->path;
     }
+    */
 }
