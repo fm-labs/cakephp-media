@@ -82,7 +82,7 @@ class MediaPickerWidget extends BasicWidget
             }
             $image = $this->view->Html->image($data['val']->url, ['height' => 50]);
 
-            $data['val'] = (string)$data['val'];
+            $data['val'] = $data['val']->path;
             //unset($data['val']);
         }
 

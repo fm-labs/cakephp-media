@@ -92,17 +92,21 @@ class MediaFile extends Entity
         return $url;
     }
 
+    public function getBasename()
+    {
+        return $this->basename;
+    }
+
+    public function getFilePath()
+    {
+        return $this->filepath;
+    }
+
+
     public function isImage()
     {
         $basename = $this->_getBasename();
 
-        return (preg_match('/\.(jpeg|jpg|gif|png)$/i', $basename));
+        return (preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename)));
     }
-
-    /*
-    public function __toString()
-    {
-        return $this->path;
-    }
-    */
 }

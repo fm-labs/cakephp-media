@@ -6,6 +6,7 @@ use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\Router;
+use Media\Model\Entity\MediaFile;
 
 class MediaPlugin implements EventListenerInterface
 {
@@ -30,7 +31,10 @@ class MediaPlugin implements EventListenerInterface
 
     public function initializeBackendView(Event $event)
     {
-        \Backend\View\Helper\FormatterHelper::register('media_file', function ($val, $extra, $params) {
+        \Backend\View\Helper\FormatterHelper::register('media_file', function ($val, $extra, $params, $view) {
+            if ($val instanceof MediaFile) {
+                return $view->Media->thumbnail($val->getFilePath(), ['height' => 50, 'width' => 75]);
+            }
             return h($val);
         });
 
@@ -72,11 +76,13 @@ class MediaPlugin implements EventListenerInterface
 
     public function getBackendMenu(Event $event)
     {
+        /*
         $event->subject()->addItem([
             'title' => 'Media',
             'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
             'data-icon' => 'picture-o'
         ]);
+        */
     }
 
     public function __invoke()

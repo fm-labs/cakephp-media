@@ -3,6 +3,8 @@
 namespace Media\View\Helper;
 
 use Cake\Log\Log;
+use Cake\Utility\Inflector;
+use Cake\Utility\Text;
 use Cake\View\Helper;
 use Cake\View\Helper\FormHelper;
 use Cake\View\Helper\HtmlHelper;
@@ -44,58 +46,61 @@ class MediaHelper extends Helper
 
     public function thumbnailUrl($source, $options = [], $full = false)
     {
-        $path = $this->_generateThumbnail($source, $options);
-        if ($full) {
-            return $this->Url->build($path, $full);
+        $thumbUrl = $this->_generateThumbnail($source, $options);
+        if (!$thumbUrl) {
+            return false;
         }
 
-        return $path;
+        return $this->Url->build($thumbUrl, $full);
     }
 
     public function thumbnail($source, $options = [], $attr = [])
     {
-        $source = $this->_generateThumbnail($source, $options);
-
-        return $this->Html->image($source, $attr);
+        $thumbUrl = $this->_generateThumbnail($source, $options);
+        if ($thumbUrl) {
+            return $this->Html->image($thumbUrl, $attr);
+        }
     }
 
     protected function _generateThumbnail($source, $options = [])
     {
-
         if (!$this->_processor) {
             debug("Media image processor not loaded");
-
-            return $source;
+            return false;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
             debug("Source image not found at " . $source);
-
-            return $source;
+            return false;
         }
 
         $info = pathinfo($source);
+        $filename = Text::slug($info['filename'], '_');
 
-        $thumbBasename = $info['filename'] . '_' . md5(serialize($options)) . '.' . $info['extension'];
+        $thumbBasename =  $filename . '_' . md5($source . serialize($options)) . '.' . $info['extension'];
         $thumbPath = WWW_ROOT . 'cache/' . $thumbBasename;
         $thumbUri = '/cache/' . $thumbBasename;
 
+        // cached thumbnail
         if (file_exists($thumbPath)) {
             return $thumbUri;
         }
 
+        // render thumbnail
         try {
             $this->_processor
                 ->open($source)
                 ->thumbnail($options)
                 ->save($thumbPath);
 
-            return $thumbUri;
+            Log::info('MediaHelper: Created thumb for ' . $source . ': ' . $thumbPath, ['media']);
+
         } catch (\Exception $ex) {
             debug($ex->getMessage());
-            Log::warning('MediaHelper: Thumb generation failed:' . $ex->getMessage(), ['media']);
+            Log::error('MediaHelper: Thumb generation failed:' . $ex->getMessage(), ['media']);
+            return false;
         }
 
-        return $source;
+        return $thumbUri;
     }
 }
