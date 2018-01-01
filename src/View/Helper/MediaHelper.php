@@ -2,6 +2,7 @@
 
 namespace Media\View\Helper;
 
+use Cake\Core\Configure;
 use Cake\Log\Log;
 use Cake\Utility\Inflector;
 use Cake\Utility\Text;
@@ -40,7 +41,7 @@ class MediaHelper extends Helper
                 $this->_processor = $processor;
             }
         } catch (\Exception $ex) {
-            Log::warning('MediaHelper: ' . $ex->getMessage(), ['media']);
+            $this->_error($ex->getMessage());
         }
     }
 
@@ -60,17 +61,21 @@ class MediaHelper extends Helper
         if ($thumbUrl) {
             return $this->Html->image($thumbUrl, $attr);
         }
+        elseif (Configure::read('debug')) {
+            return "[x]";
+        }
+        return null;
     }
 
     protected function _generateThumbnail($source, $options = [])
     {
         if (!$this->_processor) {
-            debug("Media image processor not loaded");
+            $this->_error("generateThumbnail: Image processor not loaded");
             return false;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
-            debug("Source image not found at " . $source);
+            $this->_error("generateThumbnail: Source image not found at " . $source);
             return false;
         }
 
@@ -93,14 +98,25 @@ class MediaHelper extends Helper
                 ->thumbnail($options)
                 ->save($thumbPath);
 
-            Log::info('MediaHelper: Created thumb for ' . $source . ': ' . $thumbPath, ['media']);
-
+            $this->_log('generateThumbnail: CREATED: ' . $thumbPath . ' from: ' . $source, 'info');
         } catch (\Exception $ex) {
-            debug($ex->getMessage());
-            Log::error('MediaHelper: Thumb generation failed:' . $ex->getMessage(), ['media']);
+            $this->_error('generateThumbnail: FAILED: ' . $ex->getMessage());
             return false;
         }
 
         return $thumbUri;
+    }
+
+    protected function _log($msg, $level = 'debug')
+    {
+        Log::write($level, sprintf('MediaHelper: %s', $msg), ['media']);
+    }
+
+    protected function _error($msg, $log = false)
+    {
+        //debug($msg);
+        if ($log) {
+            $this->_log($msg, 'error');
+        }
     }
 }
