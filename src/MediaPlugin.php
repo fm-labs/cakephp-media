@@ -76,13 +76,23 @@ class MediaPlugin implements EventListenerInterface
 
     public function getBackendMenu(Event $event)
     {
-        /*
         $event->subject()->addItem([
             'title' => 'Media',
-            'url' => ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'index'],
-            'data-icon' => 'picture-o'
+            'url' => ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'],
+            'data-icon' => 'picture-o',
+            'children' => [
+                'media_files' => [
+                    'title' => 'Files',
+                    'url' => ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'],
+                    'data-icon' => 'picture-o',
+                ],
+                'media_upload' => [
+                    'title' => 'Upload',
+                    'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
+                    'data-icon' => 'upload',
+                ]
+            ]
         ]);
-        */
     }
 
     public function __invoke()

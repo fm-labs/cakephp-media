@@ -5,14 +5,19 @@ use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Filesystem\Folder;
 use Cake\Log\Log;
 use Cake\Network\Exception\NotImplementedException;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Inflector;
+use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 use Media\Model\Entity\MediaFileCollection;
 use Media\Model\Table\MediaAttachmentsTable;
+use Upload\Exception\UploadException;
+use Upload\Uploader;
 
 class MediaBehavior extends \Cake\ORM\Behavior
 {
@@ -152,7 +157,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
                             break;
                     }
                 }
-
                 if ($row instanceof EntityInterface) {
                     $row->set($fieldName, $fieldMedia);
                     $row->dirty($fieldName, false);
@@ -186,8 +190,116 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $query->mapReduce($mapper, $reducer);
     }
 
+    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options)
+    {
+        debug("beforeSave");
+        //debug($this->_table);
+
+        foreach ($this->_fields as $field => $fieldConfig) {
+            $uploadField = $field . '_upload';
+            $uploadOptions = ['exceptions' => true];
+            $value = null;
+
+            if ($fieldConfig['upload'] && $entity->dirty($uploadField)) {
+
+                debug("Uploading ...");
+
+                try {
+                    // set upload dir. create it if it does not exist
+                    $uploadDir = Inflector::tableize($this->_table->alias());
+
+                    $mm = MediaManager::get($fieldConfig['config']);
+                    $uploadBasePath = $mm->getBasePath();
+
+                    $uploadPath = $uploadBasePath . $uploadDir . DS;
+                    if (!is_dir($uploadPath)) {
+                        debug("Upload path $uploadPath does not exist. Attempting to create it.");
+                        $Folder = new Folder($uploadPath, true);
+                        if (!$Folder->cd($uploadPath)) {
+                            debug("Failed to create upload dir");
+                        }
+                    }
+
+                    $Uploader = new Uploader($fieldConfig['upload']);
+                    $Uploader->setUploadDir($uploadPath);
+
+                    if ($fieldConfig['multiple']) {
+                        //@TODO Multi upload is broken
+                        $Uploader->config('multiple', true);
+                        $value = [];
+                        if ($Uploader->upload($entity->{$uploadField}, $uploadOptions)) {
+                            foreach ($Uploader->getResult() as $upload) {
+                                $value[] = $upload['basename'];
+                            }
+                        }
+                        $value = join(',', $value);
+                    } else {
+                        $upload = $Uploader->upload($entity->{$uploadField}, $uploadOptions);
+                        debug($upload);
+
+                        $file = [
+                            'config' => $fieldConfig['config'],
+                            'path' => $uploadDir . '/' . $upload['basename'],
+                            'size' => $upload['size'],
+                            'mime_type' => $upload['type']
+                        ];
+
+                        $mfile = new MediaFile();
+                        $mfile->set($file);
+
+                        $value = json_encode($mfile->toArray());
+                    }
+
+                    ///debug($value);
+
+                    // flag deprecated item for removal
+                    //if ($entity->$field) {
+                    //    $this->_flaggedForRemoval[] = $entity->$field->source;
+                    //}
+
+                    // replace with uploaded item
+                    $entity->$field = $value;
+
+                    // clear upload field
+                    unset($entity->$uploadField);
+
+                } catch (UploadException $ex) {
+                    Log::alert('AttachmentBehavior: UploadException: ' . $ex->getMessage());
+                    $entity->errors($uploadField, [$ex->getMessage()]);
+                    $entity->errors($field, [$ex->getMessage()]);
+                    return false;
+
+                } catch (\Exception $ex) {
+                    Log::alert('AttachmentBehavior: Exception: ' . $ex->getMessage());
+                    $entity->errors($uploadField, [$ex->getMessage()]);
+                    $entity->errors($field, [$ex->getMessage()]);
+                    return false;
+                }
+
+
+            } elseif ($entity->has($field)) {
+                unset($entity->$uploadField);
+            }
+        }
+
+        //debug($entity);
+
+        //$this->_removeFlagged();
+    }
+
+//    protected function _removeFlagged()
+//    {
+//        for ($i = 0; $i < count($this->_flaggedForRemoval); $i++) {
+//            $path = $this->_flaggedForRemoval[$i];
+//            @unlink($path);
+//            //debug("unlinked $path");
+//            unset($this->_flaggedForRemoval[$i]);
+//        }
+//    }
+
     public function afterSave(Event $event, Entity $entity, $options)
     {
+        debug("afterSave");
         if ($entity->isNew()) {
             return true;
         }
@@ -249,19 +361,31 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     protected function _resolveFromInline($filePath, $field)
     {
-        //debug("resolve media file " . $this->_table->alias() . ":" . $filePath);
+        //debug("resolve media file inline on table:" . $this->_table->alias() . " path:" . $filePath);
+
+        if (!$filePath) {
+            return;
+        }
+
         $config =& $this->_config;
 
         $resolver = function ($filePath) use ($field, $config) {
 
-            if (!$filePath) {
-                return;
-            }
+            // @TODO Use dedicated InlineMediaFile object and/or check if MediaFileInterface is attached
+            $file = new $field['entityClass']();
+            //$file->config = $field['config'];
 
             //debug("resolving " . $filePath);
-            $file = new $field['entityClass']();
-            $file->config = $field['config'];
-            $file->path = $filePath;
+            // check if json or simple string
+            if (preg_match('/^\{(.*)\}$/', $filePath)) {
+                $_data = json_decode($filePath, true);
+                //debug($_data);
+                $file->accessible('*');
+                $file->set($_data);
+            } else {
+                $file->set('config', $field['config']);
+                $file->set('path', $filePath);
+            }
 
             return $file;
         };
@@ -276,7 +400,9 @@ class MediaBehavior extends \Cake\ORM\Behavior
             return $files;
             //return new MediaFileCollection($files);
         } else {
-            return $resolver($filePath);
+            $file = $resolver($filePath);
+            //debug($file->toArray());
+            return $file;
         }
     }
 
