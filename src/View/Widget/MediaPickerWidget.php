@@ -4,15 +4,11 @@ namespace Media\View\Widget;
 
 use Bootstrap\View\Widget\ButtonWidget;
 use Cake\Routing\Router;
-use Cake\View\Helper\FormHelper;
 use Cake\View\View;
 use Cake\View\Widget\BasicWidget;
-use Cake\View\Widget\DateTimeWidget as CakeDateTimeWidget;
 use Cake\View\Form\ContextInterface;
 use Cake\View\StringTemplate;
 use Cake\View\Widget\SelectBoxWidget;
-use DateTime;
-use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 
 /**

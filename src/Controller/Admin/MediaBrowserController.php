@@ -113,7 +113,7 @@ class MediaBrowserController extends AppController
         $mm =& $this->_mm;
         $mm->open($path);
 
-        $folders = $mm->listFoldersRecursive(0);
+        $folders = $mm->listFoldersRecursive($path, 0);
         array_walk($folders, function ($val) use (&$treeData, &$id) {
             $treeData[] = [
                 'id' => $val,

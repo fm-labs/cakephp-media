@@ -18,9 +18,8 @@ class MediaManagerController extends AppController
         $config = $this->request->query('config');
 
         $mm = MediaManager::get($config);
-        $mm->open($path);
 
-        $folders = $mm->listFoldersRecursive(0);
+        $folders = $mm->listFoldersRecursive($path, 0);
         array_walk($folders, function ($val) use (&$treeData, &$id) {
             $treeData[] = [
                 'id' => $val,
@@ -53,9 +52,7 @@ class MediaManagerController extends AppController
         $config = $this->request->query('config');
 
         $mm = MediaManager::get($config);
-        $mm->open($path);
-
-        $files = $mm->listFiles();
+        $files = $mm->listFiles($path);
         array_walk($files, function ($val) use (&$treeData, &$mm, &$parent) {
 
             $icon = true;

@@ -15,123 +15,105 @@ use Media\Lib\Media\MediaException;
 class LocalStorageProvider extends MediaProvider
 {
     protected $_defaultConfig = [
-        'path' => MEDIA,
-        'url' => false
+        'path' => null,
+        'url' => null
     ];
 
-    public function connect()
+    /**
+     * @var string|null Absolute path to local directory
+     */
+    protected $_basePath;
+
+    /**
+     * @var string|null Base URL
+     */
+    protected $_baseUrl;
+
+    /**
+     * @var string Current working path
+     */
+    protected $_path;
+
+    /**
+     * @var Folder
+     */
+    protected $_Folder;
+
+    public function initialize()
     {
-        if (!is_dir($this->config('path')) || !is_readable($this->config('path'))) {
-            throw new MediaException(__("LocalStorage: Root path *{0}* is not accessible", $this->config('path')));
+        $basePath = $this->config('basePath');
+        if (!$basePath) {
+            throw new \InvalidArgumentException("LocalStorage: Base path not defined");
         }
-    }
-
-    public function disconnect()
-    {
-    }
-
-    public function basePath()
-    {
-        return $this->_getRealPath('');
-    }
-
-    public function baseUrl($full = false)
-    {
-        $baseUrl = $this->config('url');
-        if (!$baseUrl) {
-            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
+        if (!is_dir($basePath)) {
+            throw new \Exception("LocalStorage: Base path not found: " . $basePath);
         }
-
-        return Router::url($baseUrl, $full);
-    }
-
-    public function listFiles($path)
-    {
-        $path = $this->_normalizePath($path);
-        $folderPath = $this->_getRealPath($path);
-        $folder = new Folder($folderPath);
-
-        list(, $files) = $folder->read();
-        array_walk($files, function (&$file, $idx) use ($path) {
-            $file = $path . $file;
-        });
-
-        return $files;
-    }
-
-    public function listFilesRecursive($path, $fullPath = false)
-    {
-        $path = $this->_normalizePath($path);
-        $folderPath = $this->_getRealPath($path);
-
-        $folder = new Folder($folderPath);
-        $files = $folder->findRecursive($pattern = '.*', $sort = true);
-
-        if ($fullPath !== true) {
-            array_walk($files, function (&$file, $idx) use ($folderPath) {
-                $file = substr($file, strlen($folderPath));
-            });
+        if (!is_readable($basePath)) {
+            throw new \Exception(__("LocalStorage: Root path *{0}* is not accessible", $basePath));
         }
-
-        return $files;
+        $this->_basePath = rtrim($basePath, '/') . '/';
+        $this->_baseUrl = $this->config('baseUrl');
+        $this->_path = '/';
     }
-
-    public function listFolders($path)
+    
+    protected function _getRealPath($path = '/')
     {
-        $path = $this->_normalizePath($path);
-        $folderPath = $this->_getRealPath($path);
-
-        $folder = new Folder($folderPath);
-        list($dirs, ) = $folder->read();
-
-        return $dirs;
+        return $this->_basePath . ltrim($path, '/');
     }
-
-    public function listFoldersRecursive($path, $depth = -1)
+    
+    protected function _connect()
     {
-        $path = $this->_normalizePath($path);
-        $folderPath = $this->_getRealPath($path);
-
-        $folder = new Folder($folderPath);
-        list($dirs, ) = $folder->read();
-
-        $list = [];
-        array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
-            $_dir = $path . $dir;
-            $list[] = $_dir;
-
-            if ($depth > -1 && $depth == 0) {
-                return;
-            }
-
-            foreach ($this->listFoldersRecursive($_dir, $depth - 1) as $dir) {
-                $list[] = $dir;
-            }
-        });
-
-        return $list;
-    }
-
-    public function readFile($path)
-    {
-        // TODO: Implement readFile() method.
+        if (!$this->_Folder) {
+            $this->_Folder = new Folder($this->_basePath, false);
+        }
     }
 
     /**
-     * Normalize Path
-     *
-     * Strip leading path separator
-     * Append trailing path separator if not root path
-     *
-     * @param $path
-     * @return string
+     * Read contents of directory path
+     * @param $path string Path to directory
+     * @return array List of files and directories
+     * @throws \Exception
      */
-    protected function _normalizePath($path)
+    public function read($path)
     {
-        $path = trim($path, '/');
+        $this->_connect();
 
-        return ($path) ? $path . '/' : '';
+        $path = $this->_getRealPath($path);
+        if (!is_dir($path)) {
+            throw new \Exception("Directory path not found: " . $path);
+        }
+        if (!$this->_Folder->cd($path)) {
+            throw new \Exception("Failed to open directory path");
+        }
+        return $this->_Folder->read();
     }
+
+
+//    public function basePath()
+//    {
+//        return $this->_getRealPath('');
+//    }
+//
+//    public function baseUrl($full = false)
+//    {
+//        $baseUrl = $this->config('url');
+//        if (!$baseUrl) {
+//            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
+//        }
+//
+//        return Router::url($baseUrl, $full);
+//    }
+
+//    public function listFiles($path)
+//    {
+//        list($files, ) = $this->read($path);
+//        array_walk($files, function (&$file, $idx) use ($path) {
+//            $file = $path . $file;
+//        });
+//
+//        return $files;
+//    }
+
 
     /**
      * Real path to file/folder
@@ -139,12 +121,12 @@ class LocalStorageProvider extends MediaProvider
      * @param $path
      * @return string
      */
-    protected function _getRealPath($path)
-    {
-        $path = $this->_normalizePath($path);
-        $realpath = $this->config('path') . $path;
-
-        //return realpath($realpath);
-        return $realpath;
-    }
+//    protected function _getRealPath($path)
+//    {
+//        $path = $this->_normalizePath($path);
+//        $realpath = $this->config('path') . $path;
+//
+//        //return realpath($realpath);
+//        return $realpath;
+//    }
 }

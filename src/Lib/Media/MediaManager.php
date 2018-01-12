@@ -3,21 +3,81 @@ namespace Media\Lib\Media;
 
 use Cake\Core\App;
 use Cake\Core\Configure;
+use Cake\Core\StaticConfigTrait;
 use Media\Lib\Media\Provider\MediaProviderInterface;
 
 class MediaManager
 {
-    //protected $_mounts = [];
+    use StaticConfigTrait;
+
+    protected static $_dsnClassMap = [];
 
     /**
-     * @var Provider\MediaProviderInterface
+     * @var MediaProviderInterface
      */
     protected $_provider;
 
+    /**
+     * @var string Current working dir
+     * @deprecated
+     */
     protected $_path;
+
+    /**
+     * @param $config
+     * @return $this
+     * @throws \Exception
+     */
+    static public function getProvider($config)
+    {
+        if (empty(self::configured())) {
+            self::config(Configure::read('Media'));
+        }
+
+        if (is_string($config) && in_array($config, self::configured())) {
+            $config = self::config($config);
+        }
+        elseif (!is_array($config)) {
+            throw new \InvalidArgumentException("Invalid configuration '" . (string) $config . "'");
+        }
+
+        $config = array_merge([
+            'label' => 'Default',
+            'className' => null,
+            'public' => false,
+            //'baseUrl' => null,
+            //'basePath' => null,
+        ], $config);
+
+        if (isset($config['provider'])) {
+            $config['className'] = $config['provider'];
+            unset($config['provider']);
+        }
+
+        //debug($config);
+
+        $provider = $config['className'];
+        if (!$provider) {
+            throw new \Exception("Provider not configured");
+        }
+
+        $className = App::className($provider, 'Lib/Media/Provider', 'Provider');
+        if (!$className) {
+            throw new \Exception("Provider class not found");
+        }
+
+        $providerObj = new $className($config);
+        if ($providerObj instanceof MediaProviderInterface) {
+            return new self($providerObj);
+        }
+
+        throw new \Exception("Provider is not a valid MediaProviderInterface");
+    }
+
 
     public static function get($configName)
     {
+        /*
         $configKey = 'Media.' . $configName;
         $config = Configure::read($configKey);
         if (!$config) {
@@ -36,6 +96,8 @@ class MediaManager
         $providerIns = new $className($config);
 
         return new self($providerIns);
+        */
+        return self::getProvider($configName);
     }
 
     public function __construct(MediaProviderInterface $provider)
@@ -43,82 +105,41 @@ class MediaManager
         //$this->mount('default', new LocalStorageProvider(MEDIA));
         //$this->mount('dropbox', new DropboxProvider());
         $this->_provider = $provider;
-        $this->_provider->connect();
-        $this->open('/');
+        //$this->_provider->connect();
+        //$this->open('/');
     }
 
-    public function config($key)
-    {
-        return $this->_provider->config($key);
-    }
+    /** PROVIDER INTERFACE **/
 
-    public function open($path)
+    public function read($path)
     {
         $this->setPath($path);
-
-        return $this;
+        return $this->_provider->read($this->_path);
     }
 
-    public function listFiles()
-    {
-        return $this->_provider->listFiles($this->_path);
-    }
 
-    public function listFileUrls()
-    {
-        $files = $this->listFiles();
-        $list = [];
-        array_walk($files, function ($val, $idx) use (&$list) {
-            $list[$val] = $this->getFileUrl($val);
-        });
 
-        return $list;
-    }
+    /** MEDIA BROWSING **/
 
-    public function listFilesRecursive($fullPath = false)
-    {
-        return $this->_provider->listFilesRecursive($this->_path, $fullPath);
-    }
-
-    public function listFolders()
-    {
-        return $this->_provider->listFolders($this->_path);
-    }
-
-    public function listFoldersRecursive($depth = -1)
-    {
-        return $this->_provider->listFoldersRecursive($this->_path, $depth);
-    }
-
-    public function readFile($path)
-    {
-        return $this->_provider->readFile($path);
-    }
-
-    public function deleteFile($path)
-    {
-        //$this->_provider->unlinkFile($path);
-    }
-
+    /**
+     * @deprecated
+     */
     public function setPath($path)
     {
-        $path .= '/';
-        $path = preg_replace('|([\/])?\.\.\/|', '/', $path); // clean path patterns like '/../../'
-        $path = preg_replace('|([\/])?\.\/|', '/', $path); // clean path patterns like '/././'
-        $path = preg_replace('|[\/]+|', '/', $path); // clean path patterns like '/////path///to//dir///'
-        $path = ltrim($path, '/');
-        $path = ($path == '/') ? '' : $path;
-
-        //debug("entering path $path");
-
-        $this->_path = $path;
+        $this->_path = $this->_normalizePath($path);
     }
 
+    /**
+     * @deprecated
+     */
     public function getPath()
     {
         return $this->_path;
     }
 
+    /**
+     * @deprecated
+     */
     public function getParentPath()
     {
         $path = $this->_path;
@@ -133,17 +154,114 @@ class MediaManager
         return join('/', $parts);
     }
 
-    public function getBasePath()
+//    public function open($path)
+//    {
+//        $this->setPath($path);
+//        return $this;
+//    }
+    
+    public function listFiles($path)
     {
-        return realpath($this->_provider->basePath()) . DS;
+        $path = $this->_normalizePath($path);
+        list($files, ) = $this->read($path);
+        array_walk($files, function (&$file, $idx) use ($path) {
+            $file = $path . $file;
+        });
+
+        return $files;
     }
 
-    public function getBaseUrl()
+    public function listFileUrls($path)
     {
-        return rtrim($this->_provider->baseUrl(), '/');
+        $urls = [];
+        $files = $this->listFiles($path);
+        array_walk($files, function ($val, $idx) use (&$urls) {
+            $urls[$val] = $this->buildFileUrl($val);
+        });
+
+        return $urls;
     }
 
-    public function getFileUrl($filePath)
+    public function listFilesRecursive($path, $fullPath = false)
+    {
+        $list = [];
+        $basePath = ($fullPath) ? $this->getBasePath() : '';
+
+        $path = $this->_normalizePath($path);
+        list($files, $dirs) = $this->read($path);
+        array_walk($files, function ($file) use ($basePath, $path) {
+            $list[] = $basePath . $path . $file;
+        });
+
+        array_walk($dirs, function ($dir) use (&$list, $path, $fullPath) {
+            $files = $this->listFilesRecursive($path . $dir, $fullPath);
+            foreach ($files as $file) {
+                $list[] = $file;
+            }
+        });
+
+        return $list;
+    }
+
+    public function listFolders($path)
+    {
+        list($dirs, ) = $this->read($path);
+
+        return $dirs;
+    }
+
+    public function listFoldersRecursive($path, $depth = -1)
+    {
+        $path = $this->_normalizePath($path);
+        list($dirs, ) = $this->read($path);
+
+        $list = [];
+        array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
+            //$_dir = $this->_normalizePath($path . $dir);
+            $_dir = $path . $dir;
+            $list[] = $_dir;
+
+            if ($depth > -1 && $depth == 0) {
+                return;
+            }
+
+            foreach ($this->listFoldersRecursive($_dir . '/', $depth - 1) as $dir) {
+                $list[] = $dir;
+            }
+        });
+
+        return $list;
+    }
+
+    public function deleteFile($path)
+    {
+        //$this->_provider->delete($path);
+    }
+
+
+    /**
+     * Normalize Path
+     *
+     * Strip leading path separator
+     * Append trailing path separator if not root path
+     *
+     * @param $path
+     * @return string
+     */
+    protected function _normalizePath($path)
+    {
+        $path = trim(trim($path), '/') . '/';
+        $path = preg_replace('|([\/])?\.\.\/|', '/', $path); // clean path patterns like '/../../'
+        $path = preg_replace('|([\/])?\.\/|', '/', $path); // clean path patterns like '/././'
+        $path = preg_replace('|[\/]+|', '/', $path); // clean path patterns like '/////path///to//dir///'
+        $path = ltrim($path, '/');
+        $path = ($path == '/') ? '' : $path;
+
+        return $path;
+    }
+
+
+    public function buildFileUrl($filePath)
     {
         //@TODO sanitize file path
         //if (strpos($filePath, '..') !== false) {
@@ -154,7 +272,7 @@ class MediaManager
         return $this->getBaseUrl() . '/' . $filePath;
     }
 
-    public function getFileUrlEncoded($filePath)
+    public function buildFileUrlEncoded($filePath)
     {
         $url = urlencode($filePath);
         $url = preg_replace('/\%2F/', '/', $url);
@@ -163,20 +281,52 @@ class MediaManager
         return $this->getBaseUrl() . '/' . $url;
     }
 
-    public function getSelectListRecursive()
+    /**
+     * @deprecated Use buildFileUrl() instead
+     */
+    public function getFileUrl($filePath)
     {
-        $files = $this->listFilesRecursive(false);
+        return $this->buildFileUrl($filePath);
+    }
+
+    /**
+     * @deprecated Use buildFileUrlEncoded() instead
+     */
+    public function getFileUrlEncoded($filePath)
+    {
+        return $this->buildFileUrlEncoded($filePath);
+    }
+
+    /**
+     * @deprecated This should not be used anymore. And will be removed.
+     */
+    public function getBasePath()
+    {
+        return realpath($this->_provider->config('basePath')) . DS;
+    }
+
+    /**
+     * @deprecated This should not be used anymore. And will be removed.
+     */
+    public function getBaseUrl()
+    {
+        return rtrim($this->_provider->config('baseUrl'), '/');
+    }
+
+    public function getSelectListRecursive($path = '/')
+    {
+        $files = $this->listFilesRecursive($path, false);
         $list = [];
         array_walk($files, function ($val, $idx) use (&$list) {
-            $list[$val] = $this->getFileUrl($val);
+            $list[$val] = $this->buildFileUrl($val);
         });
 
         return $list;
     }
 
-    public function getSelectFolderListRecursive()
+    public function getSelectFolderListRecursive($path = '/')
     {
-        $files = $this->listFoldersRecursive();
+        $files = $this->listFoldersRecursive($path);
         $list = [];
         array_walk($files, function ($val, $idx) use (&$list) {
             $list[$val] = $val;
@@ -185,14 +335,13 @@ class MediaManager
         return $list;
     }
 
-    public function getSelectListRecursiveGrouped()
+    public function getSelectListRecursiveGrouped($path = '/')
     {
-        $folders = $this->listFoldersRecursive();
+        $folders = $this->listFoldersRecursive($path);
         $list = [];
 
         foreach ($folders as $folder) {
-            $this->open($folder);
-            $files = $this->listFiles();
+            $files = $this->listFiles($folder);
 
             if (empty($files)) {
                 continue;
@@ -200,7 +349,7 @@ class MediaManager
 
             $list[$folder] = [];
             array_walk($files, function ($val, $idx) use (&$list, $folder) {
-                $list[$folder][$val] = $this->getFileUrl($val);
+                $list[$folder][$val] = $this->buildFileUrl($val);
             });
         }
 

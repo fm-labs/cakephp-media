@@ -4,6 +4,7 @@ namespace Media\Controller\Admin;
 
 use Cake\Core\Configure;
 use Media\FileManager;
+use Media\Lib\Media\MediaManager;
 
 class MediaController extends AppController
 {
@@ -17,7 +18,7 @@ class MediaController extends AppController
     {
         $this->viewBuilder()->className('Json');
 
-        $config = ($config) ?? 'filemanager';
+        $config = ($config) ?? 'default';
         $path = ($this->request->query('path')) ?? '/';
         $path = trim($path);
         $path = rtrim($path, '/');
@@ -26,10 +27,10 @@ class MediaController extends AppController
         $files = [];
         $error = null;
 
-        FileManager::config(Configure::read('Media'));
+        MediaManager::config(Configure::read('Media'));
 
         try {
-            $mgr = FileManager::createInstance($config);
+            $mgr = MediaManager::getProvider($config);
             list($dirs, $files) = $mgr->read($path);
 
         } catch(\Exception $ex) {

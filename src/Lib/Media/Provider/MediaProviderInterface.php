@@ -10,21 +10,12 @@ namespace Media\Lib\Media\Provider;
 
 interface MediaProviderInterface
 {
-    public function basePath();
+    public function __construct(array $config);
+    /**
+     * Read contents of directory path
+     * @param $path string Path to directory
+     * @return array List of files and directories
+     */
+    public function read($path);
 
-    public function baseUrl();
-
-    public function connect();
-
-    public function disconnect();
-
-    public function listFiles($path);
-
-    public function listFilesRecursive($path);
-
-    public function listFolders($path);
-
-    public function listFoldersRecursive($path, $depth = -1);
-
-    public function readFile($path);
 }
