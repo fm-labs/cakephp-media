@@ -2,6 +2,7 @@
 
 namespace Media;
 
+use Backend\Event\RouteBuilderEvent;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -46,10 +47,10 @@ class MediaPlugin implements EventListenerInterface
         $event->subject()->loadHelper('Media.MediaPicker');
     }
 
-    public function buildBackendRoutes()
+    public function buildBackendRoutes(RouteBuilderEvent $event)
     {
-        Router::scope(
-            '/mediaadmin',
+        $event->subject()->scope(
+            '/media',
             ['plugin' => 'Media', 'prefix' => 'admin', '_namePrefix' => 'media:admin:'],
             function ($routes) {
 

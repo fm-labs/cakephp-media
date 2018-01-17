@@ -20,4 +20,4 @@ if (!Log::config('media')) {
     ]);
 }
 
-//\Media\Lib\Media\MediaManager::config(Configure::read('Media'));
+\Media\Lib\Media\MediaManager::config(Configure::read('Media'));
