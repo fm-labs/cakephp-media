@@ -56,20 +56,17 @@ class MediaPlugin implements EventListenerInterface
 
                 $routes->extensions(['json']);
 
-                $routes->connect(
-                    '/browser/',
+                $routes->connect('/browser/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
                 );
-                $routes->connect(
-                    '/browser/:config/',
+                $routes->connect('/browser/:config/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
                 );
-                $routes->connect(
-                    '/browser/:config/:action',
+                $routes->connect('/browser/:config/:action',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser']
                 );
 
-                $routes->connect('/:controller');
+                //$routes->connect('/:controller');
                 $routes->fallbacks('DashedRoute');
             }
         );
