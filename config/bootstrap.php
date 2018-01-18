@@ -7,7 +7,7 @@ use Cake\Log\Log;
 /**
  * Load Media plugin configuration
  */
-//Configure::load('Media.media');
+Configure::load('Media.media');
 
 // Register MediaFileType
 Type::map('media_file', 'Media\Database\Type\MediaFileType');
@@ -19,5 +19,3 @@ if (!Log::config('media')) {
         'file' => 'media',
     ]);
 }
-
-\Media\Lib\Media\MediaManager::config(Configure::read('Media'));

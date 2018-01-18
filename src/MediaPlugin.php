@@ -3,10 +3,12 @@
 namespace Media;
 
 use Backend\Event\RouteBuilderEvent;
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\Router;
+use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 
 class MediaPlugin implements EventListenerInterface
@@ -23,7 +25,7 @@ class MediaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Backend.Menu.get' => 'getBackendMenu',
+            'Backend.Sidebar.get' => 'getBackendSidebarMenu',
             'Backend.View.initialize' => 'initializeBackendView',
             'Backend.Routes.build' => 'buildBackendRoutes'
 
@@ -72,7 +74,7 @@ class MediaPlugin implements EventListenerInterface
         );
     }
 
-    public function getBackendMenu(Event $event)
+    public function getBackendSidebarMenu(Event $event)
     {
         $event->subject()->addItem([
             'title' => 'Media',
@@ -95,5 +97,6 @@ class MediaPlugin implements EventListenerInterface
 
     public function __invoke()
     {
+        MediaManager::config(Configure::read('Media'));
     }
 }
