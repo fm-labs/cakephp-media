@@ -192,15 +192,17 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     public function beforeSave(Event $event, Entity $entity, \ArrayObject $options)
     {
-        debug("beforeSave");
-        //debug($this->_table);
-
         foreach ($this->_fields as $field => $fieldConfig) {
             $uploadField = $field . '_upload';
             $uploadOptions = ['exceptions' => true];
             $value = null;
 
-            if ($fieldConfig['upload'] && $entity->dirty($uploadField)) {
+            $upload = $entity->get($uploadField);
+            if ($fieldConfig['upload'] && is_array($upload)) {
+
+                if (isset($upload['error']) && $upload['error'] == 4) { // err 4 == no file uploaded
+                    continue;
+                }
 
                 debug("Uploading ...");
 
@@ -299,14 +301,14 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     public function afterSave(Event $event, Entity $entity, $options)
     {
-        debug("afterSave");
+        //debug("afterSave");
         if ($entity->isNew()) {
             return true;
         }
 
         foreach ($this->_fields as $fieldName => $field) {
             if ($entity->get($fieldName) && $field['mode'] === "table") {
-                debug($entity->get($fieldName));
+                //debug($entity->get($fieldName));
 
                 $attachment = $this->_getAttachmentsModel($fieldName)->find()->where([
                     'model' => $this->_modelName(),

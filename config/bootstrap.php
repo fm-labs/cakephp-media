@@ -17,5 +17,6 @@ if (!Log::config('media')) {
         'className' => 'Cake\Log\Engine\FileLog',
         'path' => LOGS,
         'file' => 'media',
+        'scopes' => ['media']
     ]);
 }
