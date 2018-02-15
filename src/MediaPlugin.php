@@ -25,7 +25,7 @@ class MediaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Backend.Sidebar.build' => ['callable' => 'buildBackendSidebarMenu', 'priority' => 90],
+            'Backend.Menu.build' => ['callable' => 'buildBackendMenu', 'priority' => 90],
             'Backend.View.initialize' => 'initializeBackendView',
             'Backend.Routes.build' => 'buildBackendRoutes'
 
@@ -74,7 +74,7 @@ class MediaPlugin implements EventListenerInterface
         );
     }
 
-    public function buildBackendSidebarMenu(Event $event)
+    public function buildBackendMenu(Event $event)
     {
         $event->subject()->addItem([
             'title' => 'Media',
