@@ -52,6 +52,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
         'attachmentsTable' => 'Media.MediaAttachments',
         // Use i18n mode
         'i18n' => false,
+        // upload
+        'upload' => false
     ];
 
     /**
