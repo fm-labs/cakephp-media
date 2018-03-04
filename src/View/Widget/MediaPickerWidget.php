@@ -89,7 +89,7 @@ class MediaPickerWidget extends BasicWidget
             'id' => uniqid('mediapickerselect'),
             'class' => 'mediapicker-select-control btn-default',
             'data-target' => '#' . $data['id'],
-            'text' => __('Select Media'),
+            'text' => __d('media','Select Media'),
             'type' => 'button',
             'escape' => false,
             'templateVars' => []

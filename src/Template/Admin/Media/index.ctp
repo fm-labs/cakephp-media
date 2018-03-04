@@ -8,6 +8,23 @@
         <!-- Show media browser here -->
     </div>
 
+    <div id="media-upload">
+        <?php
+        $this->assign('title', __d('media','Upload'))
+        ?>
+        <div class="upload-form form">
+            <?php
+//            echo $this->Form->create(null, ['type' => 'file']);
+//            echo $this->Form->input('config', ['type' => 'text', 'value' => $this->get('config')]);
+//            echo $this->Form->input('upload_file', ['type' => 'file']);
+            echo $this->Form->create($uploadForm, ['type' => 'file']);
+            echo $this->Form->input('config');
+            echo $this->Form->input('upload_file', ['type' => 'file']);
+            echo $this->Form->submit(__d('media','Upload file'));
+            ?>
+        </div>
+    </div>
+
 </div>
 <?php $this->append('script'); ?>
 <script>

@@ -9,13 +9,13 @@
 
 
         <div id="browser-toolbar" class="actions">
-            <?= $this->Html->link(__('New Folder'),
+            <?= $this->Html->link(__d('media','New Folder'),
                 ['action' => 'add', 'type' => 'folder'],
                 ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']); ?>
-            <?= $this->Html->link(__('New File'),
+            <?= $this->Html->link(__d('media','New File'),
                 ['action' => 'add', 'type' => 'file'],
                 ['data-icon' => 'file', 'class' => 'file-add btn btn-default']); ?>
-            <?= $this->Html->link(__('Upload'),
+            <?= $this->Html->link(__d('media','Upload'),
                 ['action' => 'upload'],
                 ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']); ?>
         </div>

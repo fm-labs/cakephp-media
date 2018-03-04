@@ -49,7 +49,7 @@ class LocalStorageProvider extends MediaProvider
             throw new \Exception("LocalStorage: Base path not found: " . $basePath);
         }
         if (!is_readable($basePath)) {
-            throw new \Exception(__("LocalStorage: Root path *{0}* is not accessible", $basePath));
+            throw new \Exception(__d('media',"LocalStorage: Root path *{0}* is not accessible", $basePath));
         }
         $this->_basePath = rtrim($basePath, '/') . '/';
         $this->_baseUrl = $this->config('baseUrl');

@@ -81,7 +81,7 @@ class MediaManager
         $configKey = 'Media.' . $configName;
         $config = Configure::read($configKey);
         if (!$config) {
-            throw new \Exception(__('Media config {0} does not exist', $configName));
+            throw new \Exception(__d('media','Media config {0} does not exist', $configName));
         }
         $config = array_merge([
             'label' => 'Unlabeled',
@@ -366,7 +366,7 @@ class MediaManager
     public function mount($name, MediaProviderInterface $provider)
     {
     if (isset($this->_mounts[$name])) {
-    throw new MediaException(__("Media provider with name {0} is already mounted", $name));
+    throw new MediaException(__d('media',"Media provider with name {0} is already mounted", $name));
     }
     $provider->connect();
     $this->_mounts[$name] = $provider;
@@ -394,7 +394,7 @@ class MediaManager
     public function get($name)
     {
     if (!isset($this->_mounts[$name])) {
-    throw new MediaException(__("Media provider with name {0} has not been registered", $name));
+    throw new MediaException(__d('media',"Media provider with name {0} has not been registered", $name));
     }
     return $this->_mounts[$name];
     }
