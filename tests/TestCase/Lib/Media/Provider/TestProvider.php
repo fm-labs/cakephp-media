@@ -47,7 +47,6 @@ class TestProvider implements MediaProviderInterface
 
     public function __construct(array $config)
     {
-
     }
 
     /**
@@ -57,6 +56,5 @@ class TestProvider implements MediaProviderInterface
      */
     public function read($path)
     {
-
     }
 }

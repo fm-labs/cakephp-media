@@ -18,6 +18,8 @@ class MediaFileTest extends MediaTestCase
 
     public function newEntity()
     {
+        $this->markTestIncomplete();
+        return;
         $class = '\\Media\\Model\\Entity\\MediaFile';
 
         $table = new Table();
@@ -29,6 +31,8 @@ class MediaFileTest extends MediaTestCase
 
     public function testNewEntity()
     {
+        $this->markTestIncomplete();
+        return;
         $class = '\\Media\\Model\\Entity\\MediaFile';
         $entity = $this->newEntity();
         $this->assertInstanceOf($class, $entity);
@@ -36,6 +40,8 @@ class MediaFileTest extends MediaTestCase
 
     public function testPathProperty()
     {
+        $this->markTestIncomplete();
+        return;
         // test with config + path
         $entity = $this->newEntity();
         $entity->config = 'test';
@@ -54,6 +60,8 @@ class MediaFileTest extends MediaTestCase
 
     public function testUrlProperty()
     {
+        $this->markTestIncomplete();
+        return;
         $entity = $this->newEntity();
         $entity->config = 'test';
         $entity->path = 'dir2/image1.jpg';
