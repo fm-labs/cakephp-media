@@ -44,4 +44,19 @@ class TestProvider implements MediaProviderInterface
     {
         // TODO: Implement basePath() method.
     }
+
+    public function __construct(array $config)
+    {
+
+    }
+
+    /**
+     * Read contents of directory path
+     * @param $path string Path to directory
+     * @return array List of files and directories
+     */
+    public function read($path)
+    {
+
+    }
 }
