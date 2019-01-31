@@ -139,10 +139,10 @@
 
                                 var inputType = (settings.multiple === true) ? 'checkbox' : 'radio';
 
-                                $filesContainer.html("");
+                                var $table = $('<table>', { 'class': 'table table-hover'});
                                 for(var i in data) {
                                     var file = data[i];
-                                    $('<div>', {
+                                    var $row = $('<tr>', {
                                         //'data-input': $(self).attr('id'),
                                         'data-img-src': file.icon,
                                         'data-id': file.id,
@@ -150,21 +150,44 @@
                                         'data-src': file.thumbUrl, // file.icon,
                                         'class': 'mediapicker-item'
 
-                                    })
-                                        .append($('<input>', { class: 'mediapicker-item-input', name: 'select', type: inputType, value: 1 }))
-                                        .append($('<img>', { src: file.icon, class: 'mediapicker-item-preview' }))
-                                        .append($('<span>', { class: 'mediapicker-item-name'}).html(file.text))
-                                        .appendTo($filesContainer);
+                                    });
+
+
+                                    if (file.icon) {
+                                        $('<td />', {'width': 60}).html($('<img>', {src: file.icon, class: 'mediapicker-item-preview'}))
+                                            .appendTo($row);
+                                    } else {
+                                        $('<td />', {'width': 60}).html($('<i class="fa fa-file-o"></i>'))
+                                            .appendTo($row);
+                                    }
+                                    $('<td />').html($('<span>', { class: 'mediapicker-item-name'}).html(file.text))
+                                        .appendTo($row);
+
+                                    $('<td />', {'width': 20}).html($('<input>', { class: 'mediapicker-item-input', name: 'select', type: inputType, value: 1 }))
+                                        .appendTo($row);
+
+                                    $row.appendTo($table);
                                 }
+                                $filesContainer.html($table);
+
+                                $filesContainer.off('click', '.mediapicker-item');
+                                $filesContainer.on('click', '.mediapicker-item', function(ev) {
+                                    console.log("picker item clicked");
+                                    $(this).find('.mediapicker-item-input')
+                                        .prop('checked', 'checked')
+                                        .trigger('change');
+                                });
 
                                 // Capture click events on media items
                                 $filesContainer.off('change', '.mediapicker-item-input');
                                 $filesContainer.on('change', '.mediapicker-item-input', function(ev) {
                                     ev.preventDefault();
 
-                                    var id = $(this).parent().data('id');
-                                    var name = $(this).parent().data('name');
-                                    var src = $(this).parent().data('src');
+                                    var data = $(ev.target).closest(".mediapicker-item").data();
+
+                                    var id = data.id;
+                                    var name = data.name;
+                                    var src = data.imgSrc;
                                     var val = !!$(this).attr('checked');
 
                                     console.log("Media Item selected: " + path + " -> " + id);

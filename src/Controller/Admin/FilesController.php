@@ -2,8 +2,10 @@
 
 namespace Media\Controller\Admin;
 
+use Cake\Filesystem\File;
 use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
+use Media\Model\Entity\MediaFile;
 use Upload\Uploader;
 
 class FilesController extends AppController
@@ -16,7 +18,7 @@ class FilesController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->manager = MediaManager::getProvider('default');
+        $this->manager = MediaManager::get('default');
     }
 
     public function index()
@@ -24,12 +26,77 @@ class FilesController extends AppController
         $path = ($this->request->query('path')) ?: '/';
         $path = rtrim($path, '/') . '/';
         $contents = $this->manager->read($path);
-
         list($folders, $files) = $contents;
+
+        if ($this->request->query('file')) {
+            $f = $this->_getFileFromRequest();
+            $this->set('selectedFile', $f);
+        }
 
         $this->set('path', $path);
         $this->set('folders', $folders);
         $this->set('files', $files);
+        $this->set('manager', $this->manager);
+    }
+
+    public function view()
+    {
+        $f = $this->_getFileFromRequest();
+        $this->set('selectedFile', $f);
+        $contents = null;
+
+        if (!$f->exists() || !$f->readable()) {
+            $this->Flash->error("File does not exist or is not readable by the webserver");
+            //$this->redirect($this->referer(['action' => 'index']));
+        } else {
+            $ext = strtolower($f->ext());
+            if (!in_array($ext, ['txt', 'md', 'conf', 'html', 'json', 'xml'])) {
+                $this->Flash->warning("This file type can not be viewed");
+                //$this->redirect($this->referer(['action' => 'index']));
+            } else {
+                $contents = $f->read();
+            }
+        }
+
+        $this->set('contents', $contents);
+    }
+
+    public function edit()
+    {
+        $f = $this->_getFileFromRequest();
+        $this->set('selectedFile', $f);
+
+        //@TODO Implement me
+        $this->Flash->warning("This file can not be edited");
+        $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    public function delete()
+    {
+        $f = $this->_getFileFromRequest();
+        if (!$f->exists()) {
+            $this->Flash->error("File does not exist");
+        }
+
+        if ($f->delete()) {
+            $this->Flash->success("File deleted");
+        } else {
+            $this->Flash->error("Failed to delete file");
+        }
+
+        $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    protected function _getFileFromRequest()
+    {
+        $basePath = $this->manager->getBasePath();
+        //@TODO Sanitize query!
+        $path = ($this->request->query('path')) ?: '/';
+        $path = rtrim($path, '/') . '/';
+        $file = $this->request->query('file');
+
+        $f = new File($basePath . $path . $file);
+        return $f;
     }
 
     public function upload()

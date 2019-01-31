@@ -55,7 +55,7 @@ class MediaManagerController extends AppController
         $files = $mm->listFiles($path);
         array_walk($files, function ($val) use (&$treeData, &$mm, &$parent) {
 
-            $icon = true;
+            $icon = false;
             $thumbUrl = null;
             $filename = basename($val);
             if (preg_match('/^(.*)\.(jpg|gif|jpeg|png)$/i', $filename)) {

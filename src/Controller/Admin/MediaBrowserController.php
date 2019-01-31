@@ -16,6 +16,9 @@ use Cake\Event\Event;
 use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
 
+/**
+ * @deprecated Use FilesController instead
+ */
 class MediaBrowserController extends AppController
 {
 

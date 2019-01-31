@@ -18,7 +18,7 @@
 }
 
 .mediapicker-files-container .mediapicker-item {
-    height: 50px;
+    max-height: 50px;
     border-bottom: 1px solid #CCC;
     position: relative;
 }
@@ -30,16 +30,13 @@
 .mediapicker-files-container .mediapicker-item img.mediapicker-item-preview {
     max-width: 45px;
     max-height: 40px;
-    position: absolute;
-    margin-top: 5px;
-    margin-left: 5px;
     border: 1px solid #CCC;
 }
 
 .mediapicker-files-container .mediapicker-item span.mediapicker-item-name {
     display: inline-block;
-    margin-left: 60px;
-    padding: 15px 0 0 0;
+    margin-left: 0px;
+    padding: 0 0 0 0;
 }
 
 .mediapicker-files-container .mediapicker-item.selected {

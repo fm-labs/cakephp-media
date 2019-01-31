@@ -31,15 +31,21 @@ class MediaFile extends Entity implements MediaFileInterface
         //'realpath'
     ];
 
-
-    public function getBasename()
+    public function isImage()
     {
-        return $this->basename;
+        $basename = $this->_getBasename();
+
+        return (preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename)));
     }
 
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function getBasename()
+    {
+        return $this->basename;
     }
 
     /**
@@ -80,12 +86,6 @@ class MediaFile extends Entity implements MediaFileInterface
         return $url;
     }
 
-    public function isImage()
-    {
-        $basename = $this->_getBasename();
-
-        return (preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename)));
-    }
 
     protected function _setPath($path)
     {
@@ -114,27 +114,14 @@ class MediaFile extends Entity implements MediaFileInterface
     }
 
     /**
-     * @deprecated Use _getSize() instead
+     * Absolute path to file including filename
      */
-    protected function _getFilesize()
-    {
-        return $this->_getSize();
-    }
-
     protected function _getFilepath()
     {
         return MediaManager::get($this->config)->getBasePath() . $this->path;
     }
 
     protected function _getUrl()
-    {
-        return $this->getUrl(true);
-    }
-
-    /**
-     * @deprecated Use _getUrl() instead
-     */
-    protected function _getFullUrl()
     {
         return $this->getUrl(true);
     }
@@ -147,4 +134,19 @@ class MediaFile extends Entity implements MediaFileInterface
         return $this->_properties['basename'];
     }
 
+    /**
+     * @deprecated Use _getUrl() instead
+     */
+    protected function _getFullUrl()
+    {
+        return $this->getUrl(true);
+    }
+
+    /**
+     * @deprecated Use _getSize() instead
+     */
+    protected function _getFilesize()
+    {
+        return $this->_getSize();
+    }
 }

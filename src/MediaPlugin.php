@@ -2,16 +2,23 @@
 
 namespace Media;
 
+use Backend\Backend;
+use Backend\BackendPluginInterface;
 use Backend\Event\RouteBuilderEvent;
+use Banana\Application;
+use Banana\Plugin\PluginInterface;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
+use Cake\Http\MiddlewareQueue;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 
-class MediaPlugin implements EventListenerInterface
+class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListenerInterface
 {
 
     /**
@@ -79,14 +86,9 @@ class MediaPlugin implements EventListenerInterface
     {
         $event->subject()->addItem([
             'title' => 'Media',
-            'url' => ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'],
+            'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index'],
             'data-icon' => 'picture-o',
             'children' => [
-                'media_files' => [
-                    'title' => 'Files',
-                    'url' => ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'],
-                    'data-icon' => 'picture-o',
-                ],
                 'media_upload' => [
                     'title' => 'Upload',
                     'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
@@ -96,8 +98,30 @@ class MediaPlugin implements EventListenerInterface
         ]);
     }
 
-    public function __invoke()
+    public function bootstrap(Application $app)
     {
         MediaManager::config(Configure::read('Media'));
+        EventManager::instance()->on($this);
+    }
+
+    public function routes(RouteBuilder $routes)
+    {
+
+    }
+
+    public function middleware(MiddlewareQueue $middleware)
+    {
+
+    }
+
+    public function backendBootstrap(Backend $backend)
+    {
+
+    }
+
+    public function backendRoutes(RouteBuilder $routes)
+    {
+        $routes->addExtensions('json');
+        $routes->fallbacks('DashedRoute');
     }
 }

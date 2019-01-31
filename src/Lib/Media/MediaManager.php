@@ -163,7 +163,7 @@ class MediaManager
     public function listFiles($path)
     {
         $path = $this->_normalizePath($path);
-        list($files, ) = $this->read($path);
+        list(,$files) = $this->read($path);
         array_walk($files, function (&$file, $idx) use ($path) {
             $file = $path . $file;
         });

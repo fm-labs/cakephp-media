@@ -44,8 +44,7 @@ class MediaUploadForm extends Form
      */
     protected function _buildSchema(Schema $schema)
     {
-        //$schema->addField('config', ['type' => 'string']);
-        $schema->addField('upload_file', ['type' => 'file']);
+        $schema->addField('upload_file', ['type' => 'string']);
         return $schema;
     }
 
@@ -57,5 +56,4 @@ class MediaUploadForm extends Form
         $result = $this->uploader->upload($data['upload_file']);
         return $result;
     }
-
 }

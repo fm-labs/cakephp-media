@@ -80,8 +80,14 @@ class MediaHelper extends Helper
         }
 
         $info = pathinfo($source);
-        $filename = Text::slug($info['filename'], '_');
 
+        if (!in_array($info['extension'], ['jpeg', 'jpg', 'png'])) {
+            $this->_error("generateThumbnail: Source file is not an image");
+            return false;
+        }
+
+        $options = array_merge(['height' => 100, 'width' => 100], $options);
+        $filename = Text::slug($info['filename'], '_');
         $thumbBasename =  $filename . '_' . md5($source . serialize($options)) . '.' . $info['extension'];
         $thumbPath = WWW_ROOT . 'cache/' . $thumbBasename;
         $thumbUri = '/cache/' . $thumbBasename;
@@ -114,7 +120,7 @@ class MediaHelper extends Helper
 
     protected function _error($msg, $log = false)
     {
-        //debug($msg);
+        debug($msg);
         if ($log) {
             $this->_log($msg, 'error');
         }

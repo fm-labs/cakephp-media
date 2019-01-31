@@ -14,7 +14,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
-use Media\Model\Entity\MediaFileCollection;
+use Media\Model\Entity\MediaFileInterface;
 use Media\Model\Table\MediaAttachmentsTable;
 use Upload\Exception\UploadException;
 use Upload\Uploader;
@@ -363,48 +363,48 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param array $field Field config
      * @return array|MediaFile|Collection
      */
-    protected function _resolveFromInline($filePath, $field)
+    protected function _resolveFromInline($value, $field)
     {
-        //debug("resolve media file inline on table:" . $this->_table->alias() . " path:" . $filePath);
+        //debug("resolve media file inline on table:" . $this->_table->alias() . " path:" . $value);
 
-        if (!$filePath) {
+        if (!$value) {
             return;
         }
 
         $config =& $this->_config;
 
-        $resolver = function ($filePath) use ($field, $config) {
+        $resolver = function ($value) use ($field, $config) {
 
             // @TODO Use dedicated InlineMediaFile object and/or check if MediaFileInterface is attached
             $file = new $field['entityClass']();
             //$file->config = $field['config'];
 
-            //debug("resolving " . $filePath);
+            //debug("resolving " . $value);
             // check if json or simple string
-            if (preg_match('/^\{(.*)\}$/', $filePath)) {
-                $_data = json_decode($filePath, true);
+            if (preg_match('/^\{(.*)\}$/', $value)) {
+                $_data = json_decode($value, true);
                 //debug($_data);
                 $file->accessible('*');
                 $file->set($_data);
             } else {
                 $file->set('config', $field['config']);
-                $file->set('path', $filePath);
+                $file->set('path', $value);
             }
 
             return $file;
         };
 
-        if ($field['multiple'] && is_array($filePath)) {
+        if ($field['multiple'] && is_array($value)) {
             $files = [];
-            foreach ($filePath as $_filePath) {
-                $files[] = $resolver($_filePath);
+            foreach ($value as $_value) {
+                $files[] = $resolver($_value);
             }
             // The marshaller does not accept arrays,
             // so we use a Collection -> solved by using a custom data type 'media_file'
             return $files;
             //return new MediaFileCollection($files);
         } else {
-            $file = $resolver($filePath);
+            $file = $resolver($value);
             //debug($file->toArray());
             return $file;
         }
@@ -470,6 +470,16 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
             return $resolver($attachment);
         }
+    }
+
+    /**
+     * @return MediaFileInterface
+     */
+    protected function _newMediaFile($field, $path)
+    {
+        $file = new $field['entityClass']();
+        $file->config = $field['config'];
+        $file->path = $filePath;
     }
 
     /**

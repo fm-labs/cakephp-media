@@ -8,6 +8,9 @@ use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
 use Upload\Uploader;
 
+/**
+ * @deprecated Use FilesController instead
+ */
 class MediaController extends AppController
 {
     public function index()
