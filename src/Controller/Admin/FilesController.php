@@ -99,10 +99,11 @@ class FilesController extends AppController
         return $f;
     }
 
+    /*
     public function upload()
     {
         $path = ($this->request->query('path')) ?: '/';
-        $path = rtrim($path, '/') . '/';
+        $path = trim($path, '/') . '/';
 
         try {
 
@@ -140,4 +141,5 @@ class FilesController extends AppController
         }
 
     }
+    */
 }

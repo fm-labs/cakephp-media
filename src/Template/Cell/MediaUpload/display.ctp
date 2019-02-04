@@ -1,11 +1,15 @@
 <div class="media-uploader">
 
+    <?php if (isset($error)): ?>
+    <div class="alert alert-danger"><?= h($error); ?></div>
+    <?php endif; ?>
+
     <?php if (isset($uploadForm)): ?>
     <div class="upload-form form">
         <div class="box box-default box-solid with-border">
             <div class="box-header">
                 <?= __d('media', 'Upload file'); ?>
-                <small>to /<?= $uploadPath; ?></small>
+                <small>to <?= $uploadPath; ?></small>
             </div>
             <div class="box-body">
                 <?php if (isset($upload)): ?>

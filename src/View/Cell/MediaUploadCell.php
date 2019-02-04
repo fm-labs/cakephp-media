@@ -1,6 +1,8 @@
 <?php
 namespace Media\View\Cell;
 
+use Cake\Core\Exception\MissingPluginException;
+use Cake\Core\Plugin;
 use Cake\ORM\TableRegistry;
 use Cake\View\Cell;
 use Media\Form\MediaUploadForm;
@@ -45,21 +47,23 @@ class MediaUploadCell extends Cell
      */
     public function display($params = [])
     {
-        $params += [
-        ];
+        $params += ['config' => null, 'uploader' => null];
 
         $path = ($this->request->query('path')) ?: '/';
-        $path = trim($path, '/');
+        $path = trim($path, '/') . '/';
 
         $uploadDir = $this->getMediaManager()->getBasePath() . $path;
         $uploadForm = $upload = null;
 
         try {
+            if (!Plugin::loaded('Upload')) {
+                throw new MissingPluginException(['plugin' => 'Upload']);
+            }
 
             $uploader = new Uploader([
                 'uploadDir' => $uploadDir,
                 'minFileSize' => 1,
-                'maxFileSize' => 500, //2097152, // 2MB
+                'maxFileSize' => 2097152, // 2MB
                 'mimeTypes' => '*', //['image/*'],
                 'fileExtensions' => '*',
                 'multiple' => false, //@TODO Multiple file upload
@@ -70,6 +74,7 @@ class MediaUploadCell extends Cell
                 'saveAs' => null, // filename override
                 //'pattern' => false, // @todo Implement me
             ]);
+            $uploader->setUploadDir($uploadDir);
             $this->set('uploadMultiple', $uploader->config('multiple'));
 
             $uploadForm = new MediaUploadForm('default', $uploader);

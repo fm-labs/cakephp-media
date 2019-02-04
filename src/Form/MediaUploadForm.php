@@ -8,25 +8,27 @@ use Upload\Uploader;
 
 class MediaUploadForm extends Form
 {
+    /**
+     * @var string Name of media config
+     */
+    protected $config;
 
     /**
-     * @var Uploader
+     * @var Uploader The Uploader instance
      */
     protected $uploader;
 
     /**
-     * Form data
-     *
-     * @var array
+     * @var array Form data
      */
     protected $data = [];
-
 
     /**
      * @param $mediaConfig
      * @param array|Uploader $uploader
+     * @throws \InvalidArgumentException
      */
-    public function __construct($mediaConfig, $uploader = [])
+    public function __construct($mediaConfig = 'default', $uploader = [])
     {
         $this->config = $mediaConfig;
 
@@ -45,15 +47,19 @@ class MediaUploadForm extends Form
     protected function _buildSchema(Schema $schema)
     {
         $schema->addField('upload_file', ['type' => 'string']);
+
         return $schema;
     }
 
     /**
      * Process upload
+     * @param array $data Form data
+     * @return array|bool
      */
     public function execute(array $data = [])
     {
         $result = $this->uploader->upload($data['upload_file']);
+
         return $result;
     }
 }
