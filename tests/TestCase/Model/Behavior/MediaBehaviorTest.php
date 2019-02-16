@@ -30,6 +30,9 @@ class MediaBehaviorTest extends MediaTestCase
      */
     public $table;
 
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -60,13 +63,18 @@ class MediaBehaviorTest extends MediaTestCase
         //$this->table->validator();
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public function tearDown()
     {
         parent::tearDown();
         TableRegistry::clear();
     }
 
+    /**
+     * @return void
+     */
     public function testImageFieldToMediaFile()
     {
         $post = $this->table->get(1, ['media' => true, 'contain' => []]);
@@ -74,6 +82,9 @@ class MediaBehaviorTest extends MediaTestCase
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->image);
     }
 
+    /**
+     * @return void
+     */
     public function testImageFieldToMediaFileMultiple()
     {
         $post = $this->table->get(2, ['media' => true]);
@@ -83,6 +94,9 @@ class MediaBehaviorTest extends MediaTestCase
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[1]);
     }
 
+    /**
+     * @return void
+     */
     public function testSaveText()
     {
         $text = 'Test Media Path in Text: /media/dir2/image1.jpg';
@@ -94,5 +108,4 @@ class MediaBehaviorTest extends MediaTestCase
 
         $this->table->save($entity);
     }
-
 }

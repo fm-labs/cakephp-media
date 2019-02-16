@@ -14,14 +14,12 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
-use Media\Model\Entity\MediaFileInterface;
 use Media\Model\Table\MediaAttachmentsTable;
 use Upload\Exception\UploadException;
 use Upload\Uploader;
 
 class MediaBehavior extends \Cake\ORM\Behavior
 {
-
     const MODE_INLINE = 'inline';
     const MODE_TABLE = 'table';
     const MODE_TEXT = 'text';
@@ -62,7 +60,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     protected $_fields = [];
 
     /**
-     * @param array $config
+     * {@inheritDoc}
      */
     public function initialize(array $config)
     {
@@ -84,14 +82,17 @@ class MediaBehavior extends \Cake\ORM\Behavior
         }
     }
 
+    /**
+     * @return array List of configured fields
+     */
     public function getFields()
     {
         return $this->_fields;
     }
 
     /**
-     * @param Query $query
-     * @param array $options
+     * @param Query $query Query object
+     * @param array $options Finder options
      * @return Query
      */
     public function findMedia(Query $query, array $options)
@@ -107,10 +108,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * Applies a MapReduce to the query, which resolves attachment info
      * if an attachment field is present in the query results.
      *
-     * @param Event $event
-     * @param Query $query
-     * @param array $options
-     * @param $primary
+     * @param Event $event The event object
+     * @param Query $query The query object
+     * @param array $options Finder options
+     * @param bool $primary Primary flag
+     * @return void
      */
     public function beforeFind(Event $event, Query $query, $options, $primary)
     {
@@ -148,35 +150,17 @@ class MediaBehavior extends \Cake\ORM\Behavior
                         case self::MODE_TEXT:
                         case self::MODE_HTML:
                             throw new NotImplementedException('MediaBehavior: ' . $field['mode'] . ' not implemented yet for field: ' . $fieldName);
-                            break;
 
                         case self::MODE_TABLE:
                             throw new \LogicException('MediaBehavior: A media file in table mode can not have a field: ' . $fieldName);
-                            break;
 
                         default:
                             throw new \LogicException('MediaBehavior: Misconfigured field: ' . $fieldName);
-                            break;
                     }
                 }
                 if ($row instanceof EntityInterface) {
                     $row->set($fieldName, $fieldMedia);
                     $row->dirty($fieldName, false);
-
-                    /*
-                    //@TODO Refactor media url injection, as this is qNd and has bad performance (read vproperties for every field is bad)
-                    if ($fieldMedia && !$field['multiple']) {
-                        $virtualUrlField = $fieldName . '_url';
-
-                        $_virtual = $row->virtualProperties();
-                        $_virtual[] = $virtualUrlField;
-                        $row->virtualProperties($_virtual);
-
-                        $row->accessible($virtualUrlField, true);
-                        $row->set($virtualUrlField, $fieldMedia->getUrl(true));
-                        $row->dirty($virtualUrlField, false);
-                    }
-                    */
                 } else {
                     $row[$fieldName] = $fieldMedia;
                 }
@@ -192,6 +176,12 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $query->mapReduce($mapper, $reducer);
     }
 
+    /**
+     * @param Event $event The event object
+     * @param Entity $entity The entity object
+     * @param \ArrayObject $options Finder options
+     * @return void|bool
+     */
     public function beforeSave(Event $event, Entity $entity, \ArrayObject $options)
     {
         foreach ($this->_fields as $field => $fieldConfig) {
@@ -201,7 +191,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
             $upload = $entity->get($uploadField);
             if ($fieldConfig['upload'] && is_array($upload)) {
-
                 if (isset($upload['error']) && $upload['error'] == 4) { // err 4 == no file uploaded
                     continue;
                 }
@@ -271,22 +260,20 @@ class MediaBehavior extends \Cake\ORM\Behavior
                     Log::alert('AttachmentBehavior: UploadException: ' . $ex->getMessage());
                     $entity->errors($uploadField, [$ex->getMessage()]);
                     $entity->errors($field, [$ex->getMessage()]);
+
                     return false;
 
                 } catch (\Exception $ex) {
                     Log::alert('AttachmentBehavior: Exception: ' . $ex->getMessage());
                     $entity->errors($uploadField, [$ex->getMessage()]);
                     $entity->errors($field, [$ex->getMessage()]);
+
                     return false;
                 }
-
-
             } elseif ($entity->has($field)) {
                 unset($entity->$uploadField);
             }
         }
-
-        //debug($entity);
 
         //$this->_removeFlagged();
     }
@@ -301,7 +288,13 @@ class MediaBehavior extends \Cake\ORM\Behavior
 //        }
 //    }
 
-    public function afterSave(Event $event, Entity $entity, $options)
+    /**
+     * @param Event $event The event object
+     * @param Entity $entity The entity object
+     * @param \ArrayObject $options Finder options
+     * @return void|bool
+     */
+    public function afterSave(Event $event, Entity $entity, \ArrayObject $options)
     {
         //debug("afterSave");
         if ($entity->isNew()) {
@@ -359,22 +352,20 @@ class MediaBehavior extends \Cake\ORM\Behavior
     }
 
     /**
-     * @param string $filePath Relative file path to configured dataDir
+     * @param string $value Relative file path to configured dataDir
      * @param array $field Field config
-     * @return array|MediaFile|Collection
+     * @return null|array|MediaFile|Collection
      */
     protected function _resolveFromInline($value, $field)
     {
         //debug("resolve media file inline on table:" . $this->_table->alias() . " path:" . $value);
-
         if (!$value) {
-            return;
+            return null;
         }
 
         $config =& $this->_config;
 
         $resolver = function ($value) use ($field, $config) {
-
             // @TODO Use dedicated InlineMediaFile object and/or check if MediaFileInterface is attached
             $file = new $field['entityClass']();
             //$file->config = $field['config'];
@@ -394,9 +385,10 @@ class MediaBehavior extends \Cake\ORM\Behavior
             return $file;
         };
 
-        if ($field['multiple'] && is_array($value)) {
+        if ($field['multiple']) {
+            $names = explode(',', $value);
             $files = [];
-            foreach ($value as $_value) {
+            foreach ($names as $_value) {
                 $files[] = $resolver($_value);
             }
             // The marshaller does not accept arrays,
@@ -410,9 +402,16 @@ class MediaBehavior extends \Cake\ORM\Behavior
         }
     }
 
+    /**
+     * Resolve from attachments table
+     *
+     * @param mixed $row Data row
+     * @param string $fieldName Field name
+     * @param array $field Field config
+     * @return null|array|MediaFile|Collection
+     */
     protected function _resolveFromTable($row, $fieldName, $field)
     {
-
         //debug("Resolving db attachments for field " . $fieldName);
         $config =& $this->_config;
         $Attachments = $this->_getAttachmentsModel($fieldName);
@@ -448,7 +447,6 @@ class MediaBehavior extends \Cake\ORM\Behavior
             $file->basename = $attachment->filename;
             $file->ext = null;
             $file->desc = $attachment->desc_text;
-
             if ($config['dataUrl']) {
                 $file->url = rtrim($config['dataUrl'], '/') . '/' . $filePath;
             }
@@ -473,17 +471,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     }
 
     /**
-     * @return MediaFileInterface
-     */
-    protected function _newMediaFile($field, $path)
-    {
-        $file = new $field['entityClass']();
-        $file->config = $field['config'];
-        $file->path = $filePath;
-    }
-
-    /**
-     * @param $field
+     * @param string $field Field name
      * @return MediaAttachmentsTable
      */
     protected function _getAttachmentsModel($field)
