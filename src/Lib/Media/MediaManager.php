@@ -28,7 +28,7 @@ class MediaManager
      * @return $this
      * @throws \Exception
      */
-    static public function getProvider($config)
+    public static function getProvider($config)
     {
         if (empty(self::configured())) {
             self::config(Configure::read('Media'));
@@ -36,9 +36,8 @@ class MediaManager
 
         if (is_string($config) && in_array($config, self::configured())) {
             $config = self::config($config);
-        }
-        elseif (!is_array($config)) {
-            throw new \InvalidArgumentException("Invalid configuration '" . (string) $config . "'");
+        } elseif (!is_array($config)) {
+            throw new \InvalidArgumentException("Invalid configuration '" . (string)$config . "'");
         }
 
         $config = array_merge([
@@ -73,7 +72,6 @@ class MediaManager
 
         throw new \Exception("Provider is not a valid MediaProviderInterface");
     }
-
 
     public static function get($configName)
     {
@@ -114,10 +112,9 @@ class MediaManager
     public function read($path)
     {
         $this->setPath($path);
+
         return $this->_provider->read($this->_path);
     }
-
-
 
     /** MEDIA BROWSING **/
 
@@ -159,11 +156,11 @@ class MediaManager
 //        $this->setPath($path);
 //        return $this;
 //    }
-    
+
     public function listFiles($path)
     {
         $path = $this->_normalizePath($path);
-        list(,$files) = $this->read($path);
+        list(, $files) = $this->read($path);
         array_walk($files, function (&$file, $idx) use ($path) {
             $file = $path . $file;
         });
@@ -238,7 +235,6 @@ class MediaManager
         //$this->_provider->delete($path);
     }
 
-
     /**
      * Normalize Path
      *
@@ -259,7 +255,6 @@ class MediaManager
 
         return $path;
     }
-
 
     public function buildFileUrl($filePath)
     {

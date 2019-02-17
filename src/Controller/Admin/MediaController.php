@@ -39,8 +39,7 @@ class MediaController extends AppController
                 $uploadForm->execute($this->request->data);
             }
             $this->set('uploadForm', $uploadForm);
-
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $error = $ex->getMessage();
             $this->Flash->error($error);
         }
@@ -65,10 +64,10 @@ class MediaController extends AppController
                 'saveAs' => null, // filename override
                 //'pattern' => false, // @todo Implement me
             ]);
-
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $error = $ex->getMessage();
             $this->Flash->error($error);
+
             return;
         }
 
@@ -98,8 +97,7 @@ class MediaController extends AppController
         try {
             $mgr = MediaManager::getProvider($config);
             list($dirs, $files) = $mgr->read($path);
-
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $error = $ex->getMessage();
         }
 

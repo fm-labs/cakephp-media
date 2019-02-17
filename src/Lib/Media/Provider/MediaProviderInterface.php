@@ -17,5 +17,4 @@ interface MediaProviderInterface
      * @return array List of files and directories
      */
     public function read($path);
-
 }

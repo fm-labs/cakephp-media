@@ -76,7 +76,8 @@ class MediaFile extends Entity implements MediaFileInterface
         return $url;
     }
 
-    public function getUrlEncoded($full = false) {
+    public function getUrlEncoded($full = false)
+    {
 
         $url = MediaManager::get($this->config)->getFileUrlEncoded($this->path);
         if ($full) {
@@ -85,7 +86,6 @@ class MediaFile extends Entity implements MediaFileInterface
 
         return $url;
     }
-
 
     protected function _setPath($path)
     {
@@ -110,6 +110,7 @@ class MediaFile extends Entity implements MediaFileInterface
                 $this->_properties['size'] = @filesize($this->path);
             }
         }
+
         return $this->_properties['size'];
     }
 
@@ -131,6 +132,7 @@ class MediaFile extends Entity implements MediaFileInterface
         if (!isset($this->_properties['basename'])) {
             $this->_properties['basename'] = basename($this->path);
         }
+
         return $this->_properties['basename'];
     }
 

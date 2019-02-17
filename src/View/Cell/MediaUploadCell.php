@@ -82,8 +82,7 @@ class MediaUploadCell extends Cell
                 //debug($this->request->data);
                 $upload = $uploadForm->execute($this->request->data);
             }
-
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $error = $ex->getMessage();
             $this->set('error', $ex->getMessage());
         }

@@ -2,7 +2,6 @@
 
 namespace Media\Test\TestCase\Lib\Media\Provider;
 
-
 use Media\Lib\Media\Provider\MediaProviderInterface;
 
 class TestProvider implements MediaProviderInterface

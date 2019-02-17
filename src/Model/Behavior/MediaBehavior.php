@@ -255,14 +255,12 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
                     // clear upload field
                     unset($entity->$uploadField);
-
                 } catch (UploadException $ex) {
                     Log::alert('AttachmentBehavior: UploadException: ' . $ex->getMessage());
                     $entity->errors($uploadField, [$ex->getMessage()]);
                     $entity->errors($field, [$ex->getMessage()]);
 
                     return false;
-
                 } catch (\Exception $ex) {
                     Log::alert('AttachmentBehavior: Exception: ' . $ex->getMessage());
                     $entity->errors($uploadField, [$ex->getMessage()]);

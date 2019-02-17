@@ -8,11 +8,11 @@ use Cake\TestSuite\TestCase;
 
 class MediaTestCase extends TestCase
 {
-    
+
     public static $sourcePath;
-    
+
     public static $targetPath;
-    
+
     /**
      * @var Folder
      */

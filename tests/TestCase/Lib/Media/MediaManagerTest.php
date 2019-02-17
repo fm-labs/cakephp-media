@@ -24,6 +24,7 @@ class MediaManagerTest extends MediaTestCase
     public function testPathGetterSetter()
     {
         $this->markTestIncomplete();
+
         return;
 
         $this->mm->setPath('/');
@@ -54,6 +55,7 @@ class MediaManagerTest extends MediaTestCase
     public function testBadPathGetterSetter()
     {
         $this->markTestIncomplete();
+
         return;
 
         $this->mm->setPath('/../');

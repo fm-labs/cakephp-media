@@ -80,6 +80,7 @@ class MediaBrowserHelper extends Helper
     public function getSourcePath($path, $file)
     {
         $f = $this->_getFile();
+
         return $f->path;
     }
 
@@ -90,6 +91,7 @@ class MediaBrowserHelper extends Helper
         $path = rtrim($path, '/') . '/';
 
         $f = new File($basePath . $path . $file);
+
         return $f;
     }
 }

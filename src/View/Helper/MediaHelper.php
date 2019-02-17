@@ -60,10 +60,10 @@ class MediaHelper extends Helper
         $thumbUrl = $this->_generateThumbnail($source, $options);
         if ($thumbUrl) {
             return $this->Html->image($thumbUrl, $attr);
-        }
-        elseif (Configure::read('debug')) {
+        } elseif (Configure::read('debug')) {
             return "[x]";
         }
+
         return null;
     }
 
@@ -71,11 +71,13 @@ class MediaHelper extends Helper
     {
         if (!$this->_processor) {
             $this->_error("generateThumbnail: Image processor not loaded");
+
             return false;
         }
 
         if (!file_exists($source) || preg_match('/\:\/\//', $source)) {
             $this->_error("generateThumbnail: Source image not found at " . $source);
+
             return false;
         }
 
@@ -83,6 +85,7 @@ class MediaHelper extends Helper
 
         if (!in_array($info['extension'], ['jpeg', 'jpg', 'png'])) {
             $this->_error("generateThumbnail: Source file is not an image");
+
             return false;
         }
 
@@ -107,6 +110,7 @@ class MediaHelper extends Helper
             $this->_log('generateThumbnail: CREATED: ' . $thumbPath . ' from: ' . $source, 'info');
         } catch (\Exception $ex) {
             $this->_error('generateThumbnail: FAILED: ' . $ex->getMessage());
+
             return false;
         }
 

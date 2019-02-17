@@ -46,6 +46,7 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
             if ($val instanceof MediaFile) {
                 return $view->Media->thumbnail($val->getFilePath(), ['height' => 50, 'width' => 75]);
             }
+
             return h($val);
         });
 
@@ -66,13 +67,16 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
 
                 $routes->extensions(['json']);
 
-                $routes->connect('/browser/',
+                $routes->connect(
+                    '/browser/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
                 );
-                $routes->connect('/browser/:config/',
+                $routes->connect(
+                    '/browser/:config/',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
                 );
-                $routes->connect('/browser/:config/:action',
+                $routes->connect(
+                    '/browser/:config/:action',
                     ['plugin' => 'Media', 'controller' => 'MediaBrowser']
                 );
 
@@ -106,17 +110,14 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
 
     public function routes(RouteBuilder $routes)
     {
-
     }
 
     public function middleware(MiddlewareQueue $middleware)
     {
-
     }
 
     public function backendBootstrap(Backend $backend)
     {
-
     }
 
     public function backendRoutes(RouteBuilder $routes)

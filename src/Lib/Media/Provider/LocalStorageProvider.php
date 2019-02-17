@@ -49,18 +49,18 @@ class LocalStorageProvider extends MediaProvider
             throw new \Exception("LocalStorage: Base path not found: " . $basePath);
         }
         if (!is_readable($basePath)) {
-            throw new \Exception(__d('media',"LocalStorage: Root path *{0}* is not accessible", $basePath));
+            throw new \Exception(__d('media', "LocalStorage: Root path *{0}* is not accessible", $basePath));
         }
         $this->_basePath = rtrim($basePath, '/') . '/';
         $this->_baseUrl = $this->config('baseUrl');
         $this->_path = '/';
     }
-    
+
     protected function _getRealPath($path = '/')
     {
         return $this->_basePath . ltrim($path, '/');
     }
-    
+
     protected function _connect()
     {
         if (!$this->_Folder) {
@@ -85,9 +85,9 @@ class LocalStorageProvider extends MediaProvider
         if (!$this->_Folder->cd($path)) {
             throw new \Exception("Failed to open directory path");
         }
+
         return $this->_Folder->read();
     }
-
 
 //    public function basePath()
 //    {

@@ -2,7 +2,8 @@
 
 namespace Media\Model\Entity;
 
-interface MediaFileInterface {
+interface MediaFileInterface
+{
 
     public function getPath();
     public function getUrl();
@@ -11,5 +12,4 @@ interface MediaFileInterface {
      * @return bool
      */
     public function isImage();
-
 }

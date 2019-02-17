@@ -14,7 +14,8 @@ abstract class MediaProvider implements MediaProviderInterface
         $this->initialize();
     }
 
-    public function initialize() {
+    public function initialize()
+    {
         // Override in sub classes
     }
 }

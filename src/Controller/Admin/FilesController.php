@@ -96,6 +96,7 @@ class FilesController extends AppController
         $file = $this->request->query('file');
 
         $f = new File($basePath . $path . $file);
+
         return $f;
     }
 
