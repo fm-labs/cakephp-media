@@ -2,24 +2,19 @@
 
 namespace Media;
 
-use Backend\Backend;
-use Backend\BackendPluginInterface;
-use Backend\Event\RouteBuilderEvent;
 use Banana\Application;
-use Banana\Plugin\PluginInterface;
+use Banana\Plugin\BasePlugin;
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
-use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 
-class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListenerInterface
+class MediaPlugin extends BasePlugin implements EventListenerInterface
 {
+    protected $_name = "Media";
 
     /**
      * Returns a list of events this object is implementing. When the class is registered
@@ -32,8 +27,8 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
     public function implementedEvents()
     {
         return [
-            //'Backend.Menu.build' => ['callable' => 'buildBackendMenu', 'priority' => 90],
-            'Backend.Sidebar.build' => ['callable' => 'buildBackendMenu', 'priority' => 90],
+            //'Backend.Menu.build.admin_primary' => ['callable' => 'buildBackendMenu', 'priority' => 90],
+            'Backend.Menu.build.admin_primary' => ['callable' => 'buildBackendMenu', 'priority' => 90],
             'Backend.View.initialize' => 'initializeBackendView',
             'Backend.Routes.build' => 'buildBackendRoutes'
 
@@ -54,41 +49,38 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
             return h($val);
         });
 
-        $event->subject()->loadHelper('Media.Media');
-        $event->subject()->loadHelper('Media.MediaPicker');
+        /* @var \Cake\View\View $view */
+        $view = $event->subject();
+        $view->eventManager()->on('View.beforeRender', function ($ev) {
+            $ev->subject()->loadHelper('Media.Media');
+            $ev->subject()->loadHelper('Media.MediaPicker');
+        });
     }
 
-    public function buildBackendRoutes(RouteBuilderEvent $event)
+    public function backendRoutes(RouteBuilder $routes)
     {
-        $event->subject()->scope(
-            '/media',
-            ['plugin' => 'Media', 'prefix' => 'admin', '_namePrefix' => 'media:admin:'],
-            function ($routes) {
+        $routes->extensions(['json']);
 
-                $routes->extensions(['json']);
-
-                $routes->connect(
-                    '/browser/',
-                    ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
-                );
-                $routes->connect(
-                    '/browser/:config/',
-                    ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
-                );
-                $routes->connect(
-                    '/browser/:config/:action',
-                    ['plugin' => 'Media', 'controller' => 'MediaBrowser']
-                );
-
-                //$routes->connect('/:controller');
-                $routes->fallbacks('DashedRoute');
-            }
+        $routes->connect(
+            '/browser/',
+            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
         );
+        $routes->connect(
+            '/browser/:config/',
+            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
+        );
+        $routes->connect(
+            '/browser/:config/:action',
+            ['plugin' => 'Media', 'controller' => 'MediaBrowser']
+        );
+
+        //$routes->connect('/:controller');
+        $routes->fallbacks('DashedRoute');
     }
 
-    public function buildBackendMenu(Event $event)
+    public function buildBackendMenu(Event $event, \Banana\Menu\Menu $menu)
     {
-        $event->subject()->addItem([
+        $menu->addItem([
             'title' => 'Media',
             'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index'],
             'data-icon' => 'picture-o',
@@ -104,25 +96,9 @@ class MediaPlugin implements PluginInterface, BackendPluginInterface, EventListe
 
     public function bootstrap(Application $app)
     {
+        parent::bootstrap($app);
+
         MediaManager::config(Configure::read('Media'));
         EventManager::instance()->on($this);
-    }
-
-    public function routes(RouteBuilder $routes)
-    {
-    }
-
-    public function middleware(MiddlewareQueue $middleware)
-    {
-    }
-
-    public function backendBootstrap(Backend $backend)
-    {
-    }
-
-    public function backendRoutes(RouteBuilder $routes)
-    {
-        $routes->addExtensions('json');
-        $routes->fallbacks('DashedRoute');
     }
 }

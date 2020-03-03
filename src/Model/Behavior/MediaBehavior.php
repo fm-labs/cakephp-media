@@ -120,12 +120,13 @@ class MediaBehavior extends \Cake\ORM\Behavior
         //    $options['media'] = true; //@TODO Make eager-loading configurable
         //}
 
-        if (!isset($options['media']) || isset($options['media']) && $options['media'] === false) {
+        if (/*!isset($options['media']) || */isset($options['media']) && $options['media'] === false) {
+            //debug("Media disabled in this find operatoin " . get_class($this->_table));
             return;
         }
 
         $fields = [];
-        if ($options['media'] === true) {
+        if (!isset($options['media']) || $options['media'] === true) {
             $fields = array_keys($this->_fields);
         } else {
             $fields = (array)$options['media'];
