@@ -64,7 +64,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function initialize(array $config)
     {
-        $this->_config['model'] = ($this->_config['model']) ?: $this->_table->alias();
+        $this->_config['model'] = ($this->_config['model']) ?: $this->_table->getAlias();
 
         foreach ($this->_config['fields'] as $field => $_config) {
             if (is_numeric($field)) {
@@ -77,7 +77,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
             // apply special field type to schema
             if ($_config['multiple'] === true && $_config['mode'] !== self::MODE_TABLE) {
-                $this->_table->schema()->columnType($field, 'media_file');
+                $this->_table->getSchema()->setColumnType($field, 'media_file');
             }
         }
     }
@@ -200,7 +200,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
                 try {
                     // set upload dir. create it if it does not exist
-                    $uploadDir = Inflector::tableize($this->_table->alias());
+                    $uploadDir = Inflector::tableize($this->_table->getAlias());
 
                     $mm = MediaManager::get($fieldConfig['config']);
                     $uploadBasePath = $mm->getBasePath();
@@ -338,7 +338,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     protected function _modelName()
     {
         $plugin = null;
-        $tableName = $this->_table->alias();
+        $tableName = $this->_table->getAlias();
         list($namespace, ) = namespaceSplit(get_class($this->_table));
         if ($namespace && (($pos = strpos($namespace, '\\')) !== false)) {
             $plugin = substr($namespace, 0, $pos);
@@ -357,7 +357,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     protected function _resolveFromInline($value, $field)
     {
-        //debug("resolve media file inline on table:" . $this->_table->alias() . " path:" . $value);
+        //debug("resolve media file inline on table:" . $this->_table->getAlias() . " path:" . $value);
         if (!$value) {
             return null;
         }
@@ -479,7 +479,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
         if ($this->_fields[$field]['i18n'] && $this->_table && $this->_table->hasBehavior('Translate')) {
             $parentLocale = $this->_table->locale();
             $Model->enableI18n();
-            $Model->locale($parentLocale);
+            $Model->setLocale($parentLocale);
         }
 
         return $Model;

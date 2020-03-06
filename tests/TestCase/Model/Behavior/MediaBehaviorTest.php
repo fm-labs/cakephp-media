@@ -40,7 +40,7 @@ class MediaBehaviorTest extends MediaTestCase
         $this->table = TableRegistry::getTableLocator()->get('Media.Posts', ['table' => 'media_posts']);
         $this->table->primaryKey(['id']);
         //$this->table->entityClass('\\Attachment\\Test\\TestCase\\Model\\Entity\\ExampleEntity');
-        //$this->table->schema()->columnType('images', 'media_file');
+        //$this->table->getSchema()->setColumnType('images', 'media_file');
         $this->table->addBehavior('Media.Media', [
             'fields' => [
                 'image' => [
@@ -69,7 +69,7 @@ class MediaBehaviorTest extends MediaTestCase
     public function tearDown()
     {
         parent::tearDown();
-        TableRegistry::clear();
+        TableRegistry::getTableLocator()->clear();
     }
 
     /**

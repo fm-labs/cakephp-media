@@ -74,7 +74,7 @@ class MediaController extends AppController
         //$uploader->setSaveAs('hellyea.jpg');
 
         if ($this->request->is('post')) {
-            $upload = $uploader->upload($this->request->data['upload']);
+            $upload = $uploader->upload($this->request->getData('upload'));
             debug($upload);
         }
     }

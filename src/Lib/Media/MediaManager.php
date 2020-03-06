@@ -31,11 +31,11 @@ class MediaManager
     public static function getProvider($config)
     {
         if (empty(self::configured())) {
-            self::config(Configure::read('Media'));
+            self::setConfig(Configure::read('Media'));
         }
 
         if (is_string($config) && in_array($config, self::configured())) {
-            $config = self::config($config);
+            $config = self::getConfig($config);
         } elseif (!is_array($config)) {
             throw new \InvalidArgumentException("Invalid configuration '" . (string)$config . "'");
         }
