@@ -37,7 +37,7 @@ class MediaBehaviorTest extends MediaTestCase
     {
         parent::setUp();
 
-        $this->table = TableRegistry::get('Media.Posts', ['table' => 'media_posts']);
+        $this->table = TableRegistry::getTableLocator()->get('Media.Posts', ['table' => 'media_posts']);
         $this->table->primaryKey(['id']);
         //$this->table->entityClass('\\Attachment\\Test\\TestCase\\Model\\Entity\\ExampleEntity');
         //$this->table->schema()->columnType('images', 'media_file');

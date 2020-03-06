@@ -81,10 +81,10 @@ class MediaController extends AppController
 
     public function data($config = null)
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
         $config = ($config) ? $config : 'default';
-        $path = ($this->request->query('path')) ?: '/';
+        $path = ($this->request->getQuery('path')) ?: '/';
         $path = trim($path);
         $path = rtrim($path, '/');
         $path = $path . '/';

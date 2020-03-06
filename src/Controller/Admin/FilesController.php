@@ -23,12 +23,12 @@ class FilesController extends AppController
 
     public function index()
     {
-        $path = ($this->request->query('path')) ?: '/';
+        $path = ($this->request->getQuery('path')) ?: '/';
         $path = rtrim($path, '/') . '/';
         $contents = $this->manager->read($path);
         list($folders, $files) = $contents;
 
-        if ($this->request->query('file')) {
+        if ($this->request->getQuery('file')) {
             $f = $this->_getFileFromRequest();
             $this->set('selectedFile', $f);
         }
@@ -91,9 +91,9 @@ class FilesController extends AppController
     {
         $basePath = $this->manager->getBasePath();
         //@TODO Sanitize query!
-        $path = ($this->request->query('path')) ?: '/';
+        $path = ($this->request->getQuery('path')) ?: '/';
         $path = rtrim($path, '/') . '/';
-        $file = $this->request->query('file');
+        $file = $this->request->getQuery('file');
 
         $f = new File($basePath . $path . $file);
 
@@ -103,7 +103,7 @@ class FilesController extends AppController
     /*
     public function upload()
     {
-        $path = ($this->request->query('path')) ?: '/';
+        $path = ($this->request->getQuery('path')) ?: '/';
         $path = trim($path, '/') . '/';
 
         try {

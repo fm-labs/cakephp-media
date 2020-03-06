@@ -49,7 +49,7 @@ class MediaUploadCell extends Cell
     {
         $params += ['config' => null, 'uploader' => null];
 
-        $path = ($this->request->query('path')) ?: '/';
+        $path = ($this->request->getQuery('path')) ?: '/';
         $path = trim($path, '/') . '/';
 
         $uploadDir = $this->getMediaManager()->getBasePath() . $path;

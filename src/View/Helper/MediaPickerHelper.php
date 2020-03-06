@@ -2,7 +2,6 @@
 
 namespace Media\View\Helper;
 
-use Cake\Event\Event;
 use Cake\View\View;
 
 class MediaPickerHelper extends MediaHelper
@@ -15,18 +14,6 @@ class MediaPickerHelper extends MediaHelper
     {
         parent::__construct($View, $config);
 
-        $this->Form->templater()->load('Media.form_templates');
-        $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button', 'select']);
-
-        $this->loadDependencies();
-    }
-
-    public function loadDependencies()
-    {
-        if ($this->_assetsLoaded === true) {
-            return;
-        }
-
         $this->_View->loadHelper('Backend.JsTree');
 
         $this->Html->script('/backend/libs/underscore/underscore-min', ['block' => 'script']);
@@ -34,11 +21,5 @@ class MediaPickerHelper extends MediaHelper
 
         $this->Html->css('Media.mediapicker', ['block' => true]);
         $this->Html->script('Media.mediapicker', ['block' => 'script']);
-
-        $this->_assetsLoaded = true;
-    }
-
-    public function beforeLayout(Event $event)
-    {
     }
 }

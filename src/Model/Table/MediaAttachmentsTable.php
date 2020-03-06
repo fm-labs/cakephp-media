@@ -22,9 +22,9 @@ class MediaAttachmentsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('attachments');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('attachments');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

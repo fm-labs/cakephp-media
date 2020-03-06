@@ -41,7 +41,7 @@ class LocalStorageProvider extends MediaProvider
 
     public function initialize()
     {
-        $basePath = $this->config('basePath');
+        $basePath = $this->getConfig('basePath');
         if (!$basePath) {
             throw new \InvalidArgumentException("LocalStorage: Base path not defined");
         }
@@ -52,7 +52,7 @@ class LocalStorageProvider extends MediaProvider
             throw new \Exception(__d('media', "LocalStorage: Root path *{0}* is not accessible", $basePath));
         }
         $this->_basePath = rtrim($basePath, '/') . '/';
-        $this->_baseUrl = $this->config('baseUrl');
+        $this->_baseUrl = $this->getConfig('baseUrl');
         $this->_path = '/';
     }
 
@@ -96,7 +96,7 @@ class LocalStorageProvider extends MediaProvider
 //
 //    public function baseUrl($full = false)
 //    {
-//        $baseUrl = $this->config('url');
+//        $baseUrl = $this->getConfig('url');
 //        if (!$baseUrl) {
 //            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
 //        }
@@ -124,7 +124,7 @@ class LocalStorageProvider extends MediaProvider
 //    protected function _getRealPath($path)
 //    {
 //        $path = $this->_normalizePath($path);
-//        $realpath = $this->config('path') . $path;
+//        $realpath = $this->getConfig('path') . $path;
 //
 //        //return realpath($realpath);
 //        return $realpath;

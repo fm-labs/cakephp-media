@@ -42,15 +42,15 @@ class MediaBrowserController extends AppController
 
         $config = $this->request->param('config');
         if (!$config) {
-            $config = $this->request->query('config');
+            $config = $this->request->getQuery('config');
         }
         if (!$config) {
             $config = "default";
         }
         $configKey = 'Media.'.$config;
         if (!Plugin::loaded('Media') || !Configure::check($configKey)) {
-            $this->request->params['action'] = 'noconfig';
-            $this->request->params['config'] = $config;
+            $this->request->getParam('action') = 'noconfig';
+            $this->request->getParam('config') = $config;
             //$this->viewBuilder()->view('notfound');
         } else {
             $this->_mediaConfig = $config;
@@ -77,7 +77,7 @@ class MediaBrowserController extends AppController
     public function noconfig()
     {
         $pluginLoaded = Plugin::loaded('Media');
-        $config = $this->request->params['config'];
+        $config = $this->request->getParam('config');
         if ($pluginLoaded) {
             $configExample = @file_get_contents(Plugin::path('Media') . DS . 'config' . DS . 'media.default.php');
         } else {
@@ -96,8 +96,8 @@ class MediaBrowserController extends AppController
 
     public function browse()
     {
-        $path = $this->request->query('path');
-        $file = $this->request->query('file');
+        $path = $this->request->getQuery('path');
+        $file = $this->request->getQuery('file');
         $this->_mm->open($path);
 
         $this->set('directories', $this->_mm->listFolders());
@@ -107,9 +107,9 @@ class MediaBrowserController extends AppController
 
     public function treeData()
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
-        $id = $this->request->query('id');
+        $id = $this->request->getQuery('id');
         $path = ($id == '#') ? '/' : $id;
         $treeData = [];
 
@@ -140,9 +140,9 @@ class MediaBrowserController extends AppController
 
     public function filesData()
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
-        $id = $this->request->query('id');
+        $id = $this->request->getQuery('id');
         $path = ($id == '#') ? '/' : $id;
         $treeData = [];
 
@@ -183,8 +183,8 @@ class MediaBrowserController extends AppController
 
     public function filepicker()
     {
-        $path = $this->request->query('path');
-        $file = $this->request->query('file');
+        $path = $this->request->getQuery('path');
+        $file = $this->request->getQuery('file');
         $this->_mm->open($path);
 
         $this->set('folders', $this->_mm->listFolders());
@@ -196,7 +196,7 @@ class MediaBrowserController extends AppController
      */
     public function treeFiles()
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
         $files = [];
         $selectedDirs = $this->request->data('selected');

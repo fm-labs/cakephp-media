@@ -36,7 +36,7 @@ class ImageSelectCell extends Cell
             'multiple' => false,
         ];
 
-        $Model = TableRegistry::get($params['model']);
+        $Model = TableRegistry::getTableLocator()->get($params['model']);
 
         $image = null;
         if (isset($params['image'])) {

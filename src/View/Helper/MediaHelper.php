@@ -30,9 +30,10 @@ class MediaHelper extends Helper
      */
     protected $_processor;
 
-    public function __construct(View $View, array $config = [])
+    public function initialize($config)
     {
-        parent::__construct($View, $config);
+        $this->Form->templater()->load('Media.form_templates');
+        $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button', 'select']);
 
         // Load ImageProcessor if Imagine is available
         try {
@@ -124,7 +125,7 @@ class MediaHelper extends Helper
 
     protected function _error($msg, $log = false)
     {
-        debug($msg);
+        //debug($msg);
         if ($log) {
             $this->_log($msg, 'error');
         }

@@ -38,12 +38,8 @@ class MediaPickerWidget extends BasicWidget
 
         // make sure the MediaPickerHelper is attached to the current view
         if (!$this->view->helpers()->has('MediaPicker')) {
-            $this->view->loadHelper('Media.Media');
             $this->view->loadHelper('Media.MediaPicker');
         }
-
-        // lazy load helper, css and script dependencies via MediaPickerHelper
-        $view->MediaPicker->loadDependencies();
     }
 
     public function render(array $data, ContextInterface $context)

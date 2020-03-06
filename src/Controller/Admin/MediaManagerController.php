@@ -10,12 +10,12 @@ class MediaManagerController extends AppController
 
     public function treeData()
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
-        $id = $this->request->query('id');
+        $id = $this->request->getQuery('id');
         $path = ($id == '#') ? '/' : $id;
         $treeData = [];
-        $config = $this->request->query('config');
+        $config = $this->request->getQuery('config');
 
         $mm = MediaManager::get($config);
 
@@ -43,13 +43,13 @@ class MediaManagerController extends AppController
 
     public function filesData()
     {
-        $this->viewBuilder()->className('Json');
+        $this->viewBuilder()->setClassName('Json');
 
-        $id = $this->request->query('id');
+        $id = $this->request->getQuery('id');
         $path = ($id == '#') ? '/' : $id;
         $treeData = [];
 
-        $config = $this->request->query('config');
+        $config = $this->request->getQuery('config');
 
         $mm = MediaManager::get($config);
         $files = $mm->listFiles($path);
@@ -82,13 +82,13 @@ class MediaManagerController extends AppController
 
     public function setImage()
     {
-        $scope = $this->request->query('scope');
-        $multiple = $this->request->query('multiple');
-        $model = $this->request->query('model');
-        $id = $this->request->query('id');
-        $config = $this->request->query('config');
+        $scope = $this->request->getQuery('scope');
+        $multiple = $this->request->getQuery('multiple');
+        $model = $this->request->getQuery('model');
+        $id = $this->request->getQuery('id');
+        $config = $this->request->getQuery('config');
 
-        $Table = TableRegistry::get($model);
+        $Table = TableRegistry::getTableLocator()->get($model);
 
         $Table->behaviors()->unload('Media');
         $content = $Table->get($id, [
@@ -141,15 +141,15 @@ class MediaManagerController extends AppController
 
     public function deleteImage()
     {
-        $scope = $this->request->query('scope');
-        $multiple = $this->request->query('multiple');
-        $model = $this->request->query('model');
-        $id = $this->request->query('id');
-        $pathEncoded = $this->request->query('img');
+        $scope = $this->request->getQuery('scope');
+        $multiple = $this->request->getQuery('multiple');
+        $model = $this->request->getQuery('model');
+        $id = $this->request->getQuery('id');
+        $pathEncoded = $this->request->getQuery('img');
         $pathDecoded = base64_decode($pathEncoded);
-        $referer = ($this->request->query('ref')) ?: $this->referer();
+        $referer = ($this->request->getQuery('ref')) ?: $this->referer();
 
-        $Table = TableRegistry::get($model);
+        $Table = TableRegistry::getTableLocator()->get($model);
 
         $Table->behaviors()->unload('Media');
         $content = $Table->get($id, [

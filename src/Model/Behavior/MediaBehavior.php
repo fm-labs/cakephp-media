@@ -7,7 +7,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 use Cake\Log\Log;
-use Cake\Network\Exception\NotImplementedException;
+use Cake\Http\Exception\NotImplementedException;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -320,7 +320,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 $attachment->filepath = $entity->get($fieldName);
 
                 if (!$this->_getAttachmentsModel($fieldName)->save($attachment)) {
-                    Log::error('MediaBehavior:afterSave: Failed to save attachment: ' . json_encode($attachment->errors()));
+                    Log::error('MediaBehavior:afterSave: Failed to save attachment: ' . json_encode($attachment->getErrors()));
                 }
             }
         }
@@ -328,7 +328,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     /**
      * Return model alias including plugin prefix with dot notation.
-     * Compatible with TableRegistry::get()
+     * Compatible with TableRegistry::getTableLocator()->get()
      *
      * Example: Plugin Blog has a model table named PostsTable
      *   The function would return 'Blog.Posts'
@@ -475,7 +475,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     protected function _getAttachmentsModel($field)
     {
-        $Model = TableRegistry::get($this->_fields[$field]['attachmentsTable']);
+        $Model = TableRegistry::getTableLocator()->get($this->_fields[$field]['attachmentsTable']);
         if ($this->_fields[$field]['i18n'] && $this->_table && $this->_table->hasBehavior('Translate')) {
             $parentLocale = $this->_table->locale();
             $Model->enableI18n();
