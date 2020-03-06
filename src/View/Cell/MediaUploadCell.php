@@ -56,7 +56,7 @@ class MediaUploadCell extends Cell
         $uploadForm = $upload = null;
 
         try {
-            if (!Plugin::loaded('Upload')) {
+            if (!Plugin::isLoaded('Upload')) {
                 throw new MissingPluginException(['plugin' => 'Upload']);
             }
 
@@ -75,7 +75,7 @@ class MediaUploadCell extends Cell
                 //'pattern' => false, // @todo Implement me
             ]);
             $uploader->setUploadDir($uploadDir);
-            $this->set('uploadMultiple', $uploader->config('multiple'));
+            $this->set('uploadMultiple', $uploader->getConfig('multiple'));
 
             $uploadForm = new MediaUploadForm('default', $uploader);
             if ($this->request->is('post')) {

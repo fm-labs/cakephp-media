@@ -219,7 +219,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
                     if ($fieldConfig['multiple']) {
                         //@TODO Multi upload is broken
-                        $Uploader->config('multiple', true);
+                        $Uploader->setConfig('multiple', true);
                         $value = [];
                         if ($Uploader->upload($entity->{$uploadField}, $uploadOptions)) {
                             foreach ($Uploader->getResult() as $upload) {

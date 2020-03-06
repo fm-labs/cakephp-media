@@ -26,19 +26,19 @@
                 <?php endif; ?>
                 <?php
                 //            echo $this->Form->create(null, ['type' => 'file']);
-                //            echo $this->Form->input('config', ['type' => 'text', 'value' => $this->get('config')]);
-                //            echo $this->Form->input('upload_file', ['type' => 'file']);
+                //            echo $this->Form->control('config', ['type' => 'text', 'value' => $this->get('config')]);
+                //            echo $this->Form->control('upload_file', ['type' => 'file']);
                 echo $this->Form->create($this->get('uploadForm'), [
                     'type' => 'file'
                 ]);
                 if ($uploadMultiple) {
-                    echo $this->Form->input('upload_file', [
+                    echo $this->Form->control('upload_file', [
                         'label' => false, //__d('media', 'Select files'),
                         'type' => 'file',
                         'multiple' => 'multiple'
                     ]);
                 } else {
-                    echo $this->Form->input('upload_file', [
+                    echo $this->Form->control('upload_file', [
                         'label' => false, //__d('media', 'Select file'),
                         'type' => 'file',
                     ]);

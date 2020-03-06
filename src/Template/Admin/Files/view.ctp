@@ -1,6 +1,6 @@
 <?php
 $this->assign('title', __('View file'));
-$this->assign('heading', $this->request->query('file'));
+$this->assign('heading', $this->request->getQuery('file'));
 ?>
 <div class="view">
 

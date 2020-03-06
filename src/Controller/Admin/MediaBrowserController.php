@@ -40,7 +40,7 @@ class MediaBrowserController extends AppController
 
         //$this->layout = "Backend.media_browser";
 
-        $config = $this->request->param('config');
+        $config = $this->request->getParam('config');
         if (!$config) {
             $config = $this->request->getQuery('config');
         }
@@ -48,7 +48,7 @@ class MediaBrowserController extends AppController
             $config = "default";
         }
         $configKey = 'Media.'.$config;
-        if (!Plugin::loaded('Media') || !Configure::check($configKey)) {
+        if (!Plugin::isLoaded('Media') || !Configure::check($configKey)) {
             $this->request->getParam('action') = 'noconfig';
             $this->request->getParam('config') = $config;
             //$this->viewBuilder()->view('notfound');
@@ -76,7 +76,7 @@ class MediaBrowserController extends AppController
 
     public function noconfig()
     {
-        $pluginLoaded = Plugin::loaded('Media');
+        $pluginLoaded = Plugin::isLoaded('Media');
         $config = $this->request->getParam('config');
         if ($pluginLoaded) {
             $configExample = @file_get_contents(Plugin::path('Media') . DS . 'config' . DS . 'media.default.php');

@@ -297,7 +297,7 @@ class MediaManager
      */
     public function getBasePath()
     {
-        return realpath($this->_provider->config('basePath')) . DS;
+        return realpath($this->_provider->getConfig('basePath')) . DS;
     }
 
     /**
@@ -305,7 +305,7 @@ class MediaManager
      */
     public function getBaseUrl()
     {
-        return rtrim($this->_provider->config('baseUrl'), '/');
+        return rtrim($this->_provider->getConfig('baseUrl'), '/');
     }
 
     public function getSelectListRecursive($path = '/')
