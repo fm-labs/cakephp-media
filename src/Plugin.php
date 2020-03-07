@@ -37,7 +37,11 @@ class Plugin extends BasePlugin implements EventListenerInterface
             ]);
         }
 
-        MediaManager::setConfig(Configure::read('Media'));
+        foreach ((array)Configure::read('Media') as $key => $config) {
+            if (!MediaManager::getConfig($key)) {
+                MediaManager::setConfig($key, $config);
+            }
+        }
         EventManager::instance()->on($this);
     }
 

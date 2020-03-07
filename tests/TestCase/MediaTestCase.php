@@ -48,6 +48,8 @@ class MediaTestCase extends TestCase
         if (static::$setupTestFiles === true) {
             self::tearDownTestFiles();
         }
+
+        Configure::delete('Media.test');
     }
 
     public static function setUpTestFiles()

@@ -39,8 +39,8 @@ class ImageSelectCellTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->request = $this->getMock('Cake\Http\Request');
-        $this->response = $this->getMock('Cake\Http\Response');
+        $this->request = $this->getMockBuilder('Cake\Http\ServerRequest')->getMock();
+        $this->response = $this->getMockBuilder('Cake\Http\Response')->getMock();
         $this->ImageSelect = new ImageSelectCell($this->request, $this->response);
     }
 

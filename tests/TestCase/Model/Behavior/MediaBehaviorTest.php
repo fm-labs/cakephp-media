@@ -22,7 +22,7 @@ class MediaBehaviorTest extends MediaTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.media.posts'
+        'plugin.Media.Posts'
     ];
 
     /**
@@ -38,7 +38,7 @@ class MediaBehaviorTest extends MediaTestCase
         parent::setUp();
 
         $this->table = TableRegistry::getTableLocator()->get('Media.Posts', ['table' => 'media_posts']);
-        $this->table->primaryKey(['id']);
+        $this->table->setPrimaryKey(['id']);
         //$this->table->entityClass('\\Attachment\\Test\\TestCase\\Model\\Entity\\ExampleEntity');
         //$this->table->getSchema()->setColumnType('images', 'media_file');
         $this->table->addBehavior('Media.Media', [
@@ -60,7 +60,7 @@ class MediaBehaviorTest extends MediaTestCase
                 ],
             ]
         ]);
-        //$this->table->validator();
+        //$this->table->getValidator();
     }
 
     /**
