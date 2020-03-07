@@ -26,6 +26,11 @@ class MediaFileType extends Type
             return [];
         }
 
+        if (preg_match('/^\{(.*)\}$/', $value)) {
+            return $value;
+            //return json_decode($value, true);
+        }
+
         return explode(',', $value);
     }
 
@@ -47,6 +52,8 @@ class MediaFileType extends Type
         if (is_array($value)) {
             return join(',', $value);
         }
+
+        debug($value);
 
         return $value;
     }

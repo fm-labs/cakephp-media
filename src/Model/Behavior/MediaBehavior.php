@@ -161,7 +161,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 }
                 if ($row instanceof EntityInterface) {
                     $row->set($fieldName, $fieldMedia);
-                    $row->dirty($fieldName, false);
+                    $row->setDirty($fieldName, false);
                 } else {
                     $row[$fieldName] = $fieldMedia;
                 }
@@ -258,14 +258,14 @@ class MediaBehavior extends \Cake\ORM\Behavior
                     unset($entity->$uploadField);
                 } catch (UploadException $ex) {
                     Log::alert('AttachmentBehavior: UploadException: ' . $ex->getMessage());
-                    $entity->errors($uploadField, [$ex->getMessage()]);
-                    $entity->errors($field, [$ex->getMessage()]);
+                    $entity->setError($uploadField, [$ex->getMessage()]);
+                    $entity->setError($field, [$ex->getMessage()]);
 
                     return false;
                 } catch (\Exception $ex) {
                     Log::alert('AttachmentBehavior: Exception: ' . $ex->getMessage());
-                    $entity->errors($uploadField, [$ex->getMessage()]);
-                    $entity->errors($field, [$ex->getMessage()]);
+                    $entity->setError($uploadField, [$ex->getMessage()]);
+                    $entity->setError($field, [$ex->getMessage()]);
 
                     return false;
                 }
@@ -366,15 +366,15 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $resolver = function ($value) use ($field, $config) {
             // @TODO Use dedicated InlineMediaFile object and/or check if MediaFileInterface is attached
+            /** @var EntityInterface $file */
             $file = new $field['entityClass']();
             //$file->config = $field['config'];
 
-            //debug("resolving " . $value);
             // check if json or simple string
             if (preg_match('/^\{(.*)\}$/', $value)) {
                 $_data = json_decode($value, true);
                 //debug($_data);
-                $file->accessible('*');
+                $file->setAccess('*', true);
                 $file->set($_data);
             } else {
                 $file->set('config', $field['config']);
@@ -384,6 +384,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
             return $file;
         };
 
+        // @todo Multiple files do not work with json encoded media data
         if ($field['multiple']) {
             $names = explode(',', $value);
             $files = [];

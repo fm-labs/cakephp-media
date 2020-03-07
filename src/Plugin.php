@@ -45,6 +45,9 @@ class Plugin extends BasePlugin implements EventListenerInterface
     {
         $routes->setExtensions(['json']);
 
+        $routes->connect('/',
+            ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index']
+        );
         $routes->connect(
             '/browser/',
             ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
@@ -96,7 +99,7 @@ class Plugin extends BasePlugin implements EventListenerInterface
         $view = $event->getSubject();
         //$view->loadHelper('Media.Media');
         $view->getEventManager()->on('View.beforeRender', function ($ev) {
-            //$ev->getSubject()->loadHelper('Media.Media');
+            $ev->getSubject()->loadHelper('Media.Media');
         });
     }
 
