@@ -32,8 +32,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
         'fields' => [],
 
         'implementedMethods' => [
-            'getMediaFields' => 'getFields'
-        ]
+            'getMediaFields' => 'getFields',
+        ],
     ];
 
     protected $_defaultFieldConfig = [
@@ -51,7 +51,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
         // Use i18n mode
         'i18n' => false,
         // upload
-        'upload' => false
+        'upload' => false,
     ];
 
     /**
@@ -235,7 +235,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                             'config' => $fieldConfig['config'],
                             'path' => $uploadDir . '/' . $upload['basename'],
                             'size' => $upload['size'],
-                            'mime_type' => $upload['type']
+                            'mime_type' => $upload['type'],
                         ];
 
                         $mfile = new MediaFile();
@@ -307,7 +307,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 $attachment = $this->_getAttachmentsModel($fieldName)->find()->where([
                     'model' => $this->_modelName(),
                     'modelid' => $entity->id,
-                    'scope' => $fieldName
+                    'scope' => $fieldName,
                 ])->first();
 
                 if (!$attachment) {

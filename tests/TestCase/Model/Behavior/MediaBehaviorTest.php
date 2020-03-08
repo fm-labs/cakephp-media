@@ -22,7 +22,7 @@ class MediaBehaviorTest extends MediaTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.Media.Posts'
+        'plugin.Media.Posts',
     ];
 
     /**
@@ -44,7 +44,7 @@ class MediaBehaviorTest extends MediaTestCase
         $this->table->addBehavior('Media.Media', [
             'fields' => [
                 'image' => [
-                    'config' => 'test'
+                    'config' => 'test',
                 ],
                 'images' => [
                     'config' => 'test',
@@ -52,13 +52,13 @@ class MediaBehaviorTest extends MediaTestCase
                 ],
                 'text' => [
                     'config' => 'test',
-                    'mode' => MediaBehavior::MODE_TEXT
+                    'mode' => MediaBehavior::MODE_TEXT,
                 ],
                 'html' => [
                     'config' => 'test',
-                    'mode' => MediaBehavior::MODE_HTML
+                    'mode' => MediaBehavior::MODE_HTML,
                 ],
-            ]
+            ],
         ]);
         //$this->table->getValidator();
     }

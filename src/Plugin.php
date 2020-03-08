@@ -33,7 +33,7 @@ class Plugin extends BasePlugin implements EventListenerInterface
                 'className' => 'Cake\Log\Engine\FileLog',
                 'path' => LOGS,
                 'file' => 'media',
-                'scopes' => ['media']
+                'scopes' => ['media'],
             ]);
         }
 
@@ -49,7 +49,8 @@ class Plugin extends BasePlugin implements EventListenerInterface
     {
         $routes->setExtensions(['json']);
 
-        $routes->connect('/',
+        $routes->connect(
+            '/',
             ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index']
         );
         $routes->connect(
@@ -118,8 +119,8 @@ class Plugin extends BasePlugin implements EventListenerInterface
                     'title' => 'Upload',
                     'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
                     'data-icon' => 'upload',
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }

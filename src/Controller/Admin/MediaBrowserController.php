@@ -47,7 +47,7 @@ class MediaBrowserController extends AppController
         if (!$config) {
             $config = "default";
         }
-        $configKey = 'Media.'.$config;
+        $configKey = 'Media.' . $config;
         if (!Plugin::isLoaded('Media') || !Configure::check($configKey)) {
             $this->request->getParam('action') = 'noconfig';
             $this->request->getParam('config') = $config;
@@ -123,7 +123,7 @@ class MediaBrowserController extends AppController
                 'text' => basename($val),
                 'children' => true,
                 'type' => 'folder',
-                'parent' => $id
+                'parent' => $id,
             ];
         });
 
@@ -173,7 +173,7 @@ class MediaBrowserController extends AppController
                     //['title' => 'Edit', 'data-icon' => 'edit', 'url' => Router::url(['action' => 'edit', 'path' => $val ])],
                     ['title' => 'Download', 'data-icon' => 'download', 'url' => Router::url(['action' => 'download', 'path' => $val ])],
                     //['title' => 'Download', 'data-icon' => 'download', 'action' => 'download' ])]
-                ]
+                ],
             ];
         });
 

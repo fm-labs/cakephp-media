@@ -44,25 +44,25 @@ class PostsFixture extends TestFixture
             'id' => 1,
             'title' => 'Post 1',
             'image' => 'image1.jpg',
-            'images' => ''
+            'images' => '',
         ],
         [
             'id' => 2,
             'title' => 'Post 2',
             'image' => '',
-            'images' => 'image1.jpg,image2.png'
+            'images' => 'image1.jpg,image2.png',
         ],
         [
             'id' => 3,
             'title' => 'Post 3',
             'image' => 'image1.jpg',
-            'images' => 'image1.jpg'
+            'images' => 'image1.jpg',
         ],
         [
             'id' => 4,
             'title' => 'Post 4',
             'image' => 'image1.jpg',
-            'images' => 'image1.jpg,image2.png'
-        ]
+            'images' => 'image1.jpg,image2.png',
+        ],
     ];
 }

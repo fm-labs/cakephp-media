@@ -6,6 +6,7 @@ interface MediaFileInterface
 {
 
     public function getPath();
+
     public function getUrl();
 
     /**

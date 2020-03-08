@@ -74,7 +74,7 @@ class ImageSelectCell extends Cell
          */
         $imageOptions = [
             'width' => 200,
-            'height' => 200
+            'height' => 200,
         ];
         $this->set('imageOptions', $imageOptions);
     }

@@ -33,7 +33,7 @@ class MediaAttachmentsTable extends Table
     {
         $this->addBehavior('Translate', [
             'fields' => ['title', 'desc_text'],
-            'translationTable' => 'AttachmentsI18n'
+            'translationTable' => 'AttachmentsI18n',
         ]);
     }
 

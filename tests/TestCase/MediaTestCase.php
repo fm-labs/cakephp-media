@@ -62,7 +62,7 @@ class MediaTestCase extends TestCase
             ->copy([
                 'to' => self::$targetPath,
                 'recursive' => true,
-                'scheme' => Folder::OVERWRITE
+                'scheme' => Folder::OVERWRITE,
             ]);
     }
 

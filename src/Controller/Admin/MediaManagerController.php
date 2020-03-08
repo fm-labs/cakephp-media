@@ -26,7 +26,7 @@ class MediaManagerController extends AppController
                 'text' => basename($val),
                 'children' => true,
                 'type' => 'folder',
-                'parent' => $id
+                'parent' => $id,
             ];
         });
 

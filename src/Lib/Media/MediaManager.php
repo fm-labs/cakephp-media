@@ -351,13 +351,13 @@ class MediaManager
         return $list;
     }
 
-    /**
-     * Mount a media provider with a name
-     *
-     * @param $name
-     * @param MediaProviderInterface $provider
-     * @throws MediaException
-     *
+/**
+ * Mount a media provider with a name
+ *
+ * @param $name
+ * @param MediaProviderInterface $provider
+ * @throws MediaException
+ *
     public function mount($name, MediaProviderInterface $provider)
     {
     if (isset($this->_mounts[$name])) {
@@ -366,26 +366,26 @@ class MediaManager
     $provider->connect();
     $this->_mounts[$name] = $provider;
     }
-     */
+ */
 
-    /**
-     * Un-mount a media provider by name
-     *
-     * @param $name
+/**
+ * Un-mount a media provider by name
+ *
+ * @param $name
     public function unmount($name)
     {
     $provider = $this->get($name);
     $provider->disconnect();
     unset($this->_mounts[$name]);
     }
-     */
+ */
 
-    /**
-     * Returns the instance of a MediaProviderInterface
-     *
-     * @param $name
-     * @return MediaProviderInterface
-     * @throws MediaException
+/**
+ * Returns the instance of a MediaProviderInterface
+ *
+ * @param $name
+ * @return MediaProviderInterface
+ * @throws MediaException
     public function get($name)
     {
     if (!isset($this->_mounts[$name])) {
@@ -393,5 +393,5 @@ class MediaManager
     }
     return $this->_mounts[$name];
     }
-     */
+ */
 }

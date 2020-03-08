@@ -16,7 +16,7 @@ class LocalStorageProvider extends MediaProvider
 {
     protected $_defaultConfig = [
         'path' => null,
-        'url' => null
+        'url' => null,
     ];
 
     /**
@@ -115,12 +115,12 @@ class LocalStorageProvider extends MediaProvider
 //    }
 
 
-    /**
-     * Real path to file/folder
-     *
-     * @param $path
-     * @return string
-     */
+/**
+ * Real path to file/folder
+ *
+ * @param $path
+ * @return string
+ */
 //    protected function _getRealPath($path)
 //    {
 //        $path = $this->_normalizePath($path);

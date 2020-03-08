@@ -88,7 +88,7 @@ class MediaPickerWidget extends BasicWidget
             'text' => __d('media', 'Select Media'),
             'type' => 'button',
             'escape' => false,
-            'templateVars' => []
+            'templateVars' => [],
         ];
         $button = $this->button->render($buttonData, $context);
 
@@ -99,7 +99,7 @@ class MediaPickerWidget extends BasicWidget
             'target' => '#' . $data['id'],
             'modal' => true,
             'treeUrl' => Router::url($treeUrl),
-            'filesUrl' => Router::url($filesUrl)
+            'filesUrl' => Router::url($filesUrl),
         ];
         $template = "$(document).ready(function() { if (typeof($.fn.mediapicker) === 'undefined') { console.warn('Mediapicker not initialized'); return false; } $('#%s').mediapicker(%s); });";
         $script = sprintf($template, $buttonData['id'], json_encode($mediapicker));

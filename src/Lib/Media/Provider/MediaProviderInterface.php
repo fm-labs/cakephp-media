@@ -11,6 +11,7 @@ namespace Media\Lib\Media\Provider;
 interface MediaProviderInterface
 {
     public function __construct(array $config);
+
     /**
      * Read contents of directory path
      * @param $path string Path to directory

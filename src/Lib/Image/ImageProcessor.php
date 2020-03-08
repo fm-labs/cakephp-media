@@ -18,7 +18,6 @@ use Imagine\Image\Box;
  */
 class ImageProcessor
 {
-
     use InstanceConfigTrait;
 
     /**
@@ -27,7 +26,7 @@ class ImageProcessor
      * @var array
      */
     protected $_defaultConfig = [
-        'engine' => 'Gd'
+        'engine' => 'Gd',
     ];
 
     /**
@@ -205,7 +204,7 @@ class ImageProcessor
 
         $defaults = [
             'cropX' => 0,
-            'cropY' => 0
+            'cropY' => 0,
         ];
 
         $options = array_merge($defaults, $options);
@@ -441,7 +440,7 @@ class ImageProcessor
         $imageSize = $this->_image->getSize();
         $ratios = [
             $size->getWidth() / $imageSize->getWidth(),
-            $size->getHeight() / $imageSize->getHeight()
+            $size->getHeight() / $imageSize->getHeight(),
         ];
 
         // if target width is larger than image width
@@ -515,7 +514,7 @@ class ImageProcessor
             $BoxInterface->getWidth(),
             $BoxInterface->getHeight(),
             'x' => $BoxInterface->getWidth(),
-            'y' => $BoxInterface->getHeight()
+            'y' => $BoxInterface->getHeight(),
         ];
     }
 
