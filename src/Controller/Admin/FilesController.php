@@ -125,7 +125,7 @@ class FilesController extends AppController
 
             $uploadForm = new MediaUploadForm('default', $uploader);
             if ($this->request->is('post')) {
-                $uploadForm->execute($this->request->data);
+                $uploadForm->execute($this->request->getData());
             }
             $this->set('uploadForm', $uploadForm);
 

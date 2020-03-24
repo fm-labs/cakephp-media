@@ -2,7 +2,6 @@
 namespace Media\Lib\Media;
 
 use Cake\Core\App;
-use Cake\Core\Configure;
 use Cake\Core\StaticConfigTrait;
 use Media\Lib\Media\Provider\MediaProviderInterface;
 
@@ -25,14 +24,11 @@ class MediaManager
 
     /**
      * @param $config
-     * @return $this
+     * @return MediaProviderInterface
      * @throws \Exception
      */
     public static function getProvider($config)
     {
-        if (empty(self::configured())) {
-            self::setConfig(Configure::read('Media'));
-        }
 
         if (is_string($config) && in_array($config, self::configured())) {
             $config = self::getConfig($config);
@@ -44,13 +40,25 @@ class MediaManager
             'label' => 'Default',
             'className' => null,
             'public' => false,
-            //'baseUrl' => null,
-            //'basePath' => null,
+            'baseUrl' => null,
+            'basePath' => null,
         ], $config);
 
         if (isset($config['provider'])) {
             $config['className'] = $config['provider'];
             unset($config['provider']);
+        }
+
+        // @TODO Remove
+        if (isset($config['url'])) {
+            triggerWarning(sprintf("The parameter 'url' is deprecated. Use 'baseUrl' instead."));
+            $config['baseUrl'] = $config['url'];
+            unset($config['url']);
+        }
+        if (isset($config['path'])) {
+            triggerWarning(sprintf("The parameter 'path' is deprecated. Use 'basePath' instead."));
+            $config['basePath'] = $config['path'];
+            unset($config['path']);
         }
 
         //debug($config);
@@ -66,36 +74,17 @@ class MediaManager
         }
 
         $providerObj = new $className($config);
-        if ($providerObj instanceof MediaProviderInterface) {
-            return new self($providerObj);
+        if (!($providerObj instanceof MediaProviderInterface)) {
+            throw new \Exception("Provider is not a valid MediaProviderInterface");
         }
 
-        throw new \Exception("Provider is not a valid MediaProviderInterface");
+        return $providerObj;
     }
 
-    public static function get($configName)
+    public static function get($config)
     {
-        /*
-        $configKey = 'Media.' . $configName;
-        $config = Configure::read($configKey);
-        if (!$config) {
-            throw new \Exception(__d('media','Media config {0} does not exist', $configName));
-        }
-        $config = array_merge([
-            'label' => 'Unlabeled',
-            'name' => null,
-            'provider' => null,
-            'public' => false,
-            'url' => false,
-        ], $config);
-
-        $provider = $config['provider'];
-        $className = App::className($provider, 'Lib/Media/Provider', 'Provider');
-        $providerIns = new $className($config);
-
-        return new self($providerIns);
-        */
-        return self::getProvider($configName);
+        $provider = self::getProvider($config);
+        return new self($provider);
     }
 
     public function __construct(MediaProviderInterface $provider)

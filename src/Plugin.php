@@ -21,13 +21,8 @@ class Plugin extends BasePlugin implements EventListenerInterface
         parent::bootstrap($app);
 
         /**
-         * Load Media plugin configuration
+         * Logger
          */
-        Configure::load('Media.media');
-
-        // Register MediaFileType
-        Type::map('media_file', 'Media\Database\Type\MediaFileType');
-
         if (!Log::getConfig('media')) {
             Log::setConfig('media', [
                 'className' => 'Cake\Log\Engine\FileLog',
@@ -37,11 +32,22 @@ class Plugin extends BasePlugin implements EventListenerInterface
             ]);
         }
 
-        foreach ((array)Configure::read('Media') as $key => $config) {
-            if (!MediaManager::getConfig($key)) {
-                MediaManager::setConfig($key, $config);
-            }
-        }
+        /**
+         * Database type maps
+         */
+        Type::map('media_file', 'Media\Database\Type\MediaFileType');
+
+
+        /**
+         * Load Media plugin configuration
+         * and configure MediaManager
+         */
+        Configure::load('Media.media');
+        MediaManager::setConfig((array)Configure::read('Media'));
+
+        /**
+         * Event hooks
+         */
         EventManager::instance()->on($this);
     }
 

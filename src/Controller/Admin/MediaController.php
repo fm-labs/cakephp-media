@@ -36,7 +36,7 @@ class MediaController extends AppController
                 //'pattern' => false, // @todo Implement me
             ]);
             if ($this->request->is('post')) {
-                $uploadForm->execute($this->request->data);
+                $uploadForm->execute($this->request->getData());
             }
             $this->set('uploadForm', $uploadForm);
         } catch (\Exception $ex) {

@@ -4,7 +4,8 @@
     "type": "cakephp-plugin",
     "require": {
         "php": ">=7.1",
-        "cakephp/cakephp": "^3.8"
+        "cakephp/cakephp": "^3.8",
+        "fm-labs/cakephp-tree": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "*"

@@ -15,8 +15,8 @@ use Media\Lib\Media\MediaException;
 class LocalStorageProvider extends MediaProvider
 {
     protected $_defaultConfig = [
-        'path' => null,
-        'url' => null,
+        'basePath' => null,
+        'baseUrl' => null,
     ];
 
     /**
@@ -96,7 +96,7 @@ class LocalStorageProvider extends MediaProvider
 //
 //    public function baseUrl($full = false)
 //    {
-//        $baseUrl = $this->getConfig('url');
+//        $baseUrl = $this->getConfig('baseUrl');
 //        if (!$baseUrl) {
 //            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
 //        }

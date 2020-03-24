@@ -51,8 +51,8 @@ class ImageSelectCell extends Cell
 
         /*
         if ($this->request->is(['patch', 'post', 'put'])) {
-            debug($this->request->data);
-            $content = $Model->patchEntity($image, $this->request->data);
+            debug($this->request->getData());
+            $content = $Model->patchEntity($image, $this->request->getData());
             if ($Model->save($content)) {
                 $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
             } else {
