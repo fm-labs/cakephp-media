@@ -3,10 +3,10 @@
     "description": "Media plugin for CakePHP",
     "type": "cakephp-plugin",
     "repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/fm-labs/cakephp-tree"
-    }
+        {
+            "type": "vcs",
+            "url": "https://github.com/fm-labs/cakephp-tree"
+        }
     ],
     "require": {
         "php": ">=7.1",
@@ -26,5 +26,7 @@
             "Media\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
