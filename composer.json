@@ -2,6 +2,12 @@
     "name": "fm-labs/cakephp-media",
     "description": "Media plugin for CakePHP",
     "type": "cakephp-plugin",
+    "repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/fm-labs/cakephp-tree"
+    }
+    ],
     "require": {
         "php": ">=7.1",
         "cakephp/cakephp": "^3.8",
