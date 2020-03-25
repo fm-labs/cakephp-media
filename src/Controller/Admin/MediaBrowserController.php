@@ -32,7 +32,7 @@ class MediaBrowserController extends AppController
      */
     protected $_mediaConfig;
 
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -49,21 +49,21 @@ class MediaBrowserController extends AppController
         }
         $configKey = 'Media.' . $config;
         if (!Plugin::isLoaded('Media') || !Configure::check($configKey)) {
-            $this->request->getParam('action') = 'noconfig';
-            $this->request->getParam('config') = $config;
-            //$this->viewBuilder()->view('notfound');
+            $this->request = $this->request
+                ->withParam('action', 'noconfig')
+                ->withParam('config', $config);
         } else {
             $this->_mediaConfig = $config;
             $this->_mm = MediaManager::get($config);
         }
     }
 
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
     }
 
-    public function beforeRender(Event $event)
+    public function beforeRender(\Cake\Event\EventInterface $event)
     {
         parent::beforeRender($event);
 

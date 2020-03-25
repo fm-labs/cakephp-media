@@ -9,10 +9,10 @@
 namespace Media\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\Type;
+use Cake\Database\TypeFactory;
 use PDO;
 
-class MediaFileType extends Type
+class MediaFileType extends \Cake\Database\TypeFactory
 {
 
     public function toPHP($value, Driver $driver)

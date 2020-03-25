@@ -102,13 +102,13 @@ class MediaFile extends Entity implements MediaFileInterface
      */
     protected function _getSize()
     {
-        if (!isset($this->_properties['size'])) {
+        if (!isset($this->_fields['size'])) {
             if (is_file($this->path)) {
-                $this->_properties['size'] = @filesize($this->path);
+                $this->_fields['size'] = @filesize($this->path);
             }
         }
 
-        return $this->_properties['size'];
+        return $this->_fields['size'];
     }
 
     /**
@@ -126,11 +126,11 @@ class MediaFile extends Entity implements MediaFileInterface
 
     protected function _getBasename()
     {
-        if (!isset($this->_properties['basename'])) {
-            $this->_properties['basename'] = basename($this->path);
+        if (!isset($this->_fields['basename'])) {
+            $this->_fields['basename'] = basename($this->path);
         }
 
-        return $this->_properties['basename'];
+        return $this->_fields['basename'];
     }
 
     /**

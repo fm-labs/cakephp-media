@@ -33,7 +33,7 @@ class MediaBehaviorTest extends MediaTestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -66,7 +66,7 @@ class MediaBehaviorTest extends MediaTestCase
     /**
      * {@inheritDoc}
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         TableRegistry::getTableLocator()->clear();
@@ -89,7 +89,7 @@ class MediaBehaviorTest extends MediaTestCase
     {
         $post = $this->table->get(2, ['media' => true]);
 
-        $this->assertInternalType('array', $post->images);
+        $this->assertIsArray($post->images);
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[0]);
         $this->assertInstanceOf('\\Media\\Model\\Entity\\MediaFile', $post->images[1]);
     }

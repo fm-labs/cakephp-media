@@ -25,7 +25,7 @@ class MediaTestCase extends TestCase
 
     public static $setupTestFiles = false;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass(): void
     {
         self::$sourcePath = dirname(__DIR__) . DS . '_testfiles' . DS;
         self::$targetPath = TMP . 'tests' . DS . 'media' . DS;
@@ -43,7 +43,7 @@ class MediaTestCase extends TestCase
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (static::$setupTestFiles === true) {
             self::tearDownTestFiles();

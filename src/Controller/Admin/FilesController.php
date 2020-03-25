@@ -15,7 +15,7 @@ class FilesController extends AppController
      */
     public $manager;
 
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->manager = MediaManager::get('default');

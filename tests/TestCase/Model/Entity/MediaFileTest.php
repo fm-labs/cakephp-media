@@ -11,7 +11,7 @@ class MediaFileTest extends MediaTestCase
 {
     public static $setupTestFiles = true;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

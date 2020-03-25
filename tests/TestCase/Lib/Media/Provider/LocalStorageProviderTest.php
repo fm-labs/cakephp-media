@@ -16,7 +16,7 @@ class LocalStorageProviderTest extends MediaTestCase
      */
     public $provider;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -133,7 +133,7 @@ class LocalStorageProviderTest extends MediaTestCase
         ], $list);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->markTestIncomplete();
 

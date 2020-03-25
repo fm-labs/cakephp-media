@@ -13,7 +13,7 @@ class MediaManagerTest extends MediaTestCase
      */
     public $mm;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

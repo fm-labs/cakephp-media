@@ -30,7 +30,7 @@ class MediaHelper extends Helper
      */
     protected $_processor;
 
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->Form->templater()->load('Media.form_templates');
         $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button', 'select']);

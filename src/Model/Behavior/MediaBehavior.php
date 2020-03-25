@@ -62,7 +62,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     /**
      * {@inheritDoc}
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->_config['model'] = ($this->_config['model']) ?: $this->_table->getAlias();
 
@@ -114,7 +114,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param bool $primary Primary flag
      * @return void
      */
-    public function beforeFind(Event $event, Query $query, $options, $primary)
+    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, $options, $primary)
     {
         //if (!isset($options['media']) && $primary) {
         //    $options['media'] = true; //@TODO Make eager-loading configurable
@@ -183,7 +183,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param \ArrayObject $options Finder options
      * @return void|bool
      */
-    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options)
+    public function beforeSave(\Cake\Event\EventInterface $event, Entity $entity, \ArrayObject $options)
     {
         foreach ($this->_fields as $field => $fieldConfig) {
             $uploadField = $field . '_upload';
@@ -293,7 +293,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param \ArrayObject $options Finder options
      * @return void|bool
      */
-    public function afterSave(Event $event, Entity $entity, \ArrayObject $options)
+    public function afterSave(\Cake\Event\EventInterface $event, Entity $entity, \ArrayObject $options)
     {
         //debug("afterSave");
         if ($entity->isNew()) {
