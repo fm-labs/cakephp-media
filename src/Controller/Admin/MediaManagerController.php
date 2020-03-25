@@ -99,7 +99,7 @@ class MediaManagerController extends AppController
         $file = $content->get($scope);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $patchFile = $this->request->data($scope);
+            $patchFile = $this->request->getData($scope);
             debug($file);
             debug($patchFile);
             if (is_array($patchFile)) {
@@ -177,7 +177,7 @@ class MediaManagerController extends AppController
             $updated = join(',', $filtered);
         }
 
-        $content->accessible($scope, true);
+        $content->setAccess($scope, true);
         $content->set($scope, $updated);
 
         if ($Table->save($content)) {

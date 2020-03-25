@@ -24,7 +24,7 @@ class MediaFileTest extends MediaTestCase
         $class = '\\Media\\Model\\Entity\\MediaFile';
 
         $table = new Table();
-        $table->entityClass($class);
+        $table->setEntityClass($class);
 
         $entity = $table->newEntity();
 

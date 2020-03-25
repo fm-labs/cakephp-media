@@ -48,9 +48,6 @@ class MediaFile extends Entity implements MediaFileInterface
         return $this->basename;
     }
 
-    /**
-     * @deprecated Use getPath() instead
-     */
     public function getFilePath()
     {
         return $this->_getFilepath();
@@ -79,7 +76,7 @@ class MediaFile extends Entity implements MediaFileInterface
     public function getUrlEncoded($full = false)
     {
 
-        $url = MediaManager::get($this->config)->getFileUrlEncoded($this->path);
+        $url = MediaManager::get($this->config)->buildFileUrlEncoded($this->path);
         if ($full) {
             $url = Router::url($url, $full);
         }

@@ -199,7 +199,7 @@ class MediaBrowserController extends AppController
         $this->viewBuilder()->setClassName('Json');
 
         $files = [];
-        $selectedDirs = $this->request->data('selected');
+        $selectedDirs = $this->request->getData('selected');
         foreach ($selectedDirs as $dir) {
             $this->_mm->open($dir);
             $files += $this->_mm->listFileUrls();

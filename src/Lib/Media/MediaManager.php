@@ -18,7 +18,6 @@ class MediaManager
 
     /**
      * @var string Current working dir
-     * @deprecated
      */
     protected $_path;
 
@@ -108,7 +107,7 @@ class MediaManager
     /** MEDIA BROWSING **/
 
     /**
-     * @deprecated
+     * @todo Mark as deprecated
      */
     public function setPath($path)
     {
@@ -116,7 +115,7 @@ class MediaManager
     }
 
     /**
-     * @deprecated
+     * @todo Mark as deprecated
      */
     public function getPath()
     {
@@ -124,7 +123,7 @@ class MediaManager
     }
 
     /**
-     * @deprecated
+     * @todo Mark as deprecated
      */
     public function getParentPath()
     {
@@ -282,7 +281,7 @@ class MediaManager
     }
 
     /**
-     * @deprecated This should not be used anymore. And will be removed.
+     * @todo Mark as deprecated. This should not be used anymore. And will be removed.
      */
     public function getBasePath()
     {
@@ -290,7 +289,7 @@ class MediaManager
     }
 
     /**
-     * @deprecated This should not be used anymore. And will be removed.
+     * @todo Mark as deprecated This should not be used anymore. And will be removed.
      */
     public function getBaseUrl()
     {

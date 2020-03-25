@@ -47,41 +47,41 @@ class MediaAttachmentsTable extends Table
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->allowEmpty('model');
+            ->allowEmptyString('model');
 
         $validator
             ->add('modelid', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('modelid');
+            ->allowEmptyString('modelid');
 
         $validator
-            ->allowEmpty('scope');
+            ->allowEmptyString('scope');
 
         $validator
-            ->allowEmpty('type');
+            ->allowEmptyString('type');
 
         $validator
             ->requirePresence('filepath', 'create')
-            ->notEmpty('filepath');
+            ->notEmptyString('filepath');
 
         $validator
             ->requirePresence('filename', 'create')
-            ->notEmpty('filename');
+            ->notEmptyString('filename');
 
         $validator
-            ->allowEmpty('title');
+            ->allowEmptyString('title');
 
         $validator
-            ->allowEmpty('desc_text');
+            ->allowEmptyString('desc_text');
 
         $validator
-            ->allowEmpty('mimetype');
+            ->allowEmptyString('mimetype');
 
         $validator
             ->add('filesize', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('filesize');
+            ->allowEmptyString('filesize');
 
         return $validator;
     }
