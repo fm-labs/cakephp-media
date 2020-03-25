@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Test\TestCase\View\Cell;
 
 use Cake\TestSuite\TestCase;
@@ -9,7 +11,6 @@ use Media\View\Cell\ImageSelectCell;
  */
 class ImageSelectCellTest extends TestCase
 {
-
     /**
      * Request mock
      *

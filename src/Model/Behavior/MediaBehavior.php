@@ -1,29 +1,28 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Model\Behavior;
 
-use Cake\Collection\Collection;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
 use Cake\Filesystem\Folder;
-use Cake\Log\Log;
 use Cake\Http\Exception\NotImplementedException;
+use Cake\Log\Log;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Media\Lib\Media\MediaManager;
 use Media\Model\Entity\MediaFile;
-use Media\Model\Table\MediaAttachmentsTable;
 use Upload\Exception\UploadException;
 use Upload\Uploader;
 
 class MediaBehavior extends \Cake\ORM\Behavior
 {
-    const MODE_INLINE = 'inline';
-    const MODE_TABLE = 'table';
-    const MODE_TEXT = 'text';
-    const MODE_HTML = 'html';
+    public const MODE_INLINE = 'inline';
+    public const MODE_TABLE = 'table';
+    public const MODE_TEXT = 'text';
+    public const MODE_HTML = 'html';
 
     protected $_defaultConfig = [
         // Reference Model
@@ -64,7 +63,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      */
     public function initialize(array $config): void
     {
-        $this->_config['model'] = ($this->_config['model']) ?: $this->_table->getAlias();
+        $this->_config['model'] = $this->_config['model'] ?: $this->_table->getAlias();
 
         foreach ($this->_config['fields'] as $field => $_config) {
             if (is_numeric($field)) {
@@ -91,9 +90,9 @@ class MediaBehavior extends \Cake\ORM\Behavior
     }
 
     /**
-     * @param Query $query Query object
+     * @param \Cake\ORM\Query $query Query object
      * @param array $options Finder options
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findMedia(Query $query, array $options)
     {
@@ -108,8 +107,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * Applies a MapReduce to the query, which resolves attachment info
      * if an attachment field is present in the query results.
      *
-     * @param Event $event The event object
-     * @param Query $query The query object
+     * @param \Cake\Event\Event $event The event object
+     * @param \Cake\ORM\Query $query The query object
      * @param array $options Finder options
      * @param bool $primary Primary flag
      * @return void
@@ -178,8 +177,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
     }
 
     /**
-     * @param Event $event The event object
-     * @param Entity $entity The entity object
+     * @param \Cake\Event\Event $event The event object
+     * @param \Cake\ORM\Entity $entity The entity object
      * @param \ArrayObject $options Finder options
      * @return void|bool
      */
@@ -288,8 +287,8 @@ class MediaBehavior extends \Cake\ORM\Behavior
 //    }
 
     /**
-     * @param Event $event The event object
-     * @param Entity $entity The entity object
+     * @param \Cake\Event\Event $event The event object
+     * @param \Cake\ORM\Entity $entity The entity object
      * @param \ArrayObject $options Finder options
      * @return void|bool
      */
@@ -339,7 +338,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     {
         $plugin = null;
         $tableName = $this->_table->getAlias();
-        list($namespace, ) = namespaceSplit(get_class($this->_table));
+        [$namespace, ] = namespaceSplit(get_class($this->_table));
         if ($namespace && (($pos = strpos($namespace, '\\')) !== false)) {
             $plugin = substr($namespace, 0, $pos);
             if ($plugin == 'App' || $plugin == 'Cake') {
@@ -353,7 +352,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
     /**
      * @param string $value Relative file path to configured dataDir
      * @param array $field Field config
-     * @return null|array|MediaFile|Collection
+     * @return null|array|\Media\Model\Entity\MediaFile|\Cake\Collection\Collection
      */
     protected function _resolveFromInline($value, $field)
     {
@@ -366,7 +365,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
         $resolver = function ($value) use ($field, $config) {
             // @TODO Use dedicated InlineMediaFile object and/or check if MediaFileInterface is attached
-            /** @var EntityInterface $file */
+            /** @var \Cake\Datasource\EntityInterface $file */
             $file = new $field['entityClass']();
             //$file->config = $field['config'];
 
@@ -408,7 +407,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
      * @param mixed $row Data row
      * @param string $fieldName Field name
      * @param array $field Field config
-     * @return null|array|MediaFile|Collection
+     * @return null|array|\Media\Model\Entity\MediaFile|\Cake\Collection\Collection
      */
     protected function _resolveFromTable($row, $fieldName, $field)
     {
@@ -472,7 +471,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
 
     /**
      * @param string $field Field name
-     * @return MediaAttachmentsTable
+     * @return \Media\Model\Table\MediaAttachmentsTable
      */
     protected function _getAttachmentsModel($field)
     {

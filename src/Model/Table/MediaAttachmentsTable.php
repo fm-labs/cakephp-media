@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Model\Table;
 
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -11,7 +12,6 @@ use Cake\Validation\Validator;
  */
 class MediaAttachmentsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -87,8 +87,8 @@ class MediaAttachmentsTable extends Table
     }
 
     /**
-     * @param Attachment $entity
-     * @return bool|EntityInterface
+     * @param \Media\Model\Table\Attachment $entity
+     * @return bool|\Cake\Datasource\EntityInterface
      */
     public function saveAttachment(Attachment $entity)
     {

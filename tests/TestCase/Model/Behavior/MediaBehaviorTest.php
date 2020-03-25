@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Test\TestCase\Model\Behavior;
 
-use Cake\Core\Configure;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Media\Model\Behavior\MediaBehavior;
 use Media\Test\TestCase\MediaTestCase;

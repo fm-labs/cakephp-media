@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Test\TestCase;
 
@@ -8,7 +9,6 @@ use Cake\TestSuite\TestCase;
 
 class MediaTestCase extends TestCase
 {
-
     public static $sourcePath;
 
     public static $targetPath;

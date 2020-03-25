@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Test\TestCase\Lib\Media\Provider;
 
@@ -6,7 +7,6 @@ use Media\Lib\Media\Provider\MediaProviderInterface;
 
 class TestProvider implements MediaProviderInterface
 {
-
     public function baseUrl()
     {
     }

@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\View\Widget;
 
 use Bootstrap\View\Widget\ButtonWidget;
 use Cake\Routing\Router;
-use Cake\View\View;
-use Cake\View\Widget\BasicWidget;
 use Cake\View\Form\ContextInterface;
 use Cake\View\StringTemplate;
+use Cake\View\View;
+use Cake\View\Widget\BasicWidget;
 use Cake\View\Widget\SelectBoxWidget;
 use Media\Model\Entity\MediaFile;
 
@@ -19,12 +20,12 @@ use Media\Model\Entity\MediaFile;
 class MediaPickerWidget extends BasicWidget
 {
     /**
-     * @var View
+     * @var \Cake\View\View
      */
     public $view;
 
     /**
-     * @var ButtonWidget
+     * @var \Bootstrap\View\Widget\ButtonWidget
      */
     public $button;
 
@@ -54,7 +55,7 @@ class MediaPickerWidget extends BasicWidget
             'type' => null,
         ];
 
-        $data['id'] = (isset($data['id'])) ? $data['id'] : uniqid('mediapicker');
+        $data['id'] = $data['id'] ?? uniqid('mediapicker');
         $data['type'] = 'text'; // @TODO change to hidden
 
         $config = $data['config'];

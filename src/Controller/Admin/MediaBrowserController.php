@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: flow
@@ -8,11 +10,8 @@
 
 namespace Media\Controller\Admin;
 
-use Cake\Core\App;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
 use Cake\Core\Plugin;
-use Cake\Event\Event;
 use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
 
@@ -21,9 +20,8 @@ use Media\Lib\Media\MediaManager;
  */
 class MediaBrowserController extends AppController
 {
-
     /**
-     * @var MediaManager
+     * @var \Media\Lib\Media\MediaManager
      */
     protected $_mm;
 
@@ -110,7 +108,7 @@ class MediaBrowserController extends AppController
         $this->viewBuilder()->setClassName('Json');
 
         $id = $this->request->getQuery('id');
-        $path = ($id == '#') ? '/' : $id;
+        $path = $id == '#' ? '/' : $id;
         $treeData = [];
 
         $mm =& $this->_mm;
@@ -143,7 +141,7 @@ class MediaBrowserController extends AppController
         $this->viewBuilder()->setClassName('Json');
 
         $id = $this->request->getQuery('id');
-        $path = ($id == '#') ? '/' : $id;
+        $path = $id == '#' ? '/' : $id;
         $treeData = [];
 
         $mm =& $this->_mm;

@@ -1,10 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Test\TestCase\Model\Entity;
 
-use Cake\ORM\Entity;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Media\Test\TestCase\MediaTestCase;
 
 class MediaFileTest extends MediaTestCase

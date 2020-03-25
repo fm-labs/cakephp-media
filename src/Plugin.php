@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Media;
 
 use Banana\Plugin\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Database\TypeFactory;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
@@ -36,7 +36,6 @@ class Plugin extends BasePlugin implements EventListenerInterface
          * Database type maps
          */
         \Cake\Database\TypeFactory::map('media_file', 'Media\Database\Type\MediaFileType');
-
 
         /**
          * Load Media plugin configuration
@@ -106,7 +105,7 @@ class Plugin extends BasePlugin implements EventListenerInterface
             return h($val);
         });
 
-        /* @var \Cake\View\View $view */
+        /** @var \Cake\View\View $view */
         $view = $event->getSubject();
         //$view->loadHelper('Media.Media');
         $view->getEventManager()->on('View.beforeRender', function ($ev) {

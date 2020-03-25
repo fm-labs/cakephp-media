@@ -1,32 +1,28 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\View\Helper;
 
 use Cake\Core\Configure;
 use Cake\Log\Log;
-use Cake\Utility\Inflector;
 use Cake\Utility\Text;
 use Cake\View\Helper;
-use Cake\View\Helper\FormHelper;
-use Cake\View\Helper\HtmlHelper;
-use Cake\View\Helper\UrlHelper;
-use Cake\View\View;
 use Media\Lib\Image\ImageProcessor;
 
 /**
  * Class MediaHelper
  * @package Media\View\Helper
  *
- * @property HtmlHelper $Html
- * @property UrlHelper $Url
- * @property FormHelper $Form
+ * @property \Cake\View\Helper\HtmlHelper $Html
+ * @property \Cake\View\Helper\UrlHelper $Url
+ * @property \Cake\View\Helper\FormHelper $Form
  */
 class MediaHelper extends Helper
 {
     public $helpers = ['Html', 'Url', 'Form'];
 
     /**
-     * @var ImageProcessor
+     * @var \Media\Lib\Image\ImageProcessor
      */
     protected $_processor;
 

@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Test\TestCase\Lib\Media\Provider;
 
-use Cake\Core\Configure;
-use Cake\Filesystem\Folder;
-use Media\Lib\Media\Provider\LocalStorageProvider;
 use Media\Test\TestCase\MediaTestCase;
 
 class LocalStorageProviderTest extends MediaTestCase

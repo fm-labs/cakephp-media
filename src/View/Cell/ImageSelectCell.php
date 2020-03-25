@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\View\Cell;
 
 use Cake\ORM\TableRegistry;
@@ -10,7 +12,6 @@ use Media\Lib\Media\MediaManager;
  */
 class ImageSelectCell extends Cell
 {
-
     /**
      * List of valid options that can be passed into this
      * cell's constructor.

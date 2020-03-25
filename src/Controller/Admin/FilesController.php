@@ -1,17 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Controller\Admin;
 
 use Cake\Filesystem\File;
-use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
-use Media\Model\Entity\MediaFile;
-use Upload\Uploader;
 
 class FilesController extends AppController
 {
     /**
-     * @var MediaManager
+     * @var \Media\Lib\Media\MediaManager
      */
     public $manager;
 
@@ -23,10 +21,10 @@ class FilesController extends AppController
 
     public function index()
     {
-        $path = ($this->request->getQuery('path')) ?: '/';
+        $path = $this->request->getQuery('path') ?: '/';
         $path = rtrim($path, '/') . '/';
         $contents = $this->manager->read($path);
-        list($folders, $files) = $contents;
+        [$folders, $files] = $contents;
 
         if ($this->request->getQuery('file')) {
             $f = $this->_getFileFromRequest();
@@ -91,7 +89,7 @@ class FilesController extends AppController
     {
         $basePath = $this->manager->getBasePath();
         //@TODO Sanitize query!
-        $path = ($this->request->getQuery('path')) ?: '/';
+        $path = $this->request->getQuery('path') ?: '/';
         $path = rtrim($path, '/') . '/';
         $file = $this->request->getQuery('file');
 

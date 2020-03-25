@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\View\Cell;
 
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
-use Cake\ORM\TableRegistry;
 use Cake\View\Cell;
 use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
@@ -14,7 +15,6 @@ use Upload\Uploader;
  */
 class MediaUploadCell extends Cell
 {
-
     /**
      * List of valid options that can be passed into this
      * cell's constructor.
@@ -24,12 +24,12 @@ class MediaUploadCell extends Cell
     protected $_validCellOptions = [];
 
     /**
-     * @var MediaManager
+     * @var \Media\Lib\Media\MediaManager
      */
     protected $_mediaManager;
 
     /**
-     * @return MediaManager
+     * @return \Media\Lib\Media\MediaManager
      */
     public function getMediaManager()
     {
@@ -49,7 +49,7 @@ class MediaUploadCell extends Cell
     {
         $params += ['config' => null, 'uploader' => null];
 
-        $path = ($this->request->getQuery('path')) ?: '/';
+        $path = $this->request->getQuery('path') ?: '/';
         $path = trim($path, '/') . '/';
 
         $uploadDir = $this->getMediaManager()->getBasePath() . $path;

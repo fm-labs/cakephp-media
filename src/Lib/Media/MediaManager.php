@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Lib\Media;
 
 use Cake\Core\App;
@@ -12,7 +14,7 @@ class MediaManager
     protected static $_dsnClassMap = [];
 
     /**
-     * @var MediaProviderInterface
+     * @var \Media\Lib\Media\Provider\MediaProviderInterface
      */
     protected $_provider;
 
@@ -23,7 +25,7 @@ class MediaManager
 
     /**
      * @param $config
-     * @return MediaProviderInterface
+     * @return \Media\Lib\Media\Provider\MediaProviderInterface
      * @throws \Exception
      */
     public static function getProvider($config)
@@ -83,6 +85,7 @@ class MediaManager
     public static function get($config)
     {
         $provider = self::getProvider($config);
+
         return new self($provider);
     }
 
@@ -148,7 +151,7 @@ class MediaManager
     public function listFiles($path)
     {
         $path = $this->_normalizePath($path);
-        list(, $files) = $this->read($path);
+        [, $files] = $this->read($path);
         array_walk($files, function (&$file, $idx) use ($path) {
             $file = $path . $file;
         });
@@ -170,10 +173,10 @@ class MediaManager
     public function listFilesRecursive($path, $fullPath = false)
     {
         $list = [];
-        $basePath = ($fullPath) ? $this->getBasePath() : '';
+        $basePath = $fullPath ? $this->getBasePath() : '';
 
         $path = $this->_normalizePath($path);
-        list($files, $dirs) = $this->read($path);
+        [$files, $dirs] = $this->read($path);
         array_walk($files, function ($file) use ($basePath, $path) {
             $list[] = $basePath . $path . $file;
         });
@@ -190,7 +193,7 @@ class MediaManager
 
     public function listFolders($path)
     {
-        list($dirs, ) = $this->read($path);
+        [$dirs, ] = $this->read($path);
 
         return $dirs;
     }
@@ -198,7 +201,7 @@ class MediaManager
     public function listFoldersRecursive($path, $depth = -1)
     {
         $path = $this->_normalizePath($path);
-        list($dirs, ) = $this->read($path);
+        [$dirs, ] = $this->read($path);
 
         $list = [];
         array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
@@ -239,7 +242,7 @@ class MediaManager
         $path = preg_replace('|([\/])?\.\/|', '/', $path); // clean path patterns like '/././'
         $path = preg_replace('|[\/]+|', '/', $path); // clean path patterns like '/////path///to//dir///'
         $path = ltrim($path, '/');
-        $path = ($path == '/') ? '' : $path;
+        $path = $path == '/' ? '' : $path;
 
         return $path;
     }
@@ -343,17 +346,15 @@ class MediaManager
  * Mount a media provider with a name
  *
  * @param $name
- * @param MediaProviderInterface $provider
- * @throws MediaException
- *
-    public function mount($name, MediaProviderInterface $provider)
-    {
-    if (isset($this->_mounts[$name])) {
-    throw new MediaException(__d('media',"Media provider with name {0} is already mounted", $name));
-    }
-    $provider->connect();
-    $this->_mounts[$name] = $provider;
-    }
+ * @param \Media\Lib\Media\Provider\MediaProviderInterface $provider
+ * @throws \Media\Lib\Media\MediaException public function mount($name, MediaProviderInterface $provider)
+ *     {
+ *     if (isset($this->_mounts[$name])) {
+ *     throw new MediaException(__d('media',"Media provider with name {0} is already mounted", $name));
+ *     }
+ *     $provider->connect();
+ *     $this->_mounts[$name] = $provider;
+ *     }
  */
 
 /**
@@ -372,14 +373,13 @@ class MediaManager
  * Returns the instance of a MediaProviderInterface
  *
  * @param $name
- * @return MediaProviderInterface
- * @throws MediaException
-    public function get($name)
-    {
-    if (!isset($this->_mounts[$name])) {
-    throw new MediaException(__d('media',"Media provider with name {0} has not been registered", $name));
-    }
-    return $this->_mounts[$name];
-    }
+ * @return \Media\Lib\Media\Provider\MediaProviderInterface
+ * @throws \Media\Lib\Media\MediaException public function get($name)
+ *     {
+ *     if (!isset($this->_mounts[$name])) {
+ *     throw new MediaException(__d('media',"Media provider with name {0} has not been registered", $name));
+ *     }
+ *     return $this->_mounts[$name];
+ *     }
  */
 }

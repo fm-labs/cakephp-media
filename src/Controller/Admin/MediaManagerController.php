@@ -1,19 +1,19 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Controller\Admin;
 
-use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Media\Lib\Media\MediaManager;
 
 class MediaManagerController extends AppController
 {
-
     public function treeData()
     {
         $this->viewBuilder()->setClassName('Json');
 
         $id = $this->request->getQuery('id');
-        $path = ($id == '#') ? '/' : $id;
+        $path = $id == '#' ? '/' : $id;
         $treeData = [];
         $config = $this->request->getQuery('config');
 
@@ -46,7 +46,7 @@ class MediaManagerController extends AppController
         $this->viewBuilder()->setClassName('Json');
 
         $id = $this->request->getQuery('id');
-        $path = ($id == '#') ? '/' : $id;
+        $path = $id == '#' ? '/' : $id;
         $treeData = [];
 
         $config = $this->request->getQuery('config');
@@ -147,7 +147,7 @@ class MediaManagerController extends AppController
         $id = $this->request->getQuery('id');
         $pathEncoded = $this->request->getQuery('img');
         $pathDecoded = base64_decode($pathEncoded);
-        $referer = ($this->request->getQuery('ref')) ?: $this->referer();
+        $referer = $this->request->getQuery('ref') ?: $this->referer();
 
         $Table = TableRegistry::getTableLocator()->get($model);
 

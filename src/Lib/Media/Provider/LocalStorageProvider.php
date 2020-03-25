@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Lib\Media\Provider;
 
 use Cake\Filesystem\Folder;
-use Cake\Routing\Router;
-use Media\Lib\Media\MediaException;
 
 /**
  * Class LocalStorageProvider
@@ -35,7 +35,7 @@ class LocalStorageProvider extends MediaProvider
     protected $_path;
 
     /**
-     * @var Folder
+     * @var \Cake\Filesystem\Folder
      */
     protected $_Folder;
 

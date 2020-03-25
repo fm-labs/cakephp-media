@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Form;
 
@@ -14,7 +15,7 @@ class MediaUploadForm extends Form
     protected $config;
 
     /**
-     * @var Uploader The Uploader instance
+     * @var \Upload\Uploader The Uploader instance
      */
     protected $uploader;
 
@@ -25,7 +26,7 @@ class MediaUploadForm extends Form
 
     /**
      * @param $mediaConfig
-     * @param array|Uploader $uploader
+     * @param array|\Upload\Uploader $uploader
      * @throws \InvalidArgumentException
      */
     public function __construct($mediaConfig = 'default', $uploader = [])

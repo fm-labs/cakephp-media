@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -35,7 +37,7 @@ class MediaFile extends Entity implements MediaFileInterface
     {
         $basename = $this->_getBasename();
 
-        return (preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename)));
+        return preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename));
     }
 
     public function getPath()

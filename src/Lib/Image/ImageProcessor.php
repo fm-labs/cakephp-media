@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Media\Lib\Image;
 
 use Cake\Core\InstanceConfigTrait;
-use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
-use Imagine\Image\Box;
 
 /**
  * Class ImageProcessor
@@ -56,7 +57,7 @@ class ImageProcessor
     /**
      * Get the imagine object
      *
-     * @return Imagine object
+     * @return \Imagine\Gd\Imagine object
      */
     public function imagine($renew = false)
     {

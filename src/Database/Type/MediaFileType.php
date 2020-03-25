@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: flow
@@ -9,12 +11,10 @@
 namespace Media\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\TypeFactory;
 use PDO;
 
 class MediaFileType extends \Cake\Database\TypeFactory
 {
-
     public function toPHP($value, Driver $driver)
     {
         if ($value === null) {

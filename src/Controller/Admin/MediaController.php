@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Media\Controller\Admin;
 
 use Cake\Core\Configure;
-use Media\FileManager;
 use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
 use Upload\Uploader;
@@ -83,8 +83,8 @@ class MediaController extends AppController
     {
         $this->viewBuilder()->setClassName('Json');
 
-        $config = ($config) ? $config : 'default';
-        $path = ($this->request->getQuery('path')) ?: '/';
+        $config = $config ? $config : 'default';
+        $path = $this->request->getQuery('path') ?: '/';
         $path = trim($path);
         $path = rtrim($path, '/');
         $path = $path . '/';
@@ -96,7 +96,7 @@ class MediaController extends AppController
 
         try {
             $mgr = MediaManager::getProvider($config);
-            list($dirs, $files) = $mgr->read($path);
+            [$dirs, $files] = $mgr->read($path);
         } catch (\Exception $ex) {
             $error = $ex->getMessage();
         }
