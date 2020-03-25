@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Media\Database\Type;
 
-use Cake\Database\Driver;
 use Cake\Database\DriverInterface;
 use Cake\Database\TypeInterface;
 use PDO;
