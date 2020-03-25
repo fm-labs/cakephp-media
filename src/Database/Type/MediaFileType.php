@@ -11,11 +11,13 @@ declare(strict_types=1);
 namespace Media\Database\Type;
 
 use Cake\Database\Driver;
+use Cake\Database\DriverInterface;
+use Cake\Database\TypeInterface;
 use PDO;
 
-class MediaFileType extends \Cake\Database\TypeFactory
+class MediaFileType extends \Cake\Database\TypeFactory implements TypeInterface
 {
-    public function toPHP($value, Driver $driver)
+    public function toPHP($value, DriverInterface $driver)
     {
         if ($value === null) {
             return null;
@@ -47,7 +49,7 @@ class MediaFileType extends \Cake\Database\TypeFactory
         return $value;
     }
 
-    public function toDatabase($value, Driver $driver)
+    public function toDatabase($value, DriverInterface $driver)
     {
         if (is_array($value)) {
             return join(',', $value);
@@ -58,12 +60,36 @@ class MediaFileType extends \Cake\Database\TypeFactory
         return $value;
     }
 
-    public function toStatement($value, Driver $driver)
+    public function toStatement($value, DriverInterface $driver)
     {
         if ($value === null) {
             return PDO::PARAM_NULL;
         }
 
         return PDO::PARAM_STR;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBaseType(): ?string
+    {
+        // TODO: Implement getBaseType() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): ?string
+    {
+        // TODO: Implement getName() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function newId()
+    {
+        // TODO: Implement newId() method.
     }
 }

@@ -43,7 +43,7 @@ class MediaPickerWidget extends BasicWidget
         }
     }
 
-    public function render(array $data, ContextInterface $context)
+    public function render(array $data, ContextInterface $context): string
     {
         $data += [
             'config' => 'default',

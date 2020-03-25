@@ -45,7 +45,7 @@ class MediaUploadForm extends Form
     /**
      * Build upload form schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): Schema
     {
         $schema->addField('upload_file', ['type' => 'string']);
 
@@ -57,10 +57,10 @@ class MediaUploadForm extends Form
      * @param array $data Form data
      * @return array|bool
      */
-    public function execute(array $data = [])
+    public function execute(array $data = []): bool
     {
         $result = $this->uploader->upload($data['upload_file']);
 
-        return $result;
+        return $result ? true : false;
     }
 }
