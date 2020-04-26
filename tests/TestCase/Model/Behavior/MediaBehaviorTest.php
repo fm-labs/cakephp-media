@@ -101,7 +101,7 @@ class MediaBehaviorTest extends MediaTestCase
     {
         $text = 'Test Media Path in Text: /media/dir2/image1.jpg';
 
-        $entity = $this->table->newEntity();
+        $entity = $this->table->newEmptyEntity();
         $entity->text = $text;
 
         $this->assertEquals($text, $entity->text);

@@ -310,7 +310,7 @@ class MediaBehavior extends \Cake\ORM\Behavior
                 ])->first();
 
                 if (!$attachment) {
-                    $attachment = $this->_getAttachmentsModel($fieldName)->newEntity();
+                    $attachment = $this->_getAttachmentsModel($fieldName)->newEmptyEntity();
                     $attachment->model = $this->_modelName();
                     $attachment->modelid = $entity->id;
                     $attachment->scope = $fieldName;

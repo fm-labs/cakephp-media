@@ -16,7 +16,7 @@ class PostsFixture extends TestFixture
      *
      * @var array
      */
-    // @codingStandardsIgnoreStart
+    // phpcs::disable
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => '', 'comment' => '', 'precision' => null, 'fixed' => null],
@@ -31,7 +31,7 @@ class PostsFixture extends TestFixture
             'engine' => 'InnoDB', 'collation' => 'utf8_general_ci'
         ],
     ];
-    // @codingStandardsIgnoreEnd
+    // phpcs::enable
 
     /**
      * Records

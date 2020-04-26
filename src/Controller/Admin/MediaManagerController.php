@@ -15,7 +15,7 @@ class MediaManagerController extends AppController
         $id = $this->request->getQuery('id');
         $path = $id == '#' ? '/' : $id;
         $treeData = [];
-        $config = $this->request->getQuery('config');
+        $config = $this->request->getQuery('config', 'default');
 
         $mm = MediaManager::get($config);
 
@@ -49,7 +49,7 @@ class MediaManagerController extends AppController
         $path = $id == '#' ? '/' : $id;
         $treeData = [];
 
-        $config = $this->request->getQuery('config');
+        $config = $this->request->getQuery('config', 'default');
 
         $mm = MediaManager::get($config);
         $files = $mm->listFiles($path);

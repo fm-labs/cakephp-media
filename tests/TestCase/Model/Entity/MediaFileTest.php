@@ -25,7 +25,7 @@ class MediaFileTest extends MediaTestCase
         $table = new Table();
         $table->setEntityClass($class);
 
-        $entity = $table->newEntity();
+        $entity = $table->newEmptyEntity();
 
         return $entity;
     }
@@ -36,7 +36,7 @@ class MediaFileTest extends MediaTestCase
 
         return;
         $class = '\\Media\\Model\\Entity\\MediaFile';
-        $entity = $this->newEntity();
+        $entity = $this->newEmptyEntity();
         $this->assertInstanceOf($class, $entity);
     }
 
@@ -46,14 +46,14 @@ class MediaFileTest extends MediaTestCase
 
         return;
         // test with config + path
-        $entity = $this->newEntity();
+        $entity = $this->newEmptyEntity();
         $entity->config = 'test';
         $entity->path = 'dir2/image1.jpg';
 
         $this->assertEquals('dir2/image1.jpg', $entity->path);
 
         // test with media url
-        $entity = $this->newEntity();
+        $entity = $this->newEmptyEntity();
         $entity->config = null;
         $entity->path = 'media://test/dir2/image1.jpg';
 
@@ -66,7 +66,7 @@ class MediaFileTest extends MediaTestCase
         $this->markTestIncomplete();
 
         return;
-        $entity = $this->newEntity();
+        $entity = $this->newEmptyEntity();
         $entity->config = 'test';
         $entity->path = 'dir2/image1.jpg';
 

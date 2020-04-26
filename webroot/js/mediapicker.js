@@ -118,7 +118,7 @@
                         console.log('[mediapicker] Selected: ' + r.join(', '), 'Path: ' + path);
 
                         var config = 'images';
-                        var url = settings.filesUrl + '&id='+path;
+                        var url = settings.filesUrl + '?id='+path;
 
                         $.ajax({
                             method: 'GET',

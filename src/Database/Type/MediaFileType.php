@@ -73,7 +73,7 @@ class MediaFileType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getBaseType(): ?string
     {
-        // TODO: Implement getBaseType() method.
+        return null;
     }
 
     /**
@@ -81,7 +81,7 @@ class MediaFileType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getName(): ?string
     {
-        // TODO: Implement getName() method.
+        return null;
     }
 
     /**
@@ -89,6 +89,6 @@ class MediaFileType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function newId()
     {
-        // TODO: Implement newId() method.
+        return null;
     }
 }

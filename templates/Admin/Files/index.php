@@ -2,6 +2,9 @@
 $this->loadHelper('Media.MediaBrowser');
 $this->MediaBrowser->setMediaManager($this->get('manager'));
 $this->Html->css('Media.filebrowser', ['block' => true]);
+
+$manager = $this->get('manager');
+$folders = $this->get('folders');
 ?>
 
 <div class="files-container">
@@ -10,15 +13,21 @@ $this->Html->css('Media.filebrowser', ['block' => true]);
         <div id="browser-wrapper">
 
             <div id="browser-toolbar" class="actions">
-                <?= $this->Html->link(__d('media','New Folder'),
+                <?= $this->Html->link(
+                    __d('media', 'New Folder'),
                     ['action' => 'add', 'type' => 'folder'],
-                    ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']); ?>
-                <?= $this->Html->link(__d('media','New File'),
+                    ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']
+                ); ?>
+                <?= $this->Html->link(
+                    __d('media', 'New File'),
                     ['action' => 'add', 'type' => 'file'],
-                    ['data-icon' => 'file', 'class' => 'file-add btn btn-default']); ?>
-                <?= $this->Html->link(__d('media','Upload'),
+                    ['data-icon' => 'file', 'class' => 'file-add btn btn-default']
+                ); ?>
+                <?= $this->Html->link(
+                    __d('media', 'Upload'),
                     ['action' => 'upload'],
-                    ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']); ?>
+                    ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']
+                ); ?>
             </div>
             <h4 id="browser-path">
                 <?php
@@ -30,7 +39,7 @@ $this->Html->css('Media.filebrowser', ['block' => true]);
                     echo '<small>' . h(rtrim($manager->getBasePath(), '/')) . '</small>';
                 }
 
-                foreach (explode('/', trim($path,'/')) as $_path) {
+                foreach (explode('/', trim($path, '/')) as $_path) {
                     $tmp .= $_path . '/';
                     echo '<span class="separator">&nbsp;/&nbsp;</span>';
                     echo $this->Html->link($_path, ['path' => $tmp]);
@@ -42,29 +51,29 @@ $this->Html->css('Media.filebrowser', ['block' => true]);
                     <div class="col-md-8">
                         <div id="browser-folders">
                             <table class="table table-hover">
-                                <?php foreach ($folders as $folder): ?>
+                                <?php foreach ($folders as $folder) : ?>
                                     <tr>
                                         <td width="20">
                                             <i class="fa fa-folder"></i>
                                         </td>
                                         <td>
-                                            <?= $this->Html->link($folder, ['path' => $path . $folder]) ?>
+                                            <?= $this->Html->link($folder, ['?' => ['path' => $path . $folder]]) ?>
                                         </td>
                                         <td class="actions">&nbsp;</td>
                                     </tr>
                                 <?php endforeach; ?>
-                                <?php foreach ($files as $file): ?>
+                                <?php foreach ($files as $file) : ?>
                                     <tr>
                                         <td width="20">
                                             <?= $this->MediaBrowser->fileIcon($path, $file); ?>
                                         </td>
                                         <td>
-                                            <?= $this->Html->link($file, ['action' => 'index', 'path' => $path, 'file' => $file]) ?>
+                                            <?= $this->Html->link($file, ['action' => 'index', '?' => ['path' => $path, 'file' => $file]]) ?>
                                         </td>
                                         <td class="actions text-right">
-                                            <?= $this->Html->link('<i class="fa fa-eye"></i>', ['action' => 'view', 'path' => $path, 'file' => $file], ['escape' => false]) ?>
-                                            <?= $this->Html->link('<i class="fa fa-pencil"></i>', ['action' => 'edit', 'path' => $path, 'file' => $file], ['escape' => false]) ?>
-                                            <?= $this->Html->link('<i class="fa fa-trash"></i>', ['action' => 'delete', 'path' => $path, 'file' => $file], ['escape' => false, 'confirm' => 'Sure?']) ?>
+                                            <?= $this->Html->link('<i class="fa fa-eye"></i>', ['action' => 'view', '?' => ['path' => $path, 'file' => $file]], ['escape' => false]) ?>
+                                            <?= $this->Html->link('<i class="fa fa-pencil"></i>', ['action' => 'edit', '?' => ['path' => $path, 'file' => $file]], ['escape' => false]) ?>
+                                            <?= $this->Html->link('<i class="fa fa-trash"></i>', ['action' => 'delete', '?' => ['path' => $path, 'file' => $file]], ['escape' => false, 'confirm' => 'Sure?']) ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -72,7 +81,7 @@ $this->Html->css('Media.filebrowser', ['block' => true]);
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <?php if (isset($selectedFile)): ?>
+                        <?php if (isset($selectedFile)) : ?>
                         <div id="browser-file">
                             <div class="box box-default with-border">
                                 <div class="box-header">

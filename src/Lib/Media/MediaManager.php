@@ -30,7 +30,6 @@ class MediaManager
      */
     public static function getProvider($config)
     {
-
         if (is_string($config) && in_array($config, self::configured())) {
             $config = self::getConfig($config);
         } elseif (!is_array($config)) {
@@ -82,7 +81,7 @@ class MediaManager
         return $providerObj;
     }
 
-    public static function get($config)
+    public static function get($config = 'default')
     {
         $provider = self::getProvider($config);
 
