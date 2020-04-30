@@ -115,9 +115,9 @@ class MediaManagerController extends AppController
             $content = $Table->patchEntity($content, [$scope => $patchFile]);
             //$content->$scope = $this->request->data[$scope];
             if ($Table->save($content)) {
-                $this->Flash->success(__d('banana', 'The {0} has been saved.', __d('banana', 'content')));
+                $this->Flash->success(__d('cupcake', 'The {0} has been saved.', __d('cupcake', 'content')));
             } else {
-                $this->Flash->error(__d('banana', 'The {0} could not be saved. Please, try again.', __d('banana', 'content')));
+                $this->Flash->error(__d('cupcake', 'The {0} could not be saved. Please, try again.', __d('cupcake', 'content')));
             }
         } else {
         }
@@ -181,9 +181,9 @@ class MediaManagerController extends AppController
         $content->set($scope, $updated);
 
         if ($Table->save($content)) {
-            $this->Flash->success(__d('banana', 'The {0} has been removed.', $scope));
+            $this->Flash->success(__d('cupcake', 'The {0} has been removed.', $scope));
         } else {
-            $this->Flash->error(__d('banana', 'The {0} could not be removed. Please, try again.', $scope));
+            $this->Flash->error(__d('cupcake', 'The {0} could not be removed. Please, try again.', $scope));
         }
 
         return $this->redirect($referer);

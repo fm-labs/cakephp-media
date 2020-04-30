@@ -1,8 +1,8 @@
 <?= $this->Html->css('Media.filebrowser', ['block' => true]); ?>
-<?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
-<?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
-<?= $this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]); ?>
-<?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
+<?= $this->Html->script('Admin.underscore-min', ['block' => true]); ?>
+<?= $this->Html->script('Admin.backbone-min', ['block' => true]); ?>
+<?= $this->Html->css('Admin.jstree/themes/admin/style.min', ['block' => true]); ?>
+<?= $this->Html->script('Admin.jstree/jstree.min', ['block' => true]); ?>
 <div class="index">
 
     <div id="browser-wrapper">

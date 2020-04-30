@@ -55,9 +55,9 @@ class ImageSelectCell extends Cell
             debug($this->request->getData());
             $content = $Model->patchEntity($image, $this->request->getData());
             if ($Model->save($content)) {
-                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
+                $this->Flash->success(__d('cupcake','The {0} has been saved.', __d('cupcake','content')));
             } else {
-                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
+                $this->Flash->error(__d('cupcake','The {0} could not be saved. Please, try again.', __d('cupcake','content')));
             }
         } else {
         }

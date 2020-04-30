@@ -416,9 +416,11 @@ class MediaBehavior extends \Cake\ORM\Behavior
         $Attachments = $this->_getAttachmentsModel($fieldName);
         $params = [
             'MediaAttachments.model' => $config['model'],
-            'MediaAttachments.modelid' => $row->id,
             'MediaAttachments.scope' => $fieldName,
         ];
+
+        $modelIdParam = $row->id === null ? 'MediaAttachments.modelid IS' : 'MediaAttachments.modelid';
+        $params[$modelIdParam] = $row->id;
         $query = $Attachments->find()->where($params);
 
         //@TODO Keep it dry (possible duplicate in '_resolveInlineAttachment' method)

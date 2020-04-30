@@ -15,10 +15,10 @@ class MediaPickerHelper extends MediaHelper
     {
         parent::__construct($View, $config);
 
-        $this->_View->loadHelper('Backend.JsTree');
+        $this->_View->loadHelper('Admin.JsTree');
 
-        $this->Html->script('/backend/libs/underscore/underscore-min', ['block' => 'script']);
-        $this->Html->script('/backend/libs/backbone/backbone-min', ['block' => 'script']);
+        $this->Html->script('/admin/libs/underscore/underscore-min', ['block' => 'script']);
+        $this->Html->script('/admin/libs/backbone/backbone-min', ['block' => 'script']);
 
         $this->Html->css('Media.mediapicker', ['block' => true]);
         $this->Html->script('Media.mediapicker', ['block' => 'script']);

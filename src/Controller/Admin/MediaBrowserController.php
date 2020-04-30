@@ -36,7 +36,7 @@ class MediaBrowserController extends AppController
 
         $this->loadComponent('RequestHandler');
 
-        //$this->layout = "Backend.media_browser";
+        //$this->layout = "Admin.media_browser";
 
         $config = $this->request->getParam('config');
         if (!$config) {

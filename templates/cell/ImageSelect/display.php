@@ -6,14 +6,14 @@ if ($multiple) {
         'imageOptions' => $imageOptions,
         'imageActions' => [
             [
-                __d('banana','Remove Image'),
+                __d('cupcake','Remove Image'),
                 ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'deleteImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config, 'multiple' => true ],
                 ['class' => 'btn btn-sm btn-danger', 'data-icon' => 'remove', 'role' => 'button']
             ]
         ],
         'actions' => [
             [
-                __d('banana','Add Image'),
+                __d('cupcake','Add Image'),
                 ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config, 'multiple' => true ],
                 ['class' => 'btn btn-sm btn-default link-frame-modal', 'data-icon' => 'folder', 'role' => 'button']
             ]
@@ -26,12 +26,12 @@ if ($multiple) {
         'imageOptions' => $imageOptions,
         'imageActions' => [
             [
-                __d('banana','Select Image'),
+                __d('cupcake','Select Image'),
                 ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'setImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
                 ['class' => 'btn btn-sm btn-default link-frame-modal', 'data-icon' => 'folder', 'role' => 'button']
             ],
             [
-                __d('banana','Remove Image'),
+                __d('cupcake','Remove Image'),
                 ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'deleteImage', $id, 'scope' => $scope, 'model' => $model, 'id' => $id, 'config' => $config ],
                 ['class' => 'btn btn-sm btn-danger', 'data-icon' => 'remove', 'role' => 'button']
             ]

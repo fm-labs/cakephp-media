@@ -3,19 +3,18 @@ declare(strict_types=1);
 
 namespace Media;
 
-use Banana\Plugin\BasePlugin;
+use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Event\Event;
-use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
 use Cake\Log\Log;
-use Cake\Routing\RouteBuilder;
 use Media\Lib\Media\MediaManager;
-use Media\Model\Entity\MediaFile;
 
-class Plugin extends BasePlugin implements EventListenerInterface
+class Plugin extends BasePlugin
 {
+    /**
+     * {@inheritDoc}
+     */
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
@@ -45,87 +44,10 @@ class Plugin extends BasePlugin implements EventListenerInterface
         MediaManager::setConfig((array)Configure::read('Media'));
 
         /**
-         * Event hooks
+         * Administration plugin
          */
-        EventManager::instance()->on($this);
-    }
-
-    public function backendRoutes(RouteBuilder $routes)
-    {
-        $routes->setExtensions(['json']);
-
-        $routes->connect(
-            '/',
-            ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index']
-        );
-        $routes->connect(
-            '/browser/',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
-        );
-        $routes->connect(
-            '/browser/:config/',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
-        );
-        $routes->connect(
-            '/browser/:config/:action',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser']
-        );
-
-        $routes->fallbacks('DashedRoute');
-    }
-
-    /**
-     * Returns a list of events this object is implementing. When the class is registered
-     * in an event manager, each individual method will be associated with the respective event.
-     *
-     * @see EventListenerInterface::implementedEvents()
-     * @return array associative array or event key names pointing to the function
-     * that should be called in the object when the respective event is fired
-     */
-    public function implementedEvents(): array
-    {
-        return [
-            'Backend.Menu.build.admin_primary' => ['callable' => 'backendMenuInit', 'priority' => 90],
-            'Backend.View.initialize' => 'backendViewInit',
-
-        ];
-    }
-
-    public function backendViewInit(Event $event)
-    {
-        \Backend\View\Helper\FormatterHelper::register('media_file', function ($val, $extra, $params, $view) {
-            if ($val instanceof MediaFile) {
-                return $view->Media->thumbnail($val->getFilePath(), ['height' => 50, 'width' => 75]);
-            }
-
-            return h($val);
-        });
-
-        \Backend\View\Helper\FormatterHelper::register('media_files', function ($val, $extra, $params) {
-            return h($val);
-        });
-
-        /** @var \Cake\View\View $view */
-        $view = $event->getSubject();
-        //$view->loadHelper('Media.Media');
-        $view->getEventManager()->on('View.beforeRender', function ($ev) {
-            $ev->getSubject()->loadHelper('Media.Media');
-        });
-    }
-
-    public function backendMenuInit(Event $event, \Banana\Menu\Menu $menu)
-    {
-        $menu->addItem([
-            'title' => 'Media',
-            'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index'],
-            'data-icon' => 'picture-o',
-            'children' => [
-                'media_upload' => [
-                    'title' => 'Upload',
-                    'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
-                    'data-icon' => 'upload',
-                ],
-            ],
-        ]);
+        if (\Cake\Core\Plugin::isLoaded('Admin')) {
+            \Admin\Admin::addPlugin(new \Media\Admin());
+        }
     }
 }

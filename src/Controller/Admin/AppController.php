@@ -9,6 +9,6 @@ class AppController extends Controller
 {
     public function initialize(): void
     {
-        $this->loadComponent('Backend.Backend');
+        $this->loadComponent('Admin.Admin');
     }
 }

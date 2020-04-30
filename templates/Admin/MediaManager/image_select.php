@@ -1,4 +1,4 @@
-<?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
+<?= $this->Html->script('Admin.jstree/jstree.min', ['block' => true]); ?>
 <style>
     #is-selected img {
         max-width: 100%;
@@ -36,7 +36,7 @@
                 'options' => $imageFiles,
                 'class' => 'grouped',
                 'id' => 'imagepicker-select',
-                'empty' => __d('banana','- Choose Image -'),
+                'empty' => __d('cupcake','- Choose Image -'),
                 'hidden' => true,
                 //'style' => 'min-height: 500px;'
             ]); ?>

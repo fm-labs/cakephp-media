@@ -10,22 +10,22 @@
     <?= $this->Html->meta('icon') ?>
     <?= $this->fetch('meta') ?>
 
-    <?= $this->fetch('cssBackend') ?>
-    <?= $this->Html->css('Backend.bootstrap.min'); ?>
-    <?= $this->Html->css('Backend.admin'); ?>
+    <?= $this->fetch('cssAdmin') ?>
+    <?= $this->Html->css('Admin.bootstrap.min'); ?>
+    <?= $this->Html->css('Admin.admin'); ?>
     <?= $this->fetch('css') ?>
 
     <?= $this->fetch('script') ?>
-    <?= $this->Html->script('Backend.bootstrap.min'); ?>
-    <?= $this->Html->script('Backend.be-ui'); ?>
-    <?= $this->fetch('scriptBackend'); ?>
+    <?= $this->Html->script('Admin.bootstrap.min'); ?>
+    <?= $this->Html->script('Admin.be-ui'); ?>
+    <?= $this->fetch('scriptAdmin'); ?>
 </head>
 <body>
     <h1>Media Browser</h1>
     <div id="media" class="container-fluid">
         <?= $this->fetch('content'); ?>
     </div>
-    <?= $this->fetch('scriptBackend'); ?>
+    <?= $this->fetch('scriptAdmin'); ?>
     <?= $this->fetch('script'); ?>
 </body>
 </html>

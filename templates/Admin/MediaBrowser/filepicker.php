@@ -35,8 +35,8 @@
 
 <?php debug($folders); ?>
 <?php debug($files); ?>
-<?= $this->Html->css('Backend.jstree/themes/default/style.min'); ?>
-<?= $this->Html->script('Backend.jstree/jstree.min'); ?>
+<?= $this->Html->css('Admin.jstree/themes/default/style.min'); ?>
+<?= $this->Html->script('Admin.jstree/jstree.min'); ?>
 <script>
     $(document).ready(function() {
         var $scontainer = $('.filepicker .files-selected');
