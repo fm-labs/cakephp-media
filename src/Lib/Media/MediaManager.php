@@ -11,8 +11,6 @@ class MediaManager
 {
     use StaticConfigTrait;
 
-    protected static $_dsnClassMap = [];
-
     /**
      * @var \Media\Lib\Media\Provider\MediaProviderInterface
      */
@@ -24,11 +22,11 @@ class MediaManager
     protected $_path;
 
     /**
-     * @param $config
+     * @param string|array $config Provider config
      * @return \Media\Lib\Media\Provider\MediaProviderInterface
      * @throws \Exception
      */
-    public static function getProvider($config)
+    public static function getProvider($config): MediaProviderInterface
     {
         if (is_string($config) && in_array($config, self::configured())) {
             $config = self::getConfig($config);
@@ -51,12 +49,12 @@ class MediaManager
 
         // @TODO Remove
         if (isset($config['url'])) {
-            triggerWarning(sprintf("The parameter 'url' is deprecated. Use 'baseUrl' instead."));
+            deprecationWarning(sprintf("The parameter 'url' is deprecated. Use 'baseUrl' instead."));
             $config['baseUrl'] = $config['url'];
             unset($config['url']);
         }
         if (isset($config['path'])) {
-            triggerWarning(sprintf("The parameter 'path' is deprecated. Use 'basePath' instead."));
+            deprecationWarning(sprintf("The parameter 'path' is deprecated. Use 'basePath' instead."));
             $config['basePath'] = $config['path'];
             unset($config['path']);
         }
@@ -65,29 +63,39 @@ class MediaManager
 
         $provider = $config['className'];
         if (!$provider) {
-            throw new \Exception("Provider not configured");
+            throw new \Exception('Provider not configured');
         }
 
         $className = App::className($provider, 'Lib/Media/Provider', 'Provider');
         if (!$className) {
-            throw new \Exception("Provider class not found");
+            throw new \Exception('Provider class not found');
         }
 
         $providerObj = new $className($config);
         if (!($providerObj instanceof MediaProviderInterface)) {
-            throw new \Exception("Provider is not a valid MediaProviderInterface");
+            throw new \Exception('Provider is not a valid MediaProviderInterface');
         }
 
         return $providerObj;
     }
 
-    public static function get($config = 'default')
+    /**
+     * @param string $config Media config name
+     * @return static
+     * @throws \Exception
+     */
+    public static function get(string $config = 'default'): self
     {
         $provider = self::getProvider($config);
 
         return new self($provider);
     }
 
+    /**
+     * MediaManager constructor.
+     *
+     * @param \Media\Lib\Media\Provider\MediaProviderInterface $provider
+     */
     public function __construct(MediaProviderInterface $provider)
     {
         //$this->mount('default', new LocalStorageProvider(MEDIA));
@@ -97,37 +105,44 @@ class MediaManager
         //$this->open('/');
     }
 
-    /** PROVIDER INTERFACE **/
-
-    public function read($path)
+    /**
+     * @param string $path Path to media
+     * @return array
+     * @deprecated
+     */
+    public function read(string $path): array
     {
         $this->setPath($path);
 
         return $this->_provider->read($this->_path);
     }
 
-    /** MEDIA BROWSING **/
-
     /**
-     * @todo Mark as deprecated
+     * @param string $path Path to media
+     * @return $this
+     * @deprecated
      */
-    public function setPath($path)
+    public function setPath(string $path)
     {
         $this->_path = $this->_normalizePath($path);
+
+        return $this;
     }
 
     /**
-     * @todo Mark as deprecated
+     * @return string
+     * @deprecated
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->_path;
     }
 
     /**
-     * @todo Mark as deprecated
+     * @return string
+     * @deprecated
      */
-    public function getParentPath()
+    public function getParentPath(): string
     {
         $path = $this->_path;
         $path = trim($path, '/');
@@ -141,35 +156,42 @@ class MediaManager
         return join('/', $parts);
     }
 
-//    public function open($path)
-//    {
-//        $this->setPath($path);
-//        return $this;
-//    }
-
-    public function listFiles($path)
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function listFiles(string $path): array
     {
         $path = $this->_normalizePath($path);
         [, $files] = $this->read($path);
-        array_walk($files, function (&$file, $idx) use ($path) {
+        array_walk($files, function (&$file) use ($path) {
             $file = $path . $file;
         });
 
         return $files;
     }
 
-    public function listFileUrls($path)
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function listFileUrls(string $path): array
     {
         $urls = [];
         $files = $this->listFiles($path);
-        array_walk($files, function ($val, $idx) use (&$urls) {
+        array_walk($files, function ($val) use (&$urls) {
             $urls[$val] = $this->buildFileUrl($val);
         });
 
         return $urls;
     }
 
-    public function listFilesRecursive($path, $fullPath = false)
+    /**
+     * @param string $path Path to media
+     * @param bool $fullPath Full path flag
+     * @return array
+     */
+    public function listFilesRecursive(string $path, bool $fullPath = false): array
     {
         $list = [];
         $basePath = $fullPath ? $this->getBasePath() : '';
@@ -190,26 +212,35 @@ class MediaManager
         return $list;
     }
 
-    public function listFolders($path)
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function listFolders(string $path): array
     {
         [$dirs, ] = $this->read($path);
 
         return $dirs;
     }
 
-    public function listFoldersRecursive($path, $depth = -1)
+    /**
+     * @param string $path Path to media
+     * @param int $depth Folder depth
+     * @return array
+     */
+    public function listFoldersRecursive(string $path, int $depth = -1): array
     {
         $path = $this->_normalizePath($path);
         [$dirs, ] = $this->read($path);
 
         $list = [];
-        array_walk($dirs, function (&$dir, $idx) use (&$list, &$path, &$depth) {
+        array_walk($dirs, function (&$dir) use (&$list, &$path, &$depth) {
             //$_dir = $this->_normalizePath($path . $dir);
             $_dir = $path . $dir;
             $list[] = $_dir;
 
             if ($depth > -1 && $depth == 0) {
-                return;
+                return [];
             }
 
             foreach ($this->listFoldersRecursive($_dir . '/', $depth - 1) as $dir) {
@@ -220,21 +251,16 @@ class MediaManager
         return $list;
     }
 
-    public function deleteFile($path)
-    {
-        //$this->_provider->delete($path);
-    }
-
     /**
      * Normalize Path
      *
      * Strip leading path separator
      * Append trailing path separator if not root path
      *
-     * @param $path
+     * @param string $path Path to media
      * @return string
      */
-    protected function _normalizePath($path)
+    protected function _normalizePath(string $path): string
     {
         $path = trim(trim($path), '/') . '/';
         $path = preg_replace('|([\/])?\.\.\/|', '/', $path); // clean path patterns like '/../../'
@@ -246,7 +272,11 @@ class MediaManager
         return $path;
     }
 
-    public function buildFileUrl($filePath)
+    /**
+     * @param string $filePath File path
+     * @return string
+     */
+    public function buildFileUrl(string $filePath): string
     {
         //@TODO sanitize file path
         //if (strpos($filePath, '..') !== false) {
@@ -257,7 +287,11 @@ class MediaManager
         return $this->getBaseUrl() . '/' . $filePath;
     }
 
-    public function buildFileUrlEncoded($filePath)
+    /**
+     * @param string $filePath File path
+     * @return string
+     */
+    public function buildFileUrlEncoded(string $filePath): string
     {
         $url = urlencode($filePath);
         $url = preg_replace('/\%2F/', '/', $url);
@@ -267,60 +301,78 @@ class MediaManager
     }
 
     /**
+     * @param string $filePath File path
+     * @return string
      * @deprecated Use buildFileUrl() instead
      */
-    public function getFileUrl($filePath)
+    public function getFileUrl(string $filePath): string
     {
         return $this->buildFileUrl($filePath);
     }
 
     /**
+     * @param string $filePath File path
+     * @return string
      * @deprecated Use buildFileUrlEncoded() instead
      */
-    public function getFileUrlEncoded($filePath)
+    public function getFileUrlEncoded(string $filePath): string
     {
         return $this->buildFileUrlEncoded($filePath);
     }
 
     /**
-     * @todo Mark as deprecated. This should not be used anymore. And will be removed.
+     * @return string
+     * @deprecated
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         return realpath($this->_provider->getConfig('basePath')) . DS;
     }
 
     /**
-     * @todo Mark as deprecated This should not be used anymore. And will be removed.
+     * @return string
+     * @deprecated
      */
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
         return rtrim($this->_provider->getConfig('baseUrl'), '/');
     }
 
-    public function getSelectListRecursive($path = '/')
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function getSelectListRecursive(string $path = '/'): array
     {
         $files = $this->listFilesRecursive($path, false);
         $list = [];
-        array_walk($files, function ($val, $idx) use (&$list) {
+        array_walk($files, function ($val) use (&$list) {
             $list[$val] = $this->buildFileUrl($val);
         });
 
         return $list;
     }
 
-    public function getSelectFolderListRecursive($path = '/')
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function getSelectFolderListRecursive(string $path = '/'): array
     {
         $files = $this->listFoldersRecursive($path);
         $list = [];
-        array_walk($files, function ($val, $idx) use (&$list) {
+        array_walk($files, function ($val) use (&$list) {
             $list[$val] = $val;
         });
 
         return $list;
     }
 
-    public function getSelectListRecursiveGrouped($path = '/')
+    /**
+     * @param string $path Path to media
+     * @return array
+     */
+    public function getSelectListRecursiveGrouped($path = '/'): array
     {
         $folders = $this->listFoldersRecursive($path);
         $list = [];
@@ -333,52 +385,11 @@ class MediaManager
             }
 
             $list[$folder] = [];
-            array_walk($files, function ($val, $idx) use (&$list, $folder) {
+            array_walk($files, function ($val) use (&$list, $folder) {
                 $list[$folder][$val] = $this->buildFileUrl($val);
             });
         }
 
         return $list;
     }
-
-/**
- * Mount a media provider with a name
- *
- * @param $name
- * @param \Media\Lib\Media\Provider\MediaProviderInterface $provider
- * @throws \Media\Lib\Media\MediaException public function mount($name, MediaProviderInterface $provider)
- *     {
- *     if (isset($this->_mounts[$name])) {
- *     throw new MediaException(__d('media',"Media provider with name {0} is already mounted", $name));
- *     }
- *     $provider->connect();
- *     $this->_mounts[$name] = $provider;
- *     }
- */
-
-/**
- * Un-mount a media provider by name
- *
- * @param $name
-    public function unmount($name)
-    {
-    $provider = $this->get($name);
-    $provider->disconnect();
-    unset($this->_mounts[$name]);
-    }
- */
-
-/**
- * Returns the instance of a MediaProviderInterface
- *
- * @param $name
- * @return \Media\Lib\Media\Provider\MediaProviderInterface
- * @throws \Media\Lib\Media\MediaException public function get($name)
- *     {
- *     if (!isset($this->_mounts[$name])) {
- *     throw new MediaException(__d('media',"Media provider with name {0} has not been registered", $name));
- *     }
- *     return $this->_mounts[$name];
- *     }
- */
 }

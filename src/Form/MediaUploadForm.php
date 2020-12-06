@@ -12,7 +12,12 @@ class MediaUploadForm extends Form
     /**
      * @var string Name of media config
      */
-    protected $config;
+    protected $mediaConfig;
+
+    /**
+     * @var array Uploader config
+     */
+    protected $uploaderConfig;
 
     /**
      * @var \Upload\Uploader The Uploader instance
@@ -25,25 +30,25 @@ class MediaUploadForm extends Form
     protected $data = [];
 
     /**
-     * @param $mediaConfig
-     * @param array|\Upload\Uploader $uploader
-     * @throws \InvalidArgumentException
+     * @var array
      */
-    public function __construct($mediaConfig = 'default', $uploader = [])
-    {
-        $this->config = $mediaConfig;
+    protected $_result;
 
-        if (is_array($uploader)) {
-            $this->uploader = new Uploader($uploader);
-        } elseif ($uploader instanceof Uploader) {
-            $this->uploader = $uploader;
-        } else {
-            throw new \InvalidArgumentException('Invalid uploader config');
-        }
+    /**
+     * @param array|string $mediaConfig
+     * @param array|string|\Upload\Uploader $uploaderConfig
+     */
+    public function __construct($mediaConfig = 'default', $uploaderConfig = [])
+    {
+        $this->mediaConfig = $mediaConfig;
+        $this->uploaderConfig = $uploaderConfig;
     }
 
     /**
      * Build upload form schema
+     *
+     * @param \Cake\Form\Schema $schema
+     * @return \Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema): Schema
     {
@@ -53,14 +58,45 @@ class MediaUploadForm extends Form
     }
 
     /**
+     * @return \Upload\Uploader
+     * @throws \Exception
+     */
+    public function getUploader(): Uploader
+    {
+        if (!$this->uploader) {
+            if (is_array($this->uploaderConfig) || is_string($this->uploaderConfig)) {
+                $this->uploader = new Uploader($this->uploaderConfig);
+            } elseif ($this->uploaderConfig instanceof Uploader) {
+                $this->uploader = $this->uploaderConfig;
+            } else {
+                throw new \InvalidArgumentException('Invalid uploader config');
+            }
+        }
+
+        return $this->uploader;
+    }
+
+    /**
      * Process upload
+     *
      * @param array $data Form data
-     * @return array|bool
+     * @return bool
+     * @throws \Exception
      */
     public function execute(array $data = []): bool
     {
-        $result = $this->uploader->upload($data['upload_file']);
+        $this->_result = $this->getUploader()->upload($data['upload_file']);
 
-        return $result ? true : false;
+        return $this->_result ? true : false;
+    }
+
+    /**
+     * Get the result of the upload.
+     *
+     * @return array
+     */
+    public function getUploadedFiles(): array
+    {
+        return $this->_result;
     }
 }

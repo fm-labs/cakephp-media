@@ -1,14 +1,14 @@
 <?php
 return [
     'Media' => [
-        /*
         'default' => [
             'label' => 'All Media',
             'provider' => 'Media.LocalStorage',
-            'basePath' => WWW_ROOT . 'media' . DS,
+            'basePath' => MEDIA, //WWW_ROOT . 'media' . DS,
             'public' => true,
-            'baseUrl' => '/media',
+            'baseUrl' => MEDIA_URL, //'/media',
         ],
+        /*
         'gallery' => [
             'label' => 'Products Gallery',
             'provider' => 'Media.LocalStorage',

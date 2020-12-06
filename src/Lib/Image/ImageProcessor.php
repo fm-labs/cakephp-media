@@ -11,11 +11,11 @@ use Imagine\Image\Point;
 /**
  * Class ImageProcessor
  *
- * Originally taken from https://github.com/burzum/cakephp-imagine-plugin/blob/master/src/Lib/ImageProcessor.php
- *
+ * Based on https://github.com/burzum/cakephp-imagine-plugin/blob/master/src/Lib/ImageProcessor.php
  *
  * @package Media\Lib\Image
- * @author burzum
+ * @author burzum https://github.com/burzum
+ * @author fmlabs https://github.com/fm-labs
  */
 class ImageProcessor
 {
@@ -33,9 +33,9 @@ class ImageProcessor
     /**
      * Imagine Engine Instance
      *
-     * @var \Imagine\Image\AbstractImagine;
+     * @var \Imagine\Image\AbstractImagine[];
      */
-    protected $_imagine = null;
+    protected $_imagine = [];
 
     /**
      * Image object instace
@@ -59,17 +59,18 @@ class ImageProcessor
      *
      * @return \Imagine\Gd\Imagine object
      */
-    public function imagine($renew = false)
+    public function imagine()
     {
-        if (empty($this->_imagine) || $renew === true) {
-            $class = '\Imagine\\' . $this->getConfig('engine') . '\Imagine';
+        $engine = $this->getConfig('engine');
+        if (!isset($this->_imagine[$engine])) {
+            $class = '\\Imagine\\' . $engine . '\\Imagine';
             if (!class_exists($class)) {
                 throw new \RuntimeException('Class ' . $class . ' not found');
             }
-            $this->_imagine = new $class();
+            $this->_imagine[$engine] = new $class();
         }
 
-        return $this->_imagine;
+        return $this->_imagine[$engine];
     }
 
     /**

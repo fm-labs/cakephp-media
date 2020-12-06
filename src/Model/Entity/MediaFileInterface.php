@@ -5,12 +5,18 @@ namespace Media\Model\Entity;
 
 interface MediaFileInterface
 {
-    public function getPath();
+    /**
+     * @return string
+     */
+    public function getPath(): string;
 
-    public function getUrl();
+    /**
+     * @return string
+     */
+    public function getUrl(): string;
 
     /**
      * @return bool
      */
-    public function isImage();
+    public function isImage(): bool;
 }

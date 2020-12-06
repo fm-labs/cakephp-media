@@ -6,6 +6,12 @@ namespace Media\Controller\Admin;
 use Cake\ORM\TableRegistry;
 use Media\Lib\Media\MediaManager;
 
+/**
+ * Class MediaManagerController
+ *
+ * @package Media\Controller\Admin
+ * @todo MediaManagerController requires a rewrite
+ */
 class MediaManagerController extends AppController
 {
     public function treeData()

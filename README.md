@@ -9,3 +9,9 @@ The recommended way to install composer packages is:
 ```
 composer require fm-labs/cakephp-media
 ```
+
+## TODO
+
+* Drag'n'Drop file uploads
+* VideoHelper
+* Ajax support in FilesController

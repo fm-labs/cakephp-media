@@ -4,52 +4,79 @@ declare(strict_types=1);
 namespace Media\Controller\Admin;
 
 use Cake\Filesystem\File;
+use Media\Form\MediaUploadForm;
 use Media\Lib\Media\MediaManager;
+use Media\Model\Entity\MediaFile;
+use Upload\Uploader;
 
 class FilesController extends AppController
 {
     /**
      * @var \Media\Lib\Media\MediaManager
      */
-    public $manager;
+    protected $_manager;
 
+    /**
+     * @inheritDoc
+     */
     public function initialize(): void
     {
         parent::initialize();
-        $this->manager = MediaManager::get('default');
     }
 
-    public function index()
+    /**
+     * @return \Media\Lib\Media\MediaManager
+     */
+    public function getMediaManager(): MediaManager
+    {
+        if (!$this->_manager) {
+            $this->_manager = MediaManager::get('default');
+        }
+
+        return $this->_manager;
+    }
+
+    /**
+     * @return void
+     */
+    public function index(): void
     {
         $path = $this->request->getQuery('path') ?: '/';
         $path = rtrim($path, '/') . '/';
-        $contents = $this->manager->read($path);
+        $contents = $this->getMediaManager()->read($path);
         [$folders, $files] = $contents;
 
         if ($this->request->getQuery('file')) {
             $f = $this->_getFileFromRequest();
+            $mf = MediaFile::fromFile($f);
             $this->set('selectedFile', $f);
+            $this->set('mediaFile', $mf);
         }
 
         $this->set('path', $path);
         $this->set('folders', $folders);
         $this->set('files', $files);
-        $this->set('manager', $this->manager);
+        $this->set('manager', $this->_manager);
     }
 
-    public function view()
+    /**
+     * @return void
+     */
+    public function view(): void
     {
         $f = $this->_getFileFromRequest();
+        $mf = MediaFile::fromFile($f);
         $this->set('selectedFile', $f);
+        $this->set('mediaFile', $mf);
         $contents = null;
 
         if (!$f->exists() || !$f->readable()) {
-            $this->Flash->error("File does not exist or is not readable by the webserver");
+            $this->Flash->error('File does not exist or is not readable by the webserver');
             //$this->redirect($this->referer(['action' => 'index']));
         } else {
             $ext = strtolower($f->ext());
             if (!in_array($ext, ['txt', 'md', 'conf', 'html', 'json', 'xml'])) {
-                $this->Flash->warning("This file type can not be viewed");
+                $this->Flash->warning('This file type can not be viewed');
                 //$this->redirect($this->referer(['action' => 'index']));
             } else {
                 $contents = $f->read();
@@ -59,35 +86,65 @@ class FilesController extends AppController
         $this->set('contents', $contents);
     }
 
-    public function edit()
+    /**
+     * @return void
+     */
+    public function edit(): void
     {
         $f = $this->_getFileFromRequest();
         $this->set('selectedFile', $f);
 
         //@TODO Implement me
-        $this->Flash->warning("This file can not be edited");
+        $this->Flash->warning('This file can not be edited');
         $this->redirect($this->referer(['action' => 'index']));
     }
 
-    public function delete()
+    public function rename(): void
+    {
+        $f = $this->_getFileFromRequest();
+        $this->set('selectedFile', $f);
+
+        if ($this->getRequest()->is(['post'])) {
+            $path = $this->getRequest()->getData('path');
+            $newName = $this->getRequest()->getData('newName');
+            $info = pathinfo($path);
+            $newPath = sprintf('%s/%s.%s', $info['dirname'], $newName, $info['extension']);
+            if (copy($path, $newPath)) {
+                unlink($path);
+                $this->Flash->success(__('File renamed from {0} to {1}', $info['filename'], $newName));
+                $this->redirect($this->referer(['action' => 'index']));
+            } else {
+                $this->Flash->error('This file can not be renamed');
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function delete(): void
     {
         $f = $this->_getFileFromRequest();
         if (!$f->exists()) {
-            $this->Flash->error("File does not exist");
+            $this->Flash->error('File does not exist');
         }
 
         if ($f->delete()) {
-            $this->Flash->success("File deleted");
+            $this->Flash->success('File deleted');
         } else {
-            $this->Flash->error("Failed to delete file");
+            $this->Flash->error('Failed to delete file');
         }
 
         $this->redirect($this->referer(['action' => 'index']));
     }
 
-    protected function _getFileFromRequest()
+    /**
+     * @return \Cake\Filesystem\File
+     * @deprecated
+     */
+    protected function _getFileFromRequest(): File
     {
-        $basePath = $this->manager->getBasePath();
+        $basePath = $this->getMediaManager()->getBasePath();
         //@TODO Sanitize query!
         $path = $this->request->getQuery('path') ?: '/';
         $path = rtrim($path, '/') . '/';
@@ -98,47 +155,41 @@ class FilesController extends AppController
         return $f;
     }
 
-    /*
-    public function upload()
+    /**
+     * @return void
+     */
+    public function upload(): void
     {
-        $path = ($this->request->getQuery('path')) ?: '/';
+        $path = $this->request->getQuery('path') ?: '/';
         $path = trim($path, '/') . '/';
 
         try {
-
+            // Uploader
+            // @TODO Read media uploader params from configuration
             $uploader = new Uploader([
-                'uploadDir' => $this->manager->getBasePath() . $path,
                 'minFileSize' => 1,
-                'maxFileSize' => 2097152, // 2MB
+                'maxFileSize' => 20 * 1024 * 1024, // 2MB
                 'mimeTypes' => '*',
                 'fileExtensions' => '*',
                 'multiple' => false,
-                'slug' => "_",
+                'slug' => '_',
                 'hashFilename' => false,
                 'uniqueFilename' => false,
                 'overwrite' => false,
                 'saveAs' => null, // filename override
-                //'pattern' => false, // @todo Implement me
+                #'pattern' => false, // @todo Implement me
             ]);
+            $uploader->setUploadDir($this->getMediaManager()->getBasePath() . $path);
 
+            // UploadForm
             $uploadForm = new MediaUploadForm('default', $uploader);
             if ($this->request->is('post')) {
                 $uploadForm->execute($this->request->getData());
             }
             $this->set('uploadForm', $uploadForm);
-
-            //$uploader->setSaveAs('hellyea.jpg');
-//            if ($this->request->is('post')) {
-//                $upload = $uploader->upload($this->request->data['upload']);
-//                debug($upload);
-//            }
-
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $error = $ex->getMessage();
             $this->Flash->error($error);
-            return;
         }
-
     }
-    */
 }

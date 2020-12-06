@@ -29,12 +29,17 @@ class MediaUploadCell extends Cell
     protected $_mediaManager;
 
     /**
+     * @var string Media config name
+     */
+    protected $_mediaConfig = 'default';
+
+    /**
      * @return \Media\Lib\Media\MediaManager
      */
     public function getMediaManager()
     {
         if (!$this->_mediaManager) {
-            $this->_mediaManager = MediaManager::get('default');
+            $this->_mediaManager = MediaManager::get($this->_mediaConfig);
         }
 
         return $this->_mediaManager;
@@ -43,14 +48,18 @@ class MediaUploadCell extends Cell
     /**
      * Default display method.
      *
+     * @param array $params The cell params
      * @return void
      */
     public function display($params = [])
     {
-        $params += ['config' => null, 'uploader' => null];
+        $params += ['config' => null, 'uploader' => []];
+        //$config = $params['config'] ?? 'default';
 
         $path = $this->request->getQuery('path') ?: '/';
         $path = trim($path, '/') . '/';
+
+        //$uploadUrl = ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'upload'];
 
         $uploadDir = $this->getMediaManager()->getBasePath() . $path;
         $uploadForm = $upload = null;
@@ -60,27 +69,30 @@ class MediaUploadCell extends Cell
                 throw new MissingPluginException(['plugin' => 'Upload']);
             }
 
-            $uploader = new Uploader([
+            $uploaderConfig = [
                 'uploadDir' => $uploadDir,
                 'minFileSize' => 1,
                 'maxFileSize' => 2097152, // 2MB
                 'mimeTypes' => '*', //['image/*'],
                 'fileExtensions' => '*',
                 'multiple' => false, //@TODO Multiple file upload
-                'slug' => "_",
+                'slug' => '_',
                 'hashFilename' => false,
                 'uniqueFilename' => false,
                 'overwrite' => false,
                 'saveAs' => null, // filename override
                 //'pattern' => false, // @todo Implement me
-            ]);
+            ];
+            $uploaderConfig = array_merge($uploaderConfig, $params['uploader']);
+            $uploader = new Uploader($uploaderConfig);
             $uploader->setUploadDir($uploadDir);
             $this->set('uploadMultiple', $uploader->getConfig('multiple'));
 
-            $uploadForm = new MediaUploadForm('default', $uploader);
+            $uploadForm = new MediaUploadForm($this->_mediaConfig, $uploader);
             if ($this->request->is('post')) {
                 //debug($this->request->getData());
-                $upload = $uploadForm->execute($this->request->getData());
+                $uploadForm->execute($this->request->getData());
+                $upload = $uploadForm->getUploadedFiles();
             }
         } catch (\Exception $ex) {
             $error = $ex->getMessage();

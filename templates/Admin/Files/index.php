@@ -1,10 +1,21 @@
 <?php
+/**
+ * @var \Cake\View\Helper\HtmlHelper $Html
+ * @var \Media\View\Helper\MediaBrowserHelper $MediaBrowser
+ * @var \Media\Lib\Media\MediaManager $manager
+ * @var array $folders
+ * @var array $files
+ * @var string $path
+ * @var \Media\Model\Entity\MediaFile $mediaFile
+ * @var \Cake\Filesystem\File $selectedFile
+ */
 $this->loadHelper('Media.MediaBrowser');
 $this->MediaBrowser->setMediaManager($this->get('manager'));
 $this->Html->css('Media.filebrowser', ['block' => true]);
 
 $manager = $this->get('manager');
-$folders = $this->get('folders');
+$folders = $this->get('folders', []);
+$files = $this->get('files', [])
 ?>
 
 <div class="files-container">
@@ -31,8 +42,8 @@ $folders = $this->get('folders');
             </div>
             <h4 id="browser-path">
                 <?php
-                $tmp = "/";
-                echo $this->Html->link('<i class="fa fa-home"></i>', ['path' => $tmp], ['escape' => false]);
+                $tmp = '/';
+                echo $this->Html->link('<i class="fa fa-home"></i>', ['?' => ['path' => $tmp]], ['escape' => false]);
                 //echo '<span class="separator">&nbsp;/&nbsp;</span>';
 
                 if (\Cake\Core\Configure::read('debug')) {
@@ -42,7 +53,7 @@ $folders = $this->get('folders');
                 foreach (explode('/', trim($path, '/')) as $_path) {
                     $tmp .= $_path . '/';
                     echo '<span class="separator">&nbsp;/&nbsp;</span>';
-                    echo $this->Html->link($_path, ['path' => $tmp]);
+                    echo $this->Html->link($_path, ['?' => ['path' => $tmp]]);
                 }
                 ?></h4>
 
@@ -65,15 +76,36 @@ $folders = $this->get('folders');
                                 <?php foreach ($files as $file) : ?>
                                     <tr>
                                         <td width="20">
+                                            <?php // $this->Media->thumbnail($manager->getBasePath() . $path . $file, ['width' => 20]); ?>
                                             <?= $this->MediaBrowser->fileIcon($path, $file); ?>
                                         </td>
                                         <td>
-                                            <?= $this->Html->link($file, ['action' => 'index', '?' => ['path' => $path, 'file' => $file]]) ?>
+                                            <?= $this->Html->link(
+                                                $file,
+                                                ['action' => 'index', '?' => ['path' => $path, 'file' => $file]]
+                                            ) ?>
                                         </td>
                                         <td class="actions text-right">
-                                            <?= $this->Html->link('<i class="fa fa-eye"></i>', ['action' => 'view', '?' => ['path' => $path, 'file' => $file]], ['escape' => false]) ?>
-                                            <?= $this->Html->link('<i class="fa fa-pencil"></i>', ['action' => 'edit', '?' => ['path' => $path, 'file' => $file]], ['escape' => false]) ?>
-                                            <?= $this->Html->link('<i class="fa fa-trash"></i>', ['action' => 'delete', '?' => ['path' => $path, 'file' => $file]], ['escape' => false, 'confirm' => 'Sure?']) ?>
+                                            <?= $this->Html->link(
+                                                '<i class="fa fa-eye"></i>',
+                                                ['action' => 'view', '?' => ['path' => $path, 'file' => $file]],
+                                                ['escape' => false, 'title' => __('View')]
+                                            ) ?>
+                                            <?= $this->Html->link(
+                                                '<i class="fa fa-pencil-square-o"></i>',
+                                                ['action' => 'edit', '?' => ['path' => $path, 'file' => $file]],
+                                                ['escape' => false, 'title' => __('Edit')]
+                                            ) ?>
+                                            <?= $this->Html->link(
+                                                '<i class="fa fa-pencil"></i>',
+                                                ['action' => 'rename', '?' => ['path' => $path, 'file' => $file]],
+                                                ['escape' => false, 'title' => __('Rename')]
+                                            ) ?>
+                                            <?= $this->Html->link(
+                                                '<i class="fa fa-trash"></i>',
+                                                ['action' => 'delete', '?' => ['path' => $path, 'file' => $file]],
+                                                ['escape' => false, 'confirm' => 'Sure?', 'title' => __('Delete')]
+                                            ) ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -81,32 +113,39 @@ $folders = $this->get('folders');
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <?php if (isset($selectedFile)) : ?>
+                        <?php if (isset($mediaFile)) : ?>
                         <div id="browser-file">
                             <div class="box box-default with-border">
                                 <div class="box-header">
-                                    <?= h($selectedFile->name() . '.' . $selectedFile->ext()); ?>
+                                    <?= h($mediaFile->getBasename()); ?>
                                 </div>
                                 <div class="box-body">
                                     <table class="table">
                                         <tr>
                                             <td>Path</td>
-                                            <td><?= h($path); ?></td>
+                                            <td><?= h($mediaFile->getPath()); ?></td>
                                         </tr>
                                         <tr>
                                             <td>Name</td>
-                                            <td><?= h($selectedFile->name() . '.' . $selectedFile->ext()); ?></td>
+                                            <td><?= h($mediaFile->getBasename()); ?></td>
                                         </tr>
                                         <tr>
                                             <td>Size</td>
-                                            <td><?= $this->Number->toReadableSize($selectedFile->size()); ?></td>
+                                            <td><?= $this->Number->toReadableSize($mediaFile->getSize()); ?></td>
                                         </tr>
                                         <tr>
                                             <td>Preview</td>
                                             <td>
-                                                <?= $this->Media->thumbnail($selectedFile->path, ['height' => 200, 'width' => 200]); ?>
+                                                <?= $this->Media->thumbnail(
+                                                    $selectedFile->path,
+                                                    ['height' => 200, 'width' => 200]
+                                                ); ?>
                                                 <br />
-                                                <?= $this->Html->link(__('View Fullsize'), '#'); ?>
+                                                <?= $this->Html->link(
+                                                    __('View Original'),
+                                                    $mediaFile->getUrl(),
+                                                    ['target' => '_blank']
+                                                ); ?>
                                             </td>
                                         </tr>
                                     </table>
