@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Media\View\Cell;
 
+use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\View\Cell;
@@ -61,14 +62,14 @@ class MediaUploadCell extends Cell
 
         //$uploadUrl = ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'upload'];
 
-        $uploadDir = $this->getMediaManager()->getBasePath() . $path;
-        $uploadForm = $upload = null;
 
+        $uploadDir = $uploadForm = $upload = null;
         try {
             if (!Plugin::isLoaded('Upload')) {
                 throw new MissingPluginException(['plugin' => 'Upload']);
             }
 
+            $uploadDir = $this->getMediaManager()->getBasePath() . $path;
             $uploaderConfig = [
                 'uploadDir' => $uploadDir,
                 'minFileSize' => 1,
@@ -95,8 +96,12 @@ class MediaUploadCell extends Cell
                 $upload = $uploadForm->getUploadedFiles();
             }
         } catch (\Exception $ex) {
-            $error = $ex->getMessage();
-            $this->set('error', $ex->getMessage());
+            $error = __('Can not load upload form');
+            if (Configure::read('debug')) {
+                $error .= $ex->getMessage();
+            }
+
+            $this->set('error', $error);
         }
 
         $this->set('uploadPath', $path);

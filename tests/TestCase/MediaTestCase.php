@@ -59,8 +59,7 @@ class MediaTestCase extends TestCase
         self::$targetFolder = new Folder(self::$targetPath, true);
 
         self::$sourceFolder
-            ->copy([
-                'to' => self::$targetPath,
+            ->copy(self::$targetPath, [
                 'recursive' => true,
                 'scheme' => Folder::OVERWRITE,
             ]);

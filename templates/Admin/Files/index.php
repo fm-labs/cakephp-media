@@ -2,7 +2,6 @@
 /**
  * @var \Cake\View\Helper\HtmlHelper $Html
  * @var \Media\View\Helper\MediaBrowserHelper $MediaBrowser
- * @var \Media\Lib\Media\MediaManager $manager
  * @var array $folders
  * @var array $files
  * @var string $path
@@ -13,7 +12,6 @@ $this->loadHelper('Media.MediaBrowser');
 $this->MediaBrowser->setMediaManager($this->get('manager'));
 $this->Html->css('Media.filebrowser', ['block' => true]);
 
-$manager = $this->get('manager');
 $folders = $this->get('folders', []);
 $files = $this->get('files', [])
 ?>
@@ -46,10 +44,6 @@ $files = $this->get('files', [])
                 echo $this->Html->link('<i class="fa fa-home"></i>', ['?' => ['path' => $tmp]], ['escape' => false]);
                 //echo '<span class="separator">&nbsp;/&nbsp;</span>';
 
-                if (\Cake\Core\Configure::read('debug')) {
-                    echo '<small>' . h(rtrim($manager->getBasePath(), '/')) . '</small>';
-                }
-
                 foreach (explode('/', trim($path, '/')) as $_path) {
                     $tmp .= $_path . '/';
                     echo '<span class="separator">&nbsp;/&nbsp;</span>';
@@ -76,7 +70,6 @@ $files = $this->get('files', [])
                                 <?php foreach ($files as $file) : ?>
                                     <tr>
                                         <td width="20">
-                                            <?php // $this->Media->thumbnail($manager->getBasePath() . $path . $file, ['width' => 20]); ?>
                                             <?= $this->MediaBrowser->fileIcon($path, $file); ?>
                                         </td>
                                         <td>
@@ -158,7 +151,6 @@ $files = $this->get('files', [])
                             <?= $this->cell('Media.MediaUpload'); ?>
                         </div>
                     </div>
-
 
                 </div>
             </div>

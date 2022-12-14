@@ -55,7 +55,7 @@ class MediaFile extends Entity implements MediaFileInterface
     {
         $basename = $this->_getBasename();
 
-        return preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename));
+        return preg_match('/\.(jpeg|jpg|gif|png)$/i', strtolower($basename)) ? true : false;
     }
 
     /**

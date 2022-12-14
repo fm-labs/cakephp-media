@@ -26,6 +26,7 @@ class FilesController extends AppController
 
     /**
      * @return \Media\Lib\Media\MediaManager
+     * @throws \Exception
      */
     public function getMediaManager(): MediaManager
     {
@@ -41,22 +42,32 @@ class FilesController extends AppController
      */
     public function index(): void
     {
-        $path = $this->request->getQuery('path') ?: '/';
+        $path = $this->request->getQuery('path', '/');
         $path = rtrim($path, '/') . '/';
-        $contents = $this->getMediaManager()->read($path);
-        [$folders, $files] = $contents;
+        $file = $this->request->getQuery('file');
 
-        if ($this->request->getQuery('file')) {
-            $f = $this->_getFileFromRequest();
-            $mf = MediaFile::fromFile($f);
-            $this->set('selectedFile', $f);
-            $this->set('mediaFile', $mf);
+        $manager = null;
+        $folders = $files = [];
+        try {
+            $manager = $this->getMediaManager();
+            $contents = $manager->read($path);
+            [$folders, $files] = $contents;
+
+            if ($file) {
+                $f = $this->_getFileFromRequest();
+                $mf = MediaFile::fromFile($f);
+                $this->set('selectedFile', $f);
+                $this->set('mediaFile', $mf);
+            }
+        } catch (\Exception $ex) {
+            $this->Flash->error($ex->getMessage());
         }
+
 
         $this->set('path', $path);
         $this->set('folders', $folders);
         $this->set('files', $files);
-        $this->set('manager', $this->_manager);
+        $this->set('manager', $manager);
     }
 
     /**
