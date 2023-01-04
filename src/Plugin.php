@@ -27,8 +27,6 @@ class Plugin extends BasePlugin
         defined('MEDIA_URL') || define('MEDIA_URL', '/media/');
         defined('MEDIA_CACHE_URL') || define('MEDIA_CACHE_URL', MEDIA_URL . 'cache/');
 
-        $app->addOptionalPlugin('Upload');
-
         /**
          * Logger
          */
@@ -59,6 +57,10 @@ class Plugin extends BasePlugin
         if (\Cake\Core\Plugin::isLoaded('Admin')) {
             \Admin\Admin::addPlugin(new \Media\Admin());
         }
+
+        $app->addPlugin('Tree');
+        $app->addOptionalPlugin('Upload');
+
     }
 
     /**
