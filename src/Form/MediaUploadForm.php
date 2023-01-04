@@ -83,7 +83,7 @@ class MediaUploadForm extends Form
      * @return bool
      * @throws \Exception
      */
-    public function execute(array $data = []): bool
+    public function execute(array $data = [], array $options = []): bool
     {
         $this->_result = $this->getUploader()->upload($data['upload_file']);
 
