@@ -17,8 +17,8 @@ class MediaPickerHelper extends MediaHelper
 
         $this->_View->loadHelper('Admin.JsTree');
 
-        $this->Html->script('/admin/libs/underscore/underscore-min', ['block' => 'script']);
-        $this->Html->script('/admin/libs/backbone/backbone-min', ['block' => 'script']);
+        $this->Html->script('Media./libs/underscore-min', ['block' => 'script']);
+        $this->Html->script('Media./backbone-min', ['block' => 'script']);
 
         $this->Html->css('Media.mediapicker', ['block' => true]);
         $this->Html->script('Media.mediapicker', ['block' => 'script']);
