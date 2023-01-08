@@ -201,13 +201,13 @@ class Admin extends BaseAdminPlugin implements EventListenerInterface
             'title' => 'Media',
             'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index'],
             'data-icon' => 'picture-o',
-            'children' => [
-                'media_upload' => [
-                    'title' => 'Upload',
-                    'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
-                    'data-icon' => 'upload',
-                ],
-            ],
+//            'children' => [
+//                'media_upload' => [
+//                    'title' => 'Upload',
+//                    'url' => ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'index'],
+//                    'data-icon' => 'upload',
+//                ],
+//            ],
         ]);
     }
 }
