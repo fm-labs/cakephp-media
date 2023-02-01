@@ -34,11 +34,11 @@ class Admin extends BaseAdminPlugin implements EventListenerInterface
             ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
         );
         $routes->connect(
-            '/browser/:config/',
+            '/browser/{config}/',
             ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
         );
         $routes->connect(
-            '/browser/:config/:action',
+            '/browser/{config}/{action}',
             ['plugin' => 'Media', 'controller' => 'MediaBrowser']
         );
 
