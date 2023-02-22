@@ -78,7 +78,7 @@ $files = $this->get('files', [])
                                                 ['action' => 'index', '?' => ['path' => $path, 'file' => $file]]
                                             ) ?>
                                         </td>
-                                        <td class="actions text-right">
+                                        <td class="actions text-end">
                                             <?= $this->Html->link(
                                                 '<i class="fa fa-eye"></i>',
                                                 ['action' => 'view', '?' => ['path' => $path, 'file' => $file]],
