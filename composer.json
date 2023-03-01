@@ -18,7 +18,8 @@
         "phpunit/phpunit": "*"
     },
     "suggest": {
-        "fm-labs/cakephp-upload": "Uploader Plugin for CakePHP"
+        "fm-labs/cakephp-upload": "Uploader Plugin for CakePHP",
+        "fm-labs/cakephp-settings": "Settings Plugin for CakePHP"
     },
     "autoload": {
         "psr-4": {

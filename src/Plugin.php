@@ -22,6 +22,11 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
 
+        $app->addPlugin('Tree');
+        $app->addOptionalPlugin('Upload');
+        $app->addOptionalPlugin('Settings');
+
+
         defined('MEDIA') || define('MEDIA', WWW_ROOT . 'media' . DS);
         defined('MEDIA_CACHE_DIR') || define('MEDIA_CACHE_DIR', MEDIA . 'cache' . DS);
         defined('MEDIA_URL') || define('MEDIA_URL', '/media/');
@@ -49,6 +54,11 @@ class Plugin extends BasePlugin
          * and configure MediaManager
          */
         Configure::load('Media.media');
+
+        if (\Cake\Core\Plugin::isLoaded('Settings')) {
+            Configure::load('Media', 'settings');
+        }
+
         MediaManager::setConfig((array)Configure::read('Media'));
 
         /**
@@ -57,9 +67,6 @@ class Plugin extends BasePlugin
         if (\Cake\Core\Plugin::isLoaded('Admin')) {
             \Admin\Admin::addPlugin(new \Media\Admin());
         }
-
-        $app->addPlugin('Tree');
-        $app->addOptionalPlugin('Upload');
 
     }
 
