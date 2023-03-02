@@ -122,7 +122,7 @@ class FilesController extends AppController
             $newPath = sprintf('%s/%s.%s', $info['dirname'], $newName, $info['extension']);
             if (copy($path, $newPath)) {
                 unlink($path);
-                $this->Flash->success(__('File renamed from {0} to {1}', $info['filename'], $newName));
+                $this->Flash->success(__d('media', 'File renamed from {0} to {1}', $info['filename'], $newName));
                 $this->redirect($this->referer(['action' => 'index']));
             } else {
                 $this->Flash->error('This file can not be renamed');

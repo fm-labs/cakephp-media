@@ -19,7 +19,7 @@ class UploadController extends AppController
     public function index(): void
     {
         if (!Plugin::isLoaded('Upload')) {
-            $this->Flash->error(__('Plugin `{0}` not installed', 'Upload'));
+            $this->Flash->error(__d('media', 'Plugin `{0}` not installed', 'Upload'));
             $this->redirect($this->referer('/'));
         }
 

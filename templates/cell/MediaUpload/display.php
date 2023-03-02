@@ -26,7 +26,7 @@
                         </div>
                     <?php else : ?>
                         <div class="alert alert-success">
-                            <?= __('Uploaded: {0}', $upload['name']); ?>
+                            <?= __d('media', 'Uploaded: {0}', $upload['name']); ?>
                         </div>
                     <?php endif; ?>
                     <?php debug($upload); ?>

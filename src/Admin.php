@@ -91,7 +91,7 @@ class Admin extends BaseAdminPlugin implements EventListenerInterface
             //}
             $uploadDir = MEDIA . 'uploads' . DS;
             if (!file_exists($uploadDir) || !is_dir($uploadDir) || !is_writable($uploadDir)) {
-                return HealthStatus::crit(__('Media upload directory not found at {0} or not writeable', $uploadDir));
+                return HealthStatus::crit(__d('media', 'Media upload directory not found at {0} or not writeable', $uploadDir));
             }
 
             return HealthStatus::ok('Media upload directory exists and is writeable');
@@ -102,7 +102,7 @@ class Admin extends BaseAdminPlugin implements EventListenerInterface
             }
             $cacheDir = MEDIA_CACHE_DIR;
             if (!file_exists($cacheDir) || !is_dir($cacheDir) || !is_writable($cacheDir)) {
-                return HealthStatus::crit(__('Media cache directory not found at {0} or not writeable', $cacheDir));
+                return HealthStatus::crit(__d('media', 'Media cache directory not found at {0} or not writeable', $cacheDir));
             }
             if (!defined('MEDIA_CACHE_URL')) {
                 return HealthStatus::crit('Media cache url is not defined');

@@ -82,22 +82,22 @@ $files = $this->get('files', [])
                                             <?= $this->Html->link(
                                                 '<i class="fa fa-eye"></i>',
                                                 ['action' => 'view', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __('View')]
+                                                ['escape' => false, 'title' => __d('media', 'View')]
                                             ) ?>
                                             <?= $this->Html->link(
                                                 '<i class="fa fa-pencil-square-o"></i>',
                                                 ['action' => 'edit', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __('Edit')]
+                                                ['escape' => false, 'title' => __d('media', 'Edit')]
                                             ) ?>
                                             <?= $this->Html->link(
                                                 '<i class="fa fa-pencil"></i>',
                                                 ['action' => 'rename', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __('Rename')]
+                                                ['escape' => false, 'title' => __d('media', 'Rename')]
                                             ) ?>
                                             <?= $this->Html->link(
                                                 '<i class="fa fa-trash"></i>',
                                                 ['action' => 'delete', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'confirm' => 'Sure?', 'title' => __('Delete')]
+                                                ['escape' => false, 'confirm' => 'Sure?', 'title' => __d('media', 'Delete')]
                                             ) ?>
                                         </td>
                                     </tr>
@@ -135,7 +135,7 @@ $files = $this->get('files', [])
                                                 ); ?>
                                                 <br />
                                                 <?= $this->Html->link(
-                                                    __('View Original'),
+                                                    __d('media', 'View Original'),
                                                     $mediaFile->getUrl(),
                                                     ['target' => '_blank']
                                                 ); ?>

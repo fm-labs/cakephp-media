@@ -96,7 +96,7 @@ class MediaUploadCell extends Cell
                 $upload = $uploadForm->getUploadedFiles();
             }
         } catch (\Exception $ex) {
-            $error = __('Can not load upload form');
+            $error = __d('media', 'Can not load upload form');
             if (Configure::read('debug')) {
                 $error .= $ex->getMessage();
             }
