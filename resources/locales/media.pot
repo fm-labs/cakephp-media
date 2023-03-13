@@ -1,0 +1,170 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2023-03-13 00:14+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Admin.php:94
+msgid "Media upload directory not found at {0} or not writeable"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Admin.php:105
+msgid "Media cache directory not found at {0} or not writeable"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:125
+msgid "File renamed from {0} to {1}"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:124
+msgid "The {0} has been saved."
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:124
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:126
+msgid "content"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:126
+msgid "The {0} could not be saved. Please, try again."
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:190
+msgid "The {0} has been removed."
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:192
+msgid "The {0} could not be removed. Please, try again."
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/UploadController.php:22
+msgid "Plugin `{0}` not installed"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:232
+msgid "You have to pass size in the options!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:268
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:285
+msgid "You must pass a size value!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:300
+msgid "You have to pass a height, width or size!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:304
+msgid "You can only scale by width or height!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:363
+msgid "You must pass a factor value!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:390
+msgid "Invalid direction, use vertically or horizontally"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:428
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:495
+msgid "You have to pass height and width in the options!"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/Lib/Media/Provider/LocalStorageProvider.php:52
+msgid "LocalStorage: Root path *{0}* is not accessible"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/View/Cell/MediaUploadCell.php:99
+msgid "Can not load upload form"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/src/View/Widget/MediaPickerWidget.php:89
+msgid "Select Media"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:26
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:12
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:11
+msgid "New Folder"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:31
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:15
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:14
+msgid "New File"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:36
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Media/index.php:13
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:18
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:17
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Upload/index.php:2
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:53
+msgid "Upload"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:85
+msgid "View"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:90
+msgid "Edit"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:95
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename.php:12
+msgid "Rename"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:100
+msgid "Delete"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:138
+msgid "View Original"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/view.php:2
+msgid "View file"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Media/index.php:23
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Upload/index.php:8
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:18
+msgid "Upload file"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/image_select.php:39
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/set_image.bak.php:30
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/set_image.php:42
+msgid "- Choose Image -"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:9
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:34
+msgid "Remove Image"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:16
+msgid "Add Image"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:29
+msgid "Select Image"
+msgstr ""
+
+#: ./mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:29
+msgid "Uploaded: {0}"
+msgstr ""
+

@@ -27,7 +27,7 @@
         'options' => $imageFiles,
         'class' => 'grouped',
         'id' => 'imagepicker-select',
-        'empty' => __d('cupcake','- Choose Image -'),
+        'empty' => __d('media','- Choose Image -'),
     ]); ?>
 
 <?= $this->Form->submit('Save'); ?>

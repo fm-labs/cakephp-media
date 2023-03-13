@@ -229,7 +229,7 @@ class ImageProcessor
     public function squareCenterCrop(array $options = [])
     {
         if (empty($options['size'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You have to pass size in the options!'));
+            throw new \InvalidArgumentException(__d('media', 'You have to pass size in the options!'));
         }
 
         $imageSize = $this->getImageSize($this->_image);
@@ -265,7 +265,7 @@ class ImageProcessor
     public function widen(array $options = [])
     {
         if (empty($options['size'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You must pass a size value!'));
+            throw new \InvalidArgumentException(__d('media', 'You must pass a size value!'));
         }
         $this->widenAndHeighten(['width' => $options['size']]);
 
@@ -282,7 +282,7 @@ class ImageProcessor
     public function heighten(array $options = [])
     {
         if (empty($options['size'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You must pass a size value!'));
+            throw new \InvalidArgumentException(__d('media', 'You must pass a size value!'));
         }
         $this->widenAndHeighten(['height' => $options['size']]);
     }
@@ -297,11 +297,11 @@ class ImageProcessor
     public function widenAndHeighten(array $options = [])
     {
         if (empty($options['height']) && empty($options['width']) && empty($options['size'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You have to pass a height, width or size!'));
+            throw new \InvalidArgumentException(__d('media', 'You have to pass a height, width or size!'));
         }
 
         if (!empty($options['height']) && !empty($options['width'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You can only scale by width or height!'));
+            throw new \InvalidArgumentException(__d('media', 'You can only scale by width or height!'));
         }
 
         if (isset($options['width'])) {
@@ -360,7 +360,7 @@ class ImageProcessor
     public function scale(array $options = [])
     {
         if (empty($options['factor'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You must pass a factor value!'));
+            throw new \InvalidArgumentException(__d('media', 'You must pass a factor value!'));
         }
 
         $imageSize = $this->getImageSize();
@@ -387,7 +387,7 @@ class ImageProcessor
             $options['direction'] = 'vertically';
         }
         if (!in_array($options['direction'], ['vertically', 'horizontally'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'Invalid direction, use vertically or horizontally'));
+            throw new \InvalidArgumentException(__d('media', 'Invalid direction, use vertically or horizontally'));
         }
         $method = 'flip' . $options['direction'];
         $this->_image->{$method}();
@@ -425,7 +425,7 @@ class ImageProcessor
     public function thumbnail(array $options = [])
     {
         if (empty($options['height']) || empty($options['width'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You have to pass height and width in the options!'));
+            throw new \InvalidArgumentException(__d('media', 'You have to pass height and width in the options!'));
         }
 
         $mode = ImageInterface::THUMBNAIL_INSET;
@@ -492,7 +492,7 @@ class ImageProcessor
     public function resize(array $options = [])
     {
         if (empty($options['height']) || empty($options['width'])) {
-            throw new \InvalidArgumentException(__d('imagine', 'You have to pass height and width in the options!'));
+            throw new \InvalidArgumentException(__d('media', 'You have to pass height and width in the options!'));
         }
 
         $this->_image->resize(new Box($options['width'], $options['height']));
