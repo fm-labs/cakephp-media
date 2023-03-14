@@ -102,8 +102,8 @@ class MediaUploadCell extends Cell
 
             $uploadForm = new MediaUploadForm($this->mediaConfig, $uploader);
             if ($this->request->is('post')) {
-                debug($this->request->getData());
-                $uploadForm->execute($this->request->getData());
+                $uploadedFiles = $this->request->getUploadedFiles();
+                $uploadForm->execute($uploadedFiles);
                 $upload = $uploadForm->getUploadedFiles();
             }
         } catch (Exception $ex) {

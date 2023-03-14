@@ -24,7 +24,7 @@ $uploadMultiple = $this->get('uploadMultiple');
                 <small>to <?= $uploadPath; ?></small>
             </div>
             <div class="box-body p-2">
-                <?php if (isset($upload)) : ?>
+                <?php if (isset($upload) && $upload) : ?>
                     <?php if (isset($upload['upload_err'])) : ?>
                         <div class="alert alert-danger">
                             <?= h($upload['upload_err']); ?>
@@ -34,7 +34,6 @@ $uploadMultiple = $this->get('uploadMultiple');
                             <?= __d('media', 'Uploaded: {0}', $upload['name']); ?>
                         </div>
                     <?php endif; ?>
-                    <?php debug($upload); ?>
                 <?php endif; ?>
                 <?php
                 //            echo $this->Form->create(null, ['type' => 'file']);
@@ -43,8 +42,7 @@ $uploadMultiple = $this->get('uploadMultiple');
                 echo $this->Form->create($this->get('uploadForm'), [
                     'type' => 'file',
                 ]);
-                if (Configure::read('debug')) {
-                    debug($uploadConfig);
+                if (Configure::read('Media.debug')) {
                     $infoTemplate = '<div><strong>%s:</strong>&nbsp;%s</div>';
                     echo sprintf($infoTemplate, 'Upload to', $uploadConfig['uploadDir'] ?? '?');
                     echo sprintf($infoTemplate, 'Max file size', $uploadConfig['maxFileSize'] ?? '?');
