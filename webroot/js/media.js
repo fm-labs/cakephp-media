@@ -1,5 +1,5 @@
 // https://github.com/jquery-boilerplate/jquery-boilerplate/blob/master/src/jquery.boilerplate.js
-(function(window, document, $, _, Backbone){
+(function (window, document, $, _, Backbone) {
 
     //var CakeMedia = window.CakeMedia || {};
     var _name_ = "CakeMedia";
@@ -10,7 +10,8 @@
     };
 
     // The actual plugin constructor
-    function CakeMedia ( element, options ) {
+    function CakeMedia( element, options )
+    {
 
         console.log("creating new CakeMedia instance", typeof element, element, options);
 
@@ -24,15 +25,15 @@
         // more objects, storing the result in the first object. The first object
         // is generally empty as we don't want to alter the default options for
         // future instances of the plugin
-        this.settings = $.extend( {}, defaults, options );
+        this.settings = $.extend({}, defaults, options);
         this._defaults = defaults;
         this._name = _name_;
         this.init();
     }
 
     // Avoid Plugin.prototype conflicts
-    _.extend( CakeMedia.prototype, {
-        init: function() {
+    _.extend(CakeMedia.prototype, {
+        init: function () {
             console.log("[CakeMedia] init", this.settings);
 
 
@@ -40,16 +41,13 @@
             if (this.element instanceof jQuery) {
                 console.log("[CakeMedia] element from jquery object");
                 this.$element = this.element;
-            }
-            else if (typeof this.element === "object") {
+            } else if (typeof this.element === "object") {
                 console.log("[CakeMedia] element from object");
                 this.$element = $(this.element);
-            }
-            else if (typeof this.element === "string") {
+            } else if (typeof this.element === "string") {
                 console.log("[CakeMedia] element from string");
                 this.$element = $(this.element);
-            }
-            else {
+            } else {
                 console.error("[CakeMedia] element is undefined")
                 this.$element = undefined;
                 return false;
@@ -78,25 +76,25 @@
             this.setPath('/')
         },
 
-        setPath: function(path) {
+        setPath: function (path) {
             console.log("[CakeMedia] Set path to", path);
 
             var self = this;
             this.getJSON(path)
-                .then(function(data) {
+                .then(function (data) {
                     console.log("AJAX SUCCESS", data);
                     self.view.onDirectoryOpen(data);
                 })
-                .fail(function(err) {
+                .fail(function (err) {
                     console.log("AJAX ERROR", err);
                 })
         },
 
-        buildApiUrl: function(path) {
+        buildApiUrl: function (path) {
             return this.mediaUrl + '?path=' + path;
         },
 
-        getJSON: function(path, ajaxSettings) {
+        getJSON: function (path, ajaxSettings) {
 
             var url = this.buildApiUrl(path);
             console.log("[app] Http.getJSON from " + url);
@@ -111,10 +109,10 @@
                 contentType: "application/json; charset=utf-8",
                 headers: {
                 },
-                success: function(data, textStatus, jqXHR) {
+                success: function (data, textStatus, jqXHR) {
                     //console.log("[app:http:getJSON] success", textStatus);
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     //console.log("[app:http:getJSON] error", textStatus);
                 }
             };
@@ -123,15 +121,15 @@
             return $.ajax(settings);
         },
 
-        _initTable: function() {
+        _initTable: function () {
 
             if (this.$element) {
                 var tblData = this.$element.data();
-                _.each(this.components, function(name) {
+                _.each(this.components, function (name) {
                     var data = {};
-                    _.each(tblData, function(v, k) {
+                    _.each(tblData, function (v, k) {
                         if (k !== name && k.indexOf(name) === 0) {
-                            var key = k[name.length].toLowerCase() + k.substr(name.length+1); // strip prefix and lowercase first letter
+                            var key = k[name.length].toLowerCase() + k.substr(name.length + 1); // strip prefix and lowercase first letter
                             data[key] = v;
                         }
                     });
@@ -144,7 +142,7 @@
 
         },
 
-        _initColumns: function(files) {
+        _initColumns: function (files) {
 
             console.log("[CakeMedia] init files");
 
@@ -152,8 +150,7 @@
             if (files instanceof Backbone.Collection) {
                 //this.files.set(files.toJSON());
                 this.files = files;
-            }
-            else if (typeof files.done === "function") { // check if this is an ajax request object
+            } else if (typeof files.done === "function") { // check if this is an ajax request object
                 console.info("[CakeMedia] init files: detect ajax: defer row initalization");
 
                 var xhr = files;
@@ -161,23 +158,22 @@
                 this._deferRows = true; // set the deferRows flag (skips dirs initalization, until triggered elsewhere)
 
                 var self = this;
-                xhr.done(function( data, textStatus, jqXHR ) { // wait for the ajax request to complete
+                xhr.done(function ( data, textStatus, jqXHR ) {
+ // wait for the ajax request to complete
                     console.log("[CakeMedia] converting files to Collection from ajax result", data);
                     self.files.set(data); // then populate collection with results
                     //self._initRows(); // and trigger row initialization
                 });
-            }
-            else if (typeof files === "object" || typeof files === "array") { // we want a collection
+            } else if (typeof files === "object" || typeof files === "array") { // we want a collection
                 console.log("[CakeMedia] converting files to Collection", files);
                 this.files.set(files);
-            }
-            else {
+            } else {
                 console.warn("[CakeMedia] _initColumns: Unknown files type given (Skip)", files);
             }
 
             // attach update listener
             var self = this;
-            this.files.on('update', function() {
+            this.files.on('update', function () {
                 console.log("[CakeMedia] files updatedX");
                 self._initRows();
             });
@@ -188,7 +184,7 @@
             }
         },
 
-        _initRows: function(dirs) {
+        _initRows: function (dirs) {
 
             console.log("[CakeMedia] init dirs");
 
@@ -197,28 +193,26 @@
                 console.log("[CakeMedia] init dirs: from collection", dirs);
                 //this.dirs.set(dirs.toJSON());
                 this.dirs = dirs;
-            }
-            else if (typeof dirs.done === "function") { // check if this is an ajax request object
+            } else if (typeof dirs.done === "function") { // check if this is an ajax request object
                 var xhr = dirs;
                 //this.dirs = new Backbone.Collection(); // create new collection
 
                 var self = this;
-                xhr.done(function( data, textStatus, jqXHR ) { // wait for the ajax request to complete
+                xhr.done(function ( data, textStatus, jqXHR ) {
+ // wait for the ajax request to complete
                     console.log("[CakeMedia] converting dirs to Collection from ajax result", data);
                     self.dirs.set(data); // then populate collection with results
                 });
-            }
-            else if (typeof dirs === "object" || typeof dirs === "array") { // we want a collection
+            } else if (typeof dirs === "object" || typeof dirs === "array") { // we want a collection
                 this.dirs.set(dirs);
                 console.log("[CakeMedia] converting dirs to Collection", dirs);
-            }
-            else {
+            } else {
                 console.warn("[CakeMedia] _initRows: Unknown dirs type given (Skip)", dirs);
             }
 
             // attach update listener
             var self = this;
-            this.dirs.on('update', function() {
+            this.dirs.on('update', function () {
                 console.log("[CakeMedia] dirs updatedX");
                 self.render();
             });
@@ -229,7 +223,7 @@
             }
         },
 
-        render: function() {
+        render: function () {
             console.log("[CakeMedia] render");
             // TableView instance
             /*
@@ -242,7 +236,7 @@
             //this.table.render();
         }
 
-    } );
+    });
 
     /** VIEW **/
     CakeMedia.MediaView = Backbone.View.extend({
@@ -260,11 +254,11 @@
             '</div>'
         ),
 
-        events: {
-            'click a.parent': 'onClickParentDir'
+    events: {
+        'click a.parent': 'onClickParentDir'
         },
 
-        initialize: function(settings) {
+        initialize: function (settings) {
             console.log("[MediaView] INIT", settings);
             this.media = settings.media;
             this.data = settings.data || { path: null, files: [], dirs: [] }
@@ -273,7 +267,7 @@
             this.$preview = null;
         },
 
-        render: function() {
+        render: function () {
             console.log("[MediaView] RENDER");
             this.reset();
             this.$el.html(this.template(this.data));
@@ -288,7 +282,7 @@
 
             var self = this;
             this.listenTo(this.dirsView, 'dir.select', this.onDirectorySelect);
-            this.listenTo(this.filesView, 'file.select', function(parent, file) {
+            this.listenTo(this.filesView, 'file.select', function (parent, file) {
                 console.log("[media] file selected", parent, file)
             });
 
@@ -303,7 +297,7 @@
             return this;
         },
 
-        reset: function() {
+        reset: function () {
             if (this.dirsView) {
                 this.stopListening(this.dirsView);
                 //this.dirsView.close();
@@ -314,7 +308,7 @@
             }
         },
 
-        _buildParentDir: function(path) {
+        _buildParentDir: function (path) {
             var tmp = path;
 
             if (tmp.lastIndexOf("/") != tmp.indexOf("/")) {
@@ -326,7 +320,7 @@
             return tmp;
         },
 
-        onClickParentDir: function(ev) {
+        onClickParentDir: function (ev) {
             var $target = $(ev.target);
             var dir = this.data.path;
             if (dir && dir != "/") {
@@ -339,20 +333,18 @@
             return false;
         },
 
-        onDirectorySelect: function(parent, dir) {
+        onDirectorySelect: function (parent, dir) {
             console.log("[media] dir selected", parent, dir);
             if (parent && dir) {
                 this.media.setPath(parent + dir);
-            }
-            else if (parent) {
+            } else if (parent) {
                 this.media.setPath(parent);
-            }
-            else {
+            } else {
                 this.media.setPath('/');
             }
         },
 
-        onDirectoryOpen: function(data) {
+        onDirectoryOpen: function (data) {
             this.data = data;
             this.render();
         }
@@ -368,18 +360,18 @@
             'click li a': 'onClick'
         },
 
-        initialize: function(settings) {
+        initialize: function (settings) {
             this.parent = settings.parent || undefined;
             this.type = settings.type || undefined;
             this.files = settings.files || [];
         },
 
-        render: function() {
+        render: function () {
             this.$el.html("");
 
             var self = this;
             console.log("[file-list] RENDER", this.files);
-            _.each(this.files, function(file) {
+            _.each(this.files, function (file) {
                 console.log("append file", file);
                 self.$el.append(self.template({ type: self.type, parent: self.parent, name: file }));
             });
@@ -387,7 +379,7 @@
             return this;
         },
 
-        onClick: function(ev) {
+        onClick: function (ev) {
             $target = $(ev.target);
             var item = $target.data(this.type);
 
@@ -399,7 +391,7 @@
             return false;
         },
 
-        setFiles: function(files) {
+        setFiles: function (files) {
             this.files = files;
             return this;
         }
@@ -416,20 +408,20 @@
             'mouseover td a': 'onItemHover'
         },
 
-        initialize: function(settings) {
+        initialize: function (settings) {
             this.parent = settings.parent || undefined;
             this.type = settings.type || undefined;
             this.files = settings.files || [];
             this.baseUrl = settings.baseUrl || undefined;
         },
 
-        render: function() {
+        render: function () {
             this.$el.html("");
             this.$el.addClass('table table-condensed');
 
             var self = this;
             console.log("[file-table] RENDER", this.files);
-            _.each(this.files, function(file) {
+            _.each(this.files, function (file) {
                 console.log("append file", file);
                 self.$el.append((new CakeMedia.FileTableItemView({
                     parent: self.parent,
@@ -439,7 +431,7 @@
                 })).render().$el);
             });
 
-            this.$el.find('tr td img[data-url]').each(function() {
+            this.$el.find('tr td img[data-url]').each(function () {
                 var url = $(this).data('url');
                 if (url && url !== "#") {
                     $(this).attr('src', url);
@@ -449,12 +441,12 @@
             return this;
         },
 
-        setFiles: function(files) {
+        setFiles: function (files) {
             this.files = files;
             return this;
         },
 
-        onItemClick: function(ev) {
+        onItemClick: function (ev) {
             $target = $(ev.target);
             var item = $target.data(this.type);
             var url = $target.data('url');
@@ -467,7 +459,7 @@
             return false;
         },
 
-        onItemHover: function(ev) {
+        onItemHover: function (ev) {
             $target = $(ev.target);
             var item = $target.data(this.type);
             var url = $target.data('url');
@@ -505,15 +497,15 @@
             '</td>'
         ),
 
-        initialize: function(settings) {
-            this.parent = settings.parent || undefined;
-            this.type = settings.type || undefined;
-            this.item = settings.item || undefined;
-            this.baseUrl = settings.baseUrl || undefined;
-            this.itemUrl = (this.baseUrl) ? this.baseUrl + this.parent + this.item : '#';
-        },
+    initialize: function (settings) {
+        this.parent = settings.parent || undefined;
+        this.type = settings.type || undefined;
+        this.item = settings.item || undefined;
+        this.baseUrl = settings.baseUrl || undefined;
+        this.itemUrl = (this.baseUrl) ? this.baseUrl + this.parent + this.item : '#';
+    },
 
-        render: function() {
+        render: function () {
             this.$el.html(this.template({
                 type: this.type,
                 parent: this.parent,
@@ -524,7 +516,6 @@
 
             if (this.type == "file"
                 && (this.item.indexOf('.jpeg') > 0 || this.item.indexOf('.jpg') > 0 || this.item.indexOf('.png') > 0 || this.item.indexOf('.gif') > 0)) {
-
                 //this.$el.find('td.icon').html($('<img>', {
                 //    src: '',
                 //    'data-src': this.itemUrl,
@@ -565,9 +556,9 @@
     /** FILE SYSTEM **/
 
     CakeMedia.File = Backbone.Model.extend({
-       defaults: {
-           filename: null
-       }
+        defaults: {
+            filename: null
+        }
     });
     CakeMedia.FileCollection = Backbone.Collection.extend({
         model: CakeMedia.CakeMediaFileModel
@@ -576,13 +567,13 @@
 
     /** COMPONENT **/
 
-    CakeMedia.Component = (function() {
+    CakeMedia.Component = (function () {
         var Component = {
-            Component: function() {
+            Component: function () {
                 console.log("construct component")
             },
 
-            extend: function(obj) {
+            extend: function (obj) {
                 _.extend(this, obj);
             }
         };
@@ -593,19 +584,19 @@
 
     });
 
-    $.fn[_name_] = function( options ) {
-        return this.each( function() {
+    $.fn[_name_] = function ( options ) {
+        return this.each(function () {
 
             // @TODO: check if selector is a TABLE tag
             if (this.tagName !== "TABLE") {
                 console.warn("CakeMedia jquery selector is not a TABLE: " + this.tagName);
             }
 
-            if ( !$.data( this, _name_ ) ) {
+            if ( !$.data(this, _name_) ) {
                 //$.data( this, _name_, new CakeMedia( $(this), options ) );
-                $.data( this, _name_, new CakeMedia( this, options ) );
+                $.data(this, _name_, new CakeMedia(this, options));
             }
-        } );
+        });
     };
 
     window.CakeMedia = CakeMedia;

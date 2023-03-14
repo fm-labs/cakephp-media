@@ -19,7 +19,7 @@ class MediaBrowserHelper extends Helper
     public $helpers = ['Html', 'Url', 'Form'];
 
     /**
-     * @var \Media\Lib\Media\MediaManager
+     * @var \Media\MediaManager
      */
     protected $_manager;
 

@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Media\Lib\Media;
+namespace Media;
 
 use Cake\Core\App;
 use Cake\Core\StaticConfigTrait;
+use Exception;
+use InvalidArgumentException;
 use Media\Lib\Media\Provider\MediaProviderInterface;
 
 class MediaManager
@@ -14,15 +16,15 @@ class MediaManager
     /**
      * @var \Media\Lib\Media\Provider\MediaProviderInterface
      */
-    protected $_provider;
+    protected MediaProviderInterface $_provider;
 
     /**
      * @var string Current working dir
      */
-    protected $_path;
+    protected string $_path;
 
     /**
-     * @param string|array $config Provider config
+     * @param array|string $config Provider config
      * @return \Media\Lib\Media\Provider\MediaProviderInterface
      * @throws \Exception
      */
@@ -31,7 +33,7 @@ class MediaManager
         if (is_string($config) && in_array($config, self::configured())) {
             $config = self::getConfig($config);
         } elseif (!is_array($config)) {
-            throw new \InvalidArgumentException("Invalid configuration '" . (string)$config . "'");
+            throw new InvalidArgumentException("Invalid configuration '" . (string)$config . "'");
         }
 
         $config = array_merge([
@@ -63,17 +65,17 @@ class MediaManager
 
         $provider = $config['className'];
         if (!$provider) {
-            throw new \Exception('Provider not configured');
+            throw new Exception('Provider not configured');
         }
 
         $className = App::className($provider, 'Lib/Media/Provider', 'Provider');
         if (!$className) {
-            throw new \Exception('Provider class not found');
+            throw new Exception('Provider class not found');
         }
 
         $providerObj = new $className($config);
         if (!($providerObj instanceof MediaProviderInterface)) {
-            throw new \Exception('Provider is not a valid MediaProviderInterface');
+            throw new Exception('Provider is not a valid MediaProviderInterface');
         }
 
         return $providerObj;
@@ -162,9 +164,10 @@ class MediaManager
      */
     public function listFiles(string $path): array
     {
+        debug($path . ' -> ' . $this->_normalizePath($path));
         $path = $this->_normalizePath($path);
         [, $files] = $this->read($path);
-        array_walk($files, function (&$file) use ($path) {
+        array_walk($files, function (&$file) use ($path): void {
             $file = $path . $file;
         });
 
@@ -179,7 +182,7 @@ class MediaManager
     {
         $urls = [];
         $files = $this->listFiles($path);
-        array_walk($files, function ($val) use (&$urls) {
+        array_walk($files, function ($val) use (&$urls): void {
             $urls[$val] = $this->buildFileUrl($val);
         });
 
@@ -197,12 +200,12 @@ class MediaManager
         $basePath = $fullPath ? $this->getBasePath() : '';
 
         $path = $this->_normalizePath($path);
-        [$files, $dirs] = $this->read($path);
-        array_walk($files, function ($file) use ($basePath, $path) {
+        [$dirs, $files] = $this->read($path);
+        array_walk($files, function ($file) use (&$list, $basePath, $path): void {
             $list[] = $basePath . $path . $file;
         });
 
-        array_walk($dirs, function ($dir) use (&$list, $path, $fullPath) {
+        array_walk($dirs, function ($dir) use (&$list, $path, $fullPath): void {
             $files = $this->listFilesRecursive($path . $dir, $fullPath);
             foreach ($files as $file) {
                 $list[] = $file;
@@ -346,7 +349,7 @@ class MediaManager
     {
         $files = $this->listFilesRecursive($path, false);
         $list = [];
-        array_walk($files, function ($val) use (&$list) {
+        array_walk($files, function ($val) use (&$list): void {
             $list[$val] = $this->buildFileUrl($val);
         });
 
@@ -361,7 +364,7 @@ class MediaManager
     {
         $files = $this->listFoldersRecursive($path);
         $list = [];
-        array_walk($files, function ($val) use (&$list) {
+        array_walk($files, function ($val) use (&$list): void {
             $list[$val] = $val;
         });
 
@@ -372,7 +375,7 @@ class MediaManager
      * @param string $path Path to media
      * @return array
      */
-    public function getSelectListRecursiveGrouped($path = '/'): array
+    public function getSelectListRecursiveGrouped(string $path = '/'): array
     {
         $folders = $this->listFoldersRecursive($path);
         $list = [];
@@ -385,7 +388,7 @@ class MediaManager
             }
 
             $list[$folder] = [];
-            array_walk($files, function ($val) use (&$list, $folder) {
+            array_walk($files, function ($val) use (&$list, $folder): void {
                 $list[$folder][$val] = $this->buildFileUrl($val);
             });
         }

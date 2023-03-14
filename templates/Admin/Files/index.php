@@ -1,19 +1,13 @@
 <?php
-/**
- * @var \Cake\View\Helper\HtmlHelper $Html
- * @var \Media\View\Helper\MediaBrowserHelper $MediaBrowser
- * @var array $folders
- * @var array $files
- * @var string $path
- * @var \Media\Model\Entity\MediaFile $mediaFile
- * @var \Cake\Filesystem\File $selectedFile
- */
-$this->loadHelper('Media.MediaBrowser');
+
+use Cake\Core\Configure;
+
 $this->MediaBrowser->setMediaManager($this->get('manager'));
 $this->Html->css('Media.filebrowser', ['block' => true]);
 
 $folders = $this->get('folders', []);
-$files = $this->get('files', [])
+$files = $this->get('files', []);
+$path = $this->get('path', '/');
 ?>
 
 <div class="files-container">
@@ -24,17 +18,17 @@ $files = $this->get('files', [])
             <div id="browser-toolbar" class="actions">
                 <?= $this->Html->link(
                     __d('media', 'New Folder'),
-                    ['action' => 'add', 'type' => 'folder'],
+                    ['action' => 'newFolder', '?' => ['path' => $path]],
                     ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']
                 ); ?>
                 <?= $this->Html->link(
                     __d('media', 'New File'),
-                    ['action' => 'add', 'type' => 'file'],
+                    ['action' => 'newFile', '?' => ['path' => $path]],
                     ['data-icon' => 'file', 'class' => 'file-add btn btn-default']
                 ); ?>
                 <?= $this->Html->link(
                     __d('media', 'Upload'),
-                    ['action' => 'upload'],
+                    ['action' => 'upload', '?' => ['path' => $path]],
                     ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']
                 ); ?>
             </div>
@@ -148,7 +142,10 @@ $files = $this->get('files', [])
                         <?php endif; ?>
 
                         <div class="browser-upload">
-                            <?= $this->cell('Media.MediaUpload'); ?>
+                            <?= $this->cell('Media.MediaUpload', [], [
+                                    'mediaConfig' => 'default',
+                                    'uploadConfig' => Configure::read('Media.Upload.files'),
+                            ]); ?>
                         </div>
                     </div>
 

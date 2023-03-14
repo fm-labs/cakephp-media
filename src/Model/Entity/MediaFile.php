@@ -6,8 +6,8 @@ namespace Media\Model\Entity;
 use Cake\Filesystem\File;
 use Cake\ORM\Entity;
 use Cake\Routing\Router;
-use Media\Lib\Media\MediaException;
-use Media\Lib\Media\MediaManager;
+use Media\MediaException;
+use Media\MediaManager;
 
 /**
  * Class MediaFile
@@ -210,7 +210,7 @@ class MediaFile extends Entity implements MediaFileInterface
     /**
      * @param \Cake\Filesystem\File $file File object
      * @return self
-     * @throws \Media\Lib\Media\MediaException
+     * @throws \Media\MediaException
      * @deprecated Use fromPath() instead
      */
     public static function fromFile(File $file): self
@@ -222,7 +222,7 @@ class MediaFile extends Entity implements MediaFileInterface
      * @param string $path File path
      * @param string $configName Media config name
      * @return self
-     * @throws \Media\Lib\Media\MediaException
+     * @throws \Media\MediaException
      */
     public static function fromPath(string $path, string $configName = 'default'): self
     {

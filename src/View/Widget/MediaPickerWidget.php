@@ -22,13 +22,19 @@ class MediaPickerWidget extends BasicWidget
     /**
      * @var \Cake\View\View
      */
-    public $view;
+    public View $view;
 
     /**
      * @var \Bootstrap\View\Widget\ButtonWidget
      */
-    public $button;
+    public ButtonWidget $button;
 
+    /**
+     * @param \Cake\View\StringTemplate $templates
+     * @param \Cake\View\View $view
+     * @param \Bootstrap\View\Widget\ButtonWidget $button
+     * @param \Cake\View\Widget\SelectBoxWidget $select
+     */
     public function __construct(StringTemplate $templates, View $view, ButtonWidget $button, SelectBoxWidget $select)
     {
         parent::__construct($templates);
@@ -43,6 +49,11 @@ class MediaPickerWidget extends BasicWidget
         }
     }
 
+    /**
+     * @param array $data
+     * @param \Cake\View\Form\ContextInterface $context
+     * @return string
+     */
     public function render(array $data, ContextInterface $context): string
     {
         $data += [
@@ -61,7 +72,7 @@ class MediaPickerWidget extends BasicWidget
         $config = $data['config'];
         unset($data['config']);
 
-        $input = $image = $button = $script = "";
+        $input = $image = $button = $script = '';
 
         // input html
         // add some media file meta data as html data attributes
@@ -94,8 +105,20 @@ class MediaPickerWidget extends BasicWidget
         $button = $this->button->render($buttonData, $context);
 
         // javascript
-        $treeUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'treeData', 'config' => $config, '_ext' => 'json'];
-        $filesUrl = ['plugin' => 'Media', 'controller' => 'MediaManager', 'action' => 'filesData', 'config' => $config, '_ext' => 'json'];
+        $treeUrl = [
+            'plugin' => 'Media',
+            'controller' => 'MediaManager',
+            'action' => 'treeData',
+            'config' => $config,
+            '_ext' => 'json',
+        ];
+        $filesUrl = [
+            'plugin' => 'Media',
+            'controller' => 'MediaManager',
+            'action' => 'filesData',
+            'config' => $config,
+            '_ext' => 'json',
+        ];
         $mediapicker = [
             'target' => '#' . $data['id'],
             'modal' => true,
@@ -105,6 +128,9 @@ class MediaPickerWidget extends BasicWidget
         $template = "$(document).ready(function() { if (typeof($.fn.mediapicker) === 'undefined') { console.warn('Mediapicker not initialized'); return false; } $('#%s').mediapicker(%s); });";
         $script = sprintf($template, $buttonData['id'], json_encode($mediapicker));
 
-        return $input . $image . $button . '<script>' . $script . '</script>';
+        $out = $input . $image . $button . '<script>' . $script . '</script>';
+        debug($data);
+        debug($out);
+        return $out;
     }
 }

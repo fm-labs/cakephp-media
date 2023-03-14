@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Media\Controller\Admin;
 
 use Cake\ORM\TableRegistry;
-use Media\Lib\Media\MediaManager;
+use Media\MediaManager;
 
 /**
  * Class MediaManagerController

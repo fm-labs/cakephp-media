@@ -4,15 +4,17 @@ declare(strict_types=1);
 namespace Media\Controller\Admin;
 
 use Cake\Filesystem\File;
+use Cake\Filesystem\Folder;
 use Media\Form\MediaUploadForm;
-use Media\Lib\Media\MediaManager;
+use Media\Form\NewFolderForm;
+use Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 use Upload\Uploader;
 
 class FilesController extends AppController
 {
     /**
-     * @var \Media\Lib\Media\MediaManager
+     * @var \Media\MediaManager
      */
     protected $_manager;
 
@@ -25,7 +27,7 @@ class FilesController extends AppController
     }
 
     /**
-     * @return \Media\Lib\Media\MediaManager
+     * @return \Media\MediaManager
      * @throws \Exception
      */
     public function getMediaManager(): MediaManager
@@ -82,12 +84,12 @@ class FilesController extends AppController
         $contents = null;
 
         if (!$f->exists() || !$f->readable()) {
-            $this->Flash->error('File does not exist or is not readable by the webserver');
+            $this->Flash->error(__('File does not exist or is not readable by the webserver'));
             //$this->redirect($this->referer(['action' => 'index']));
         } else {
             $ext = strtolower($f->ext());
             if (!in_array($ext, ['txt', 'md', 'conf', 'html', 'json', 'xml'])) {
-                $this->Flash->warning('This file type can not be viewed');
+                $this->Flash->warning(__('This file type can not be viewed'));
                 //$this->redirect($this->referer(['action' => 'index']));
             } else {
                 $contents = $f->read();
@@ -106,7 +108,7 @@ class FilesController extends AppController
         $this->set('selectedFile', $f);
 
         //@TODO Implement me
-        $this->Flash->warning('This file can not be edited');
+        $this->Flash->warning(__('This file can not be edited'));
         $this->redirect($this->referer(['action' => 'index']));
     }
 
@@ -125,7 +127,7 @@ class FilesController extends AppController
                 $this->Flash->success(__d('media', 'File renamed from {0} to {1}', $info['filename'], $newName));
                 $this->redirect($this->referer(['action' => 'index']));
             } else {
-                $this->Flash->error('This file can not be renamed');
+                $this->Flash->error(__('This file can not be renamed'));
             }
         }
     }
@@ -137,13 +139,13 @@ class FilesController extends AppController
     {
         $f = $this->_getFileFromRequest();
         if (!$f->exists()) {
-            $this->Flash->error('File does not exist');
+            $this->Flash->error(__('File does not exist'));
         }
 
         if ($f->delete()) {
-            $this->Flash->success('File deleted');
+            $this->Flash->success(__('File deleted'));
         } else {
-            $this->Flash->error('Failed to delete file');
+            $this->Flash->error(__('Failed to delete file'));
         }
 
         $this->redirect($this->referer(['action' => 'index']));
@@ -162,7 +164,22 @@ class FilesController extends AppController
         $file = $this->request->getQuery('file');
 
         $f = new File($basePath . $path . $file);
+        return $f;
+    }
 
+    /**
+     * @return Folder
+     * @throws \Exception
+     * @deprecated
+     */
+    protected function _getFolderFromRequest(): Folder
+    {
+        $basePath = $this->getMediaManager()->getBasePath();
+        //@TODO Sanitize query!
+        $path = $this->request->getQuery('path') ?: '/';
+        $path = rtrim($path, '/') . '/';
+
+        $f = new Folder($basePath . $path);
         return $f;
     }
 
@@ -202,5 +219,47 @@ class FilesController extends AppController
             $error = $ex->getMessage();
             $this->Flash->error($error);
         }
+    }
+
+    public function newFolder()
+    {
+        $f = $this->_getFolderFromRequest();
+        if (!is_dir($f->path)) {
+            $this->Flash->error('Folder does not exist: ' . $f->path);
+        }
+
+        $form = new NewFolderForm();
+        if ($this->getRequest()->is(['put', 'post'])) {
+            if ($form->execute($this->getRequest()->getData())) {
+                $this->Flash->success(__('Folder created'));
+            } else {
+                $this->Flash->success(__('Failed to create folder'));
+            }
+        }
+        $this->set('selectedDir', $f);
+        $this->set('path', $this->getRequest()->getQuery('path', '/'));
+        $this->set('form', $form);
+        //$this->redirect($this->referer(['action' => 'index']));
+    }
+
+    public function newFile()
+    {
+        $f = $this->_getFolderFromRequest();
+        if (!is_dir($f->path)) {
+            $this->Flash->error('Folder does not exist: ' . $f->path);
+        }
+
+        $form = new NewFolderForm();
+        if ($this->getRequest()->is(['put', 'post'])) {
+            if ($form->execute($this->getRequest()->getData())) {
+                $this->Flash->success(__('Folder created'));
+            } else {
+                $this->Flash->success(__('Failed to create folder'));
+            }
+        }
+        $this->set('selectedDir', $f);
+        $this->set('path', $this->getRequest()->getQuery('path', '/'));
+        $this->set('form', $form);
+        //$this->redirect($this->referer(['action' => 'index']));
     }
 }

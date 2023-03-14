@@ -18,6 +18,8 @@
             textRemove: 'Remove' // @deprecated
         }, options );
 
+        console.log("[mediapicker] Settings", settings);
+
         var pickerCount = 0;
 
         if (!settings.treeUrl) {
@@ -75,7 +77,7 @@
             //if (settings.modal) {
                 var modalId = 'media-picker-modal-' + id;
 
-                var modalTemplate = '<div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
+                var modalTemplate = '<div class="modal show fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
                     <div class="modal-dialog modal-lg" role="document" style="width: 80%;"> \
                     <div class="modal-content"> \
                     <div class="modal-header"> \

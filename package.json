@@ -1,30 +1,14 @@
 {
-  "name": "cakephp3-media",
+  "name": "cakephp-media",
   "version": "1.0.0",
-  "description": "## Installation",
-  "main": "",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fm-labs/cakephp3-media.git"
-  },
+  "description": "CakePHP Media plugin",
   "private": true,
-  "author": "",
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/fm-labs/cakephp3-media/issues"
-  },
-  "homepage": "https://github.com/fm-labs/cakephp3-media#readme",
-  "dependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-less": "^1.4.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "less-plugin-autoprefix": "^1.5.1",
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-less": "^3.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "less-plugin-autoprefix": "^2.0.0",
     "less-plugin-clean-css": "^1.5.1"
   }
 }

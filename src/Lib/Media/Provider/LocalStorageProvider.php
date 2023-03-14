@@ -88,45 +88,4 @@ class LocalStorageProvider extends MediaProvider
 
         return $this->_Folder->read();
     }
-
-//    public function basePath()
-//    {
-//        return $this->_getRealPath('');
-//    }
-//
-//    public function baseUrl($full = false)
-//    {
-//        $baseUrl = $this->getConfig('baseUrl');
-//        if (!$baseUrl) {
-//            $baseUrl = ['plugin' => 'Media', 'controller' => 'Media', 'action' => 'index'];
-//        }
-//
-//        return Router::url($baseUrl, $full);
-//    }
-
-//    public function listFiles($path)
-//    {
-//        list($files, ) = $this->read($path);
-//        array_walk($files, function (&$file, $idx) use ($path) {
-//            $file = $path . $file;
-//        });
-//
-//        return $files;
-//    }
-
-
-/**
- * Real path to file/folder
- *
- * @param $path
- * @return string
- */
-//    protected function _getRealPath($path)
-//    {
-//        $path = $this->_normalizePath($path);
-//        $realpath = $this->getConfig('path') . $path;
-//
-//        //return realpath($realpath);
-//        return $realpath;
-//    }
 }

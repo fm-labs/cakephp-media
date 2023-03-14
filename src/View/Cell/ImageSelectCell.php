@@ -5,7 +5,7 @@ namespace Media\View\Cell;
 
 use Cake\ORM\TableRegistry;
 use Cake\View\Cell;
-use Media\Lib\Media\MediaManager;
+use Media\MediaManager;
 
 /**
  * ImageSelect cell

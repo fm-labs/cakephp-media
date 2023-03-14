@@ -7,8 +7,9 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\View\Cell;
+use Exception;
 use Media\Form\MediaUploadForm;
-use Media\Lib\Media\MediaManager;
+use Media\MediaManager;
 use Upload\Uploader;
 
 /**
@@ -17,33 +18,58 @@ use Upload\Uploader;
 class MediaUploadCell extends Cell
 {
     /**
-     * List of valid options that can be passed into this
-     * cell's constructor.
-     *
-     * @var array
+     * @inheritDoc
      */
-    protected $_validCellOptions = [];
+    protected $_validCellOptions = ['mediaConfig', 'uploadConfig'];
 
     /**
-     * @var \Media\Lib\Media\MediaManager
+     * @var \Media\MediaManager|null
      */
-    protected $_mediaManager;
+    protected ?MediaManager $_mediaManager = null;
 
     /**
      * @var string Media config name
      */
-    protected $_mediaConfig = 'default';
+    protected string $mediaConfig = 'default';
+    protected array $uploadConfig = [];
 
     /**
-     * @return \Media\Lib\Media\MediaManager
+     * @return \Media\MediaManager
+     * @throws \Exception
      */
-    public function getMediaManager()
+    public function getMediaManager(): MediaManager
     {
         if (!$this->_mediaManager) {
-            $this->_mediaManager = MediaManager::get($this->_mediaConfig);
+            $this->_mediaManager = MediaManager::get($this->mediaConfig);
         }
 
         return $this->_mediaManager;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getUploader(): Uploader
+    {
+//            $uploadConfig = [
+//                'uploadDir' => $uploadDir,
+//                'minFileSize' => 1,
+//                'maxFileSize' => 2097152, // 2MB
+//                'mimeTypes' => '*', //['image/*'],
+//                'fileExtensions' => '*',
+//                'multiple' => false, //@TODO Multiple file upload
+//                'slug' => '_',
+//                'hashFilename' => false,
+//                'uniqueFilename' => false,
+//                'overwrite' => false,
+//                'saveAs' => null, // filename override
+//                //'pattern' => false, // @todo Implement me
+//            ];
+//            $uploaderConfig = array_merge($uploaderConfig, $params['uploader']);
+        $uploadConfig = $this->uploadConfig;
+        $uploader = new Uploader($uploadConfig);
+
+        return $uploader;
     }
 
     /**
@@ -52,7 +78,7 @@ class MediaUploadCell extends Cell
      * @param array $params The cell params
      * @return void
      */
-    public function display($params = [])
+    public function display(array $params = []): void
     {
         $params += ['config' => null, 'uploader' => []];
         //$config = $params['config'] ?? 'default';
@@ -62,7 +88,6 @@ class MediaUploadCell extends Cell
 
         //$uploadUrl = ['plugin' => 'Media', 'controller' => 'Upload', 'action' => 'upload'];
 
-
         $uploadDir = $uploadForm = $upload = null;
         try {
             if (!Plugin::isLoaded('Upload')) {
@@ -70,32 +95,18 @@ class MediaUploadCell extends Cell
             }
 
             $uploadDir = $this->getMediaManager()->getBasePath() . $path;
-            $uploaderConfig = [
-                'uploadDir' => $uploadDir,
-                'minFileSize' => 1,
-                'maxFileSize' => 2097152, // 2MB
-                'mimeTypes' => '*', //['image/*'],
-                'fileExtensions' => '*',
-                'multiple' => false, //@TODO Multiple file upload
-                'slug' => '_',
-                'hashFilename' => false,
-                'uniqueFilename' => false,
-                'overwrite' => false,
-                'saveAs' => null, // filename override
-                //'pattern' => false, // @todo Implement me
-            ];
-            $uploaderConfig = array_merge($uploaderConfig, $params['uploader']);
-            $uploader = new Uploader($uploaderConfig);
+            $uploader = $this->getUploader();
             $uploader->setUploadDir($uploadDir);
             $this->set('uploadMultiple', $uploader->getConfig('multiple'));
+            $this->set('uploadConfig', $uploader->getConfig());
 
-            $uploadForm = new MediaUploadForm($this->_mediaConfig, $uploader);
+            $uploadForm = new MediaUploadForm($this->mediaConfig, $uploader);
             if ($this->request->is('post')) {
-                //debug($this->request->getData());
+                debug($this->request->getData());
                 $uploadForm->execute($this->request->getData());
                 $upload = $uploadForm->getUploadedFiles();
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $error = __d('media', 'Can not load upload form');
             if (Configure::read('debug')) {
                 $error .= $ex->getMessage();

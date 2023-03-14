@@ -6,6 +6,7 @@ namespace Media\Test\TestCase;
 use Cake\Core\Configure;
 use Cake\Filesystem\Folder;
 use Cake\TestSuite\TestCase;
+use Media\MediaManager;
 
 class MediaTestCase extends TestCase
 {
@@ -30,13 +31,19 @@ class MediaTestCase extends TestCase
         self::$sourcePath = dirname(__DIR__) . DS . '_testfiles' . DS;
         self::$targetPath = TMP . 'tests' . DS . 'media' . DS;
 
-        Configure::write('Media', ['test' => [
+        //@mkdir(self::$targetPath, 0777, true);
+
+        $testMediaConfig = [
             'label' => 'Test Media',
             'provider' => 'Media.LocalStorage',
-            'path' => self::$targetPath,
+            'basePath' => self::$targetPath,
             'public' => true,
-            'url' => '/media/test',
-        ]]);
+            'baseUrl' => '/media/test',
+        ];
+        Configure::write('Media', ['test' => $testMediaConfig]);
+        if (!MediaManager::getConfig('test')) {
+            MediaManager::setConfig('test', $testMediaConfig);
+        }
 
         if (static::$setupTestFiles === true) {
             self::setUpTestFiles();
@@ -54,7 +61,7 @@ class MediaTestCase extends TestCase
 
     public static function setUpTestFiles()
     {
-
+        debug("Copy test files");
         self::$sourceFolder = new Folder(self::$sourcePath, false);
         self::$targetFolder = new Folder(self::$targetPath, true);
 
@@ -67,6 +74,6 @@ class MediaTestCase extends TestCase
 
     public static function tearDownTestFiles()
     {
-        self::$targetFolder->delete(self::$targetPath);
+        //self::$targetFolder->delete(self::$targetPath);
     }
 }

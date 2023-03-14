@@ -16,7 +16,7 @@ use Media\Model\Entity\MediaFile;
  *
  * @package Media
  */
-class Admin extends BaseAdminPlugin implements EventListenerInterface
+class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
 {
     /**
      * @inheritDoc

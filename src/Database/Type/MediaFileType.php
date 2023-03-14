@@ -54,7 +54,7 @@ class MediaFileType extends \Cake\Database\TypeFactory implements TypeInterface
             return join(',', $value);
         }
 
-        debug($value);
+        //debug($value);
 
         return $value;
     }

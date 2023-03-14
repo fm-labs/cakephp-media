@@ -8,7 +8,9 @@ use Cake\Log\Log;
 use Cake\Utility\Text;
 use Cake\View\Helper;
 use Media\Lib\Image\ImageProcessor;
-use Media\Lib\Media\MediaException;
+use Media\MediaException;
+use Media\View\Widget\MediaPickerWidget;
+use Media\View\Widget\MediaSelectWidget;
 
 /**
  * Class MediaHelper
@@ -33,7 +35,8 @@ class MediaHelper extends Helper
     public function initialize(array $config): void
     {
         $this->Form->templater()->load('Media.form_templates');
-        $this->Form->addWidget('media_picker', ['Media\View\Widget\MediaPickerWidget', '_view', 'button', 'select']);
+        $this->Form->addWidget('media_picker', [MediaPickerWidget::class, '_view', 'button', 'select']);
+        $this->Form->addWidget('media_select', [MediaSelectWidget::class, '_view', 'select']);
     }
 
     /**
@@ -91,7 +94,7 @@ class MediaHelper extends Helper
      * @param string $source Image source path
      * @param array $options Thumbnail options
      * @return string
-     * @throws \Media\Lib\Media\MediaException
+     * @throws \Media\MediaException
      * @todo Use configurable cache path instead of hard-coded path
      */
     protected function _generateThumbnail(string $source, array $options = []): string

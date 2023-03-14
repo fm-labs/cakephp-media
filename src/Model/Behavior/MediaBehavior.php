@@ -12,7 +12,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
-use Media\Lib\Media\MediaManager;
+use Media\MediaManager;
 use Media\Model\Entity\MediaFile;
 use Upload\Exception\UploadException;
 use Upload\Uploader;

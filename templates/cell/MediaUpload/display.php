@@ -1,14 +1,19 @@
 <?php
-/**
- * @var array $upload Upload data
- * @var string $uploadPath Upload target dir
- * @var bool $uploadMultiple Upload multiple files at once
- */
+use Cake\Core\Configure;
+
+/** @var array $upload */
+$upload = $this->get('upload');
+/** @var array $uploadConfig */
+$uploadConfig = $this->get('uploadConfig', []);
+/** @var string $uploadPath */
+$uploadPath = $this->get('uploadPath');
+/** @var bool $uploadMultiple */
+$uploadMultiple = $this->get('uploadMultiple');
 ?>
 <div class="media-uploader">
 
     <?php if (isset($error)) : ?>
-    <div class="alert alert-danger"><?= h($error); ?></div>
+        <div class="alert alert-danger"><?= h($error); ?></div>
     <?php endif; ?>
 
     <?php if (isset($uploadForm)) : ?>
@@ -18,7 +23,7 @@
                 <?= __d('media', 'Upload file'); ?>
                 <small>to <?= $uploadPath; ?></small>
             </div>
-            <div class="box-body">
+            <div class="box-body p-2">
                 <?php if (isset($upload)) : ?>
                     <?php if (isset($upload['upload_err'])) : ?>
                         <div class="alert alert-danger">
@@ -38,6 +43,19 @@
                 echo $this->Form->create($this->get('uploadForm'), [
                     'type' => 'file',
                 ]);
+                if (Configure::read('debug')) {
+                    debug($uploadConfig);
+                    $infoTemplate = '<div><strong>%s:</strong>&nbsp;%s</div>';
+                    echo sprintf($infoTemplate, 'Upload to', $uploadConfig['uploadDir'] ?? '?');
+                    echo sprintf($infoTemplate, 'Max file size', $uploadConfig['maxFileSize'] ?? '?');
+                    echo sprintf($infoTemplate, 'Allowed mime types', $uploadConfig['mimeTypes'] ?? '?');
+                    echo sprintf($infoTemplate, 'Allowed file extensions', $uploadConfig['fileExtensions'] ?? '*');
+                    echo sprintf($infoTemplate, 'Multiple', $uploadConfig['multiple'] ? 'Yes' : 'No');
+                    echo sprintf($infoTemplate, 'Overwrite', $uploadConfig['overwrite'] ? 'Yes' : 'No');
+                    echo sprintf($infoTemplate, 'hashFilename', $uploadConfig['hashFilename'] ? 'Yes' : 'No');
+                    echo sprintf($infoTemplate, 'uniqueFilename', $uploadConfig['uniqueFilename'] ? 'Yes' : 'No');
+                }
+
                 if ($uploadMultiple) {
                     echo $this->Form->control('upload_file', [
                         'label' => false, //__d('media', 'Select files'),
