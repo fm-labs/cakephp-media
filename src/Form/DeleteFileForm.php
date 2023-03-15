@@ -7,7 +7,7 @@ namespace Media\Form;
 /**
  * NewFolder Form.
  */
-class NewFileForm extends FileForm
+class DeleteFileForm extends FileForm
 {
     /**
      * Defines what to execute once the Form is processed
@@ -19,6 +19,6 @@ class NewFileForm extends FileForm
     protected function _execute(array $data): bool
     {
         return $this->getMediaManager($data['config'])
-            ->writeFile($data['path'] . '/' . $data['file'], '');
+            ->deleteFile($data['path'] . '/' . $data['file']);
     }
 }

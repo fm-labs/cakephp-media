@@ -27,20 +27,32 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
 
         $routes->connect(
             '/',
+            ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index', 'config' => 'default']
+        );
+        $routes->connect(
+            '/browse/',
+            ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index', 'config' => 'default']
+        );
+        $routes->connect(
+            '/browse/{config}/',
             ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index']
         );
         $routes->connect(
-            '/browser/',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
+            '/browse/{config}/{action}',
+            ['plugin' => 'Media', 'controller' => 'Files']
         );
-        $routes->connect(
-            '/browser/{config}/',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
-        );
-        $routes->connect(
-            '/browser/{config}/{action}',
-            ['plugin' => 'Media', 'controller' => 'MediaBrowser']
-        );
+//        $routes->connect(
+//            '/browser/',
+//            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree', 'config' => 'default']
+//        );
+//        $routes->connect(
+//            '/browser/{config}/',
+//            ['plugin' => 'Media', 'controller' => 'MediaBrowser', 'action' => 'tree']
+//        );
+//        $routes->connect(
+//            '/browser/{config}/{action}',
+//            ['plugin' => 'Media', 'controller' => 'MediaBrowser']
+//        );
 
         $routes->fallbacks('DashedRoute');
     }
@@ -83,9 +95,9 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
                 return HealthStatus::crit('Media url is not defined');
             }
 
-            return HealthStatus::ok('Media data directory exists');
+            return HealthStatus::ok(MEDIA);
         });
-        $hm->addCheck('media_upload_dir', function () {
+        $hm->addCheck('media_upload_config', function () {
             //if (!defined('MEDIA_UPLOAD_DIR')) {
             //    return HealthStatus::crit('Media upload directory is not defined');
             //}
@@ -94,9 +106,9 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
                 return HealthStatus::crit(__d('media', 'Media upload directory not found at {0} or not writeable', $uploadDir));
             }
 
-            return HealthStatus::ok('Media upload directory exists and is writeable');
+            return HealthStatus::ok('Media upload configuration OK');
         });
-        $hm->addCheck('media_cache_dir', function () {
+        $hm->addCheck('media_cache_config', function () {
             if (!defined('MEDIA_CACHE_DIR')) {
                 return HealthStatus::crit('Media cache directory is not defined');
             }
@@ -108,23 +120,25 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
                 return HealthStatus::crit('Media cache url is not defined');
             }
 
-            return HealthStatus::ok('Media cache directory exists and is writeable');
+            return HealthStatus::ok('Media cache configuration OK');
         });
         $hm->addCheck('media_paths', function () {
-            $mediaWwwRoot = WWW_ROOT . 'media';
-            $realWwwRoot = realpath($mediaWwwRoot);
-            if (!$realWwwRoot) {
-                return HealthStatus::warn("Media PUBLIC data directory does not exist.\nCreate a symlink to webroot/media or move MEDIA dir to webroot for better performance!");
-            }
+            //$mediaWwwRoot = MEDIA;
+            $mediaWwwRoot = WWW_ROOT . "media";
 
-            // check if the media data dir is within webroot
-            if (substr(MEDIA, 0, strlen($realWwwRoot)) !== $realWwwRoot) {
-                return HealthStatus::warn('Media PUBLIC data directory is not in WWW_ROOT');
+            $realWwwRoot = realpath(WWW_ROOT);
+            if (!$mediaWwwRoot) {
+                return HealthStatus::warn("Media PUBLIC data directory does not exist.\nCreate a symlink to webroot/media or move MEDIA dir to webroot for better performance!");
             }
 
             // check if the media data dir is a symlink
             if (is_link($mediaWwwRoot)) {
                 return HealthStatus::warn('Media PUBLIC data directory is symlinked to WWW_ROOT');
+            }
+
+            // check if the media data dir is within webroot
+            if (substr(MEDIA, 0, strlen($realWwwRoot)) !== $realWwwRoot) {
+                return HealthStatus::warn('Media PUBLIC data directory is not in WWW_ROOT: ' . $mediaWwwRoot);
             }
 
             return HealthStatus::ok('Media directories are setup correctly');
@@ -156,8 +170,12 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
                 return HealthStatus::crit('Media configuration not loaded');
             }
 
-            if (!Configure::check('Media.default')) {
+            if (!Configure::check('Media.Files.default')) {
                 return HealthStatus::crit('Default Media configuration not defined');
+            }
+
+            if (!Configure::check('Media.Upload.files')) {
+                return HealthStatus::crit('Files upload configuration not defined');
             }
 
             return HealthStatus::ok('Media plugin is properly configured');
@@ -199,7 +217,7 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
     {
         $menu->addItem([
             'title' => 'Media',
-            'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index'],
+            'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index', 'config' => 'default'],
             'data-icon' => 'picture-o',
 //            'children' => [
 //                'media_upload' => [

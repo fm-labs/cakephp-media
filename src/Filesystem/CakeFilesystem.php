@@ -2,10 +2,8 @@
 
 namespace Media\Filesystem;
 
-use Cake\Core\Configure;
 use DateTimeInterface;
 use League\Flysystem\DirectoryListing;
-use Media\Lib\Media\Provider\LocalStorageProvider;
 
 /**
  * @method string publicUrl(string $path, array $config = [])
@@ -16,7 +14,6 @@ class CakeFilesystem implements FilesystemInterface
 {
     public function __construct()
     {
-        $adapter = new LocalStorageProvider(Configure::read('Media.default'));
     }
 
     /**
@@ -24,7 +21,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function fileExists(string $location): bool
     {
-        // TODO: Implement fileExists() method.
+        return file_exists($location);
     }
 
     /**
@@ -32,7 +29,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function directoryExists(string $location): bool
     {
-        // TODO: Implement directoryExists() method.
+        return is_dir($location);
     }
 
     /**
@@ -40,7 +37,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function has(string $location): bool
     {
-        // TODO: Implement has() method.
+        return file_exists($location);
     }
 
     /**
@@ -48,7 +45,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function read(string $location): string
     {
-        // TODO: Implement read() method.
+        return file_get_contents($location);
     }
 
     /**
@@ -56,7 +53,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function readStream(string $location)
     {
-        // TODO: Implement readStream() method.
+        throw new \BadMethodCallException("Not implemented");
     }
 
     /**
@@ -64,7 +61,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function listContents(string $location, bool $deep = self::LIST_SHALLOW): DirectoryListing
     {
-        // TODO: Implement listContents() method.
+        return new DirectoryListing();
     }
 
     /**
@@ -73,6 +70,7 @@ class CakeFilesystem implements FilesystemInterface
     public function lastModified(string $path): int
     {
         // TODO: Implement lastModified() method.
+        return time();
     }
 
     /**
@@ -81,6 +79,7 @@ class CakeFilesystem implements FilesystemInterface
     public function fileSize(string $path): int
     {
         // TODO: Implement fileSize() method.
+        return 0;
     }
 
     /**
@@ -89,6 +88,7 @@ class CakeFilesystem implements FilesystemInterface
     public function mimeType(string $path): string
     {
         // TODO: Implement mimeType() method.
+        return "application/octet-stream";
     }
 
     /**
@@ -97,6 +97,7 @@ class CakeFilesystem implements FilesystemInterface
     public function visibility(string $path): string
     {
         // TODO: Implement visibility() method.
+        return "0777";
     }
 
     /**
@@ -128,7 +129,7 @@ class CakeFilesystem implements FilesystemInterface
      */
     public function delete(string $location): void
     {
-        // TODO: Implement delete() method.
+        unlink($location);
     }
 
     /**
@@ -137,6 +138,7 @@ class CakeFilesystem implements FilesystemInterface
     public function deleteDirectory(string $location): void
     {
         // TODO: Implement deleteDirectory() method.
+        unlink($location);
     }
 
     /**
@@ -145,6 +147,7 @@ class CakeFilesystem implements FilesystemInterface
     public function createDirectory(string $location, array $config = []): void
     {
         // TODO: Implement createDirectory() method.
+        mkdir($location);
     }
 
     /**

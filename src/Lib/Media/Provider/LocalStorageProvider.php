@@ -12,7 +12,7 @@ use Cake\Filesystem\Folder;
  *
  * @package Media\Lib\Media\Provider
  */
-class LocalStorageProvider extends MediaProvider
+class LocalStorageProvider extends AbstractMediaProvider
 {
     protected $_defaultConfig = [
         'basePath' => null,
@@ -87,5 +87,32 @@ class LocalStorageProvider extends MediaProvider
         }
 
         return $this->_Folder->read();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createDirectory(string $path): bool
+    {
+        // TODO: Implement createDirectory() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function directoryExists(string $path): bool
+    {
+        // TODO: Implement createDirectory() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createFile(string $path): bool
+    {
+        // TODO: Implement createFile() method.
+        return false;
     }
 }

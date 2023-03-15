@@ -32,10 +32,13 @@ class MediaPlugin extends BasePlugin
         $app->addPlugin('Upload');
         $app->addOptionalPlugin('Settings');
 
+        /**
+         * Media Constants
+         */
         defined('MEDIA') || define('MEDIA', WWW_ROOT . 'media' . DS);
-        defined('MEDIA_CACHE_DIR') || define('MEDIA_CACHE_DIR', MEDIA . 'cache' . DS);
         defined('MEDIA_URL') || define('MEDIA_URL', '/media/');
-        defined('MEDIA_CACHE_URL') || define('MEDIA_CACHE_URL', MEDIA_URL . 'cache/');
+        defined('MEDIA_CACHE_DIR') || define('MEDIA_CACHE_DIR', WWW_ROOT . 'cache' . DS);
+        defined('MEDIA_CACHE_URL') || define('MEDIA_CACHE_URL', '/cache/');
 
         /**
          * Logger

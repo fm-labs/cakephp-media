@@ -97,10 +97,10 @@ class MediaSelectWidget extends BasicWidget
             if ($data['val']->filepath) {
                 if (!file_exists($data['val']->filepath)) {
                     $msg = sprintf('<span class="badge bg-danger">%s</span> (%s)',
-                        __('File missing'), $data['val']->filepath);
+                        __d('media', 'File missing'), $data['val']->filepath);
                 } else {
                     $msg = sprintf('<span class="badge bg-success">%s</span>',
-                        __('File OK'));
+                        __d('media', 'File OK'));
                 }
             }
 

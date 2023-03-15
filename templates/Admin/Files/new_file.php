@@ -1,16 +1,19 @@
 <?php
 /**
- * @var \Cake\Filesystem\Folder $selectedFile
+ * @var string $config
+ * @var string $path
+ * @var \Media\Form\NewFileForm $form
  */
 
-/** @var \Media\Form\NewFileForm $form */
-$form = $this->get('form')
+$this->extend('index');
+$this->assign('title', __d('media', 'New File'))
 ?>
 <div class="view">
     <?php
     echo $this->Form->create($form);
-    echo $this->Form->input('path', ['disabled' => false, 'read-only' => true, 'value' => $selectedFile->path]);
-    echo $this->Form->input('name');
+    echo $this->Form->hidden('config', ['disabled' => false, 'readonly' => true, 'value' => $config]);
+    echo $this->Form->hidden('path', ['disabled' => false, 'readonly' => true, 'value' => $path]);
+    echo $this->Form->input('file');
     echo $this->Form->submit(__d('media', 'Create file'));
     ?>
 </div>

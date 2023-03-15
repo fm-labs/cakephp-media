@@ -32,9 +32,12 @@ class MediaBrowserHelper extends Helper
 
     public function fileIcon($path, $file)
     {
-        $icon = 'file-o';
-
+        deprecationWarning("MediaBrowserHelper::fileIcon() is deprecated. Use FileIconHelper::fromPath");
         $f = $this->_getFile($path, $file);
+        if (!$f) {
+            debug("MediaBrowser::fileIcon: Invalid path: $path");
+            return "";
+        }
         $map = [
             'pdf' => 'file-pdf-o',
             'jpg' => 'file-image-o',
@@ -61,9 +64,12 @@ class MediaBrowserHelper extends Helper
             'odt' => 'file-word-o',
         ];
 
-        $ext = strtolower($f->ext());
-        if (array_key_exists($ext, $map)) {
-            $icon = $map[$ext];
+        $icon = 'file-o';
+        if ($f->path) {
+            $ext = strtolower($f->ext());
+            if (array_key_exists($ext, $map)) {
+                $icon = $map[$ext];
+            }
         }
 
         return '<i class="fa fa-' . $icon . '"></i>';
@@ -71,19 +77,16 @@ class MediaBrowserHelper extends Helper
 
     public function getSourcePath($path, $file)
     {
-        $f = $this->_getFile();
+        $f = $this->_getFile($path, $file);
 
         return $f->path;
     }
 
     protected function _getFile($path, $file)
     {
-
         $basePath = $this->_manager->getBasePath();
-        $path = rtrim($path, '/') . '/';
+        $path = trim($path, '/') . '/';
 
-        $f = new File($basePath . $path . $file);
-
-        return $f;
+        return new File($basePath . $path . $file);
     }
 }

@@ -5,7 +5,7 @@ namespace Media\Lib\Media\Provider;
 
 use Cake\Core\InstanceConfigTrait;
 
-abstract class MediaProvider implements MediaProviderInterface
+abstract class AbstractMediaProvider implements MediaProviderInterface
 {
     use InstanceConfigTrait;
 

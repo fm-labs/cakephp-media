@@ -1,148 +1,102 @@
 <?php
 
 use Cake\Core\Configure;
+$this->loadHelper('Media.FileBrowser');
+$this->loadHelper('Media.FileIcon');
 
-$this->MediaBrowser->setMediaManager($this->get('manager'));
 $this->Html->css('Media.filebrowser', ['block' => true]);
+
+$config = $this->get('config');
+$path = $this->get('path', '/');
+$file = $this->get('file');
 
 $folders = $this->get('folders', []);
 $files = $this->get('files', []);
-$path = $this->get('path', '/');
-?>
 
+/** @var \Media\Model\Entity\MediaFile|null $mediaFile */
+$mediaFile = $this->get('selectedFile', null);
+
+if ($file) {
+    $this->assign('title', $file);
+}
+
+?>
 <div class="files-container">
     <div class="index">
 
+        <div>
+            <?php foreach(array_keys(Configure::read('Media.Files')) as $mediaConfig): ?>
+            <?php echo $this->Html->link($mediaConfig, ['controller' => 'Files', 'action' => 'index', 'config' => $mediaConfig]) ?> |
+            <?php endforeach; ?>
+            <hr />
+        </div>
+
         <div id="browser-wrapper">
 
-            <div id="browser-toolbar" class="actions">
-                <?= $this->Html->link(
-                    __d('media', 'New Folder'),
-                    ['action' => 'newFolder', '?' => ['path' => $path]],
-                    ['data-icon' => 'folder', 'class' => 'folder-add btn btn-default']
-                ); ?>
-                <?= $this->Html->link(
-                    __d('media', 'New File'),
-                    ['action' => 'newFile', '?' => ['path' => $path]],
-                    ['data-icon' => 'file', 'class' => 'file-add btn btn-default']
-                ); ?>
-                <?= $this->Html->link(
-                    __d('media', 'Upload'),
-                    ['action' => 'upload', '?' => ['path' => $path]],
-                    ['data-icon' => 'upload', 'class' => 'file-upload btn btn-default']
-                ); ?>
+            <div id="browser-path">
+                <div>
+                    <?php
+                    $currentDir = '/';
+                    echo $this->FileBrowser->directoryLink('<i class="fa fa-home"></i>', 'index', $currentDir, ['escape' => false]);
+                    //echo '<span class="separator">&nbsp;/&nbsp;</span>';
+
+                    foreach (explode('/', trim($path, '/')) as $_path) {
+                        $currentDir .= $_path . '/';
+                        echo '<span class="separator">&nbsp;/&nbsp;</span>';
+                        echo $this->FileBrowser->directoryLink($_path, 'index', $currentDir);
+                    }
+
+                    if ($file) {
+                        echo '<span class="separator">&nbsp;/&nbsp;</span>';
+                        //echo $this->FileBrowser->fileLink($file, 'index', $currentDir, $file);
+                        echo h($file);
+                    }
+                    ?>
+                </div>
+                <hr />
             </div>
-            <h4 id="browser-path">
-                <?php
-                $tmp = '/';
-                echo $this->Html->link('<i class="fa fa-home"></i>', ['?' => ['path' => $tmp]], ['escape' => false]);
-                //echo '<span class="separator">&nbsp;/&nbsp;</span>';
 
-                foreach (explode('/', trim($path, '/')) as $_path) {
-                    $tmp .= $_path . '/';
-                    echo '<span class="separator">&nbsp;/&nbsp;</span>';
-                    echo $this->Html->link($_path, ['?' => ['path' => $tmp]]);
-                }
-                ?></h4>
-
+            <div id="browser-toolbar" class="actions">
+                <?= $this->FileBrowser->directoryLink(
+                    __d('media', 'New Folder'),
+                    'newFolder',
+                    $path,
+                    ['data-icon' => 'folder', 'class' => 'folder-add btn btn-sm btn-outline-secondary']
+                ); ?>
+                <?= $this->FileBrowser->directoryLink(
+                    __d('media', 'New File'),
+                    ['action' => 'newFile'],
+                    $path,
+                    ['data-icon' => 'file', 'class' => 'file-add btn btn-sm btn-outline-secondary']
+                ); ?>
+                <?= $this->FileBrowser->directoryLink(
+                    __d('media', 'Upload'),
+                    ['action' => 'upload'],
+                    $path,
+                    ['data-icon' => 'upload', 'class' => 'file-upload btn-sm btn btn-outline-secondary']
+                ); ?>
+                <hr />
+            </div>
             <div id="browser-container">
                 <div class="row">
                     <div class="col-md-8">
                         <div id="browser-folders">
-                            <table class="table table-hover">
-                                <?php foreach ($folders as $folder) : ?>
-                                    <tr>
-                                        <td width="20">
-                                            <i class="fa fa-folder"></i>
-                                        </td>
-                                        <td>
-                                            <?= $this->Html->link($folder, ['?' => ['path' => $path . $folder]]) ?>
-                                        </td>
-                                        <td class="actions">&nbsp;</td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                <?php foreach ($files as $file) : ?>
-                                    <tr>
-                                        <td width="20">
-                                            <?= $this->MediaBrowser->fileIcon($path, $file); ?>
-                                        </td>
-                                        <td>
-                                            <?= $this->Html->link(
-                                                $file,
-                                                ['action' => 'index', '?' => ['path' => $path, 'file' => $file]]
-                                            ) ?>
-                                        </td>
-                                        <td class="actions text-end">
-                                            <?= $this->Html->link(
-                                                '<i class="fa fa-eye"></i>',
-                                                ['action' => 'view', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __d('media', 'View')]
-                                            ) ?>
-                                            <?= $this->Html->link(
-                                                '<i class="fa fa-pencil-square-o"></i>',
-                                                ['action' => 'edit', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __d('media', 'Edit')]
-                                            ) ?>
-                                            <?= $this->Html->link(
-                                                '<i class="fa fa-pencil"></i>',
-                                                ['action' => 'rename', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'title' => __d('media', 'Rename')]
-                                            ) ?>
-                                            <?= $this->Html->link(
-                                                '<i class="fa fa-trash"></i>',
-                                                ['action' => 'delete', '?' => ['path' => $path, 'file' => $file]],
-                                                ['escape' => false, 'confirm' => 'Sure?', 'title' => __d('media', 'Delete')]
-                                            ) ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </table>
+                            <?php echo $this->cell('Media.DirectoryListing', [$path, $file], [
+                                'mediaConfig' => $config,
+                            ]); ?>
                         </div>
                     </div>
+
+
                     <div class="col-md-4">
-                        <?php if (isset($mediaFile)) : ?>
                         <div id="browser-file">
-                            <div class="box box-default with-border">
-                                <div class="box-header">
-                                    <?= h($mediaFile->getBasename()); ?>
-                                </div>
-                                <div class="box-body">
-                                    <table class="table">
-                                        <tr>
-                                            <td>Path</td>
-                                            <td><?= h($mediaFile->getPath()); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td><?= h($mediaFile->getBasename()); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Size</td>
-                                            <td><?= $this->Number->toReadableSize($mediaFile->getSize()); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Preview</td>
-                                            <td>
-                                                <?= $this->Media->thumbnail(
-                                                    $selectedFile->path,
-                                                    ['height' => 200, 'width' => 200]
-                                                ); ?>
-                                                <br />
-                                                <?= $this->Html->link(
-                                                    __d('media', 'View Original'),
-                                                    $mediaFile->getUrl(),
-                                                    ['target' => '_blank']
-                                                ); ?>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
+                            <?php echo $this->cell('Media.MediaFile', [$mediaFile], []); ?>
                         </div>
-                        <?php endif; ?>
+
+                        <?php echo $this->fetch('content'); ?>
 
                         <div class="browser-upload">
-                            <?= $this->cell('Media.MediaUpload', [], [
+                            <?php /*echo*/ $this->cell('Media.MediaUpload', [], [
                                     'mediaConfig' => 'default',
                                     'uploadConfig' => Configure::read('Media.Upload.files'),
                             ]); ?>

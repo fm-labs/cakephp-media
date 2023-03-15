@@ -18,6 +18,7 @@ use Media\MediaManager;
  * @property string $path
  * @property string $basename
  * @property int $size
+ * @property string $filepath
  */
 class MediaFile extends Entity implements MediaFileInterface
 {
@@ -47,6 +48,11 @@ class MediaFile extends Entity implements MediaFileInterface
     protected $_hidden = [
         'filepath',
     ];
+
+    /**
+     * @var MediaManager|null
+     */
+    protected ?MediaManager $_mediaManager = null;
 
     /**
      * @return bool
@@ -99,7 +105,7 @@ class MediaFile extends Entity implements MediaFileInterface
             return $this->getUrlEncoded($full);
         }
 
-        $url = MediaManager::get($this->config)->getFileUrl($this->path);
+        $url = $this->getMediaManager()->getFileUrl($this->path);
         if ($full) {
             $url = Router::url($url, $full);
         }
@@ -113,7 +119,7 @@ class MediaFile extends Entity implements MediaFileInterface
      */
     public function getUrlEncoded($full = false): string
     {
-        $url = MediaManager::get($this->config)->buildFileUrlEncoded($this->path);
+        $url = $this->getMediaManager()->buildFileUrlEncoded($this->path);
 
         return Router::url($url, $full);
     }
@@ -134,6 +140,19 @@ class MediaFile extends Entity implements MediaFileInterface
 //
 //        return $path;
 //    }
+
+    /**
+     * @return MediaManager|null
+     * @throws \Exception
+     */
+    public function getMediaManager(): ?MediaManager
+    {
+        if (!$this->_mediaManager) {
+            $this->_mediaManager = MediaManager::get($this->config);
+        }
+        return $this->_mediaManager;
+    }
+
 
     /**
      * Return file size.
@@ -159,7 +178,7 @@ class MediaFile extends Entity implements MediaFileInterface
     protected function _getFilepath(): string
     {
         if (!isset($this->_fields['filepath'])) {
-            $this->_fields['filepath'] = MediaManager::get($this->config)->getBasePath() . $this->path;
+            $this->_fields['filepath'] = $this->getMediaManager()->getBasePath() . $this->path;
         }
 
         return $this->_fields['filepath'];
@@ -215,6 +234,8 @@ class MediaFile extends Entity implements MediaFileInterface
      */
     public static function fromFile(File $file): self
     {
+        deprecationWarning('MediaFile::fromFile() is deprecated. Use fromPath() instead.');
+
         return static::fromPath($file->path);
     }
 
@@ -226,17 +247,17 @@ class MediaFile extends Entity implements MediaFileInterface
      */
     public static function fromPath(string $path, string $configName = 'default'): self
     {
-        //$info = pathinfo($path);
-        $basePath = MediaManager::get($configName)->getBasePath();
-
-        if (substr($path, 0, strlen($basePath)) != $basePath) {
-            throw new MediaException("The path '$path' is not in base path '$basePath'");
-        }
-        $_path = substr($path, strlen($basePath));
+//        //$info = pathinfo($path);
+//        $basePath = MediaManager::get($configName)->getBasePath();
+//
+//        if (substr($path, 0, strlen($basePath)) != $basePath) {
+//            throw new MediaException("The path '$path' is not in base path '$basePath'");
+//        }
+//        $path = substr($path, strlen($basePath));
 
         $mf = new self();
         $mf->config = $configName;
-        $mf->path = $_path;
+        $mf->path = $path;
         //$mf->basename = $info['basename'];
 
         return $mf;

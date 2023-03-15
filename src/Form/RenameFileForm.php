@@ -3,40 +3,28 @@ declare(strict_types=1);
 
 namespace Media\Form;
 
+
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 
 /**
- * NewFolderForm.
+ * RenameFileForm.
  */
-class NewFolderForm extends FolderForm
+class RenameFileForm extends FileForm
 {
-
-    /**
-     * Builds the schema for the modelless form
-     *
-     * @param \Cake\Form\Schema $schema From schema
-     * @return \Cake\Form\Schema
-     */
-    protected function _buildSchema(Schema $schema): Schema
+    public function _buildSchema(Schema $schema): Schema
     {
         $schema = parent::_buildSchema($schema);
-        $schema->addField('name', [
+        $schema->addField('new_name', [
             'required' => true
         ]);
         return $schema;
     }
 
-    /**
-     * Form validation builder
-     *
-     * @param \Cake\Validation\Validator $validator to use against the form
-     * @return \Cake\Validation\Validator
-     */
     public function validationDefault(Validator $validator): Validator
     {
         $validator = parent::validationDefault($validator);
-        $validator->notEmptyString('name');
+        $validator->notEmptyString('new_name');
         return $validator;
     }
 
@@ -49,7 +37,10 @@ class NewFolderForm extends FolderForm
      */
     protected function _execute(array $data): bool
     {
+        $oldFilepath = $data['path'] . $data['file'];
+        $newFilePath = $data['path'] . $data['new_name'];
+
         return $this->getMediaManager($data['config'])
-            ->createDirectory($data['path'] . '/' . $data['name']);
+            ->renameFile($oldFilepath, $newFilePath);
     }
 }

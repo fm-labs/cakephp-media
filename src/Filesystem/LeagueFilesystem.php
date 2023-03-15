@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Media\Filesystem;
 
-use League\Flysystem\Filesystem;
+use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
-class LeagueFilesystem extends Filesystem implements FilesystemInterface
+class LeagueFilesystem extends Flysystem implements FilesystemInterface
 {
     /**
      * Construct a new Flysystem filesystem

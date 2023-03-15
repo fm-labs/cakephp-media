@@ -15,11 +15,13 @@ class MediaManager
 
     /**
      * @var \Media\Lib\Media\Provider\MediaProviderInterface
+     * @deprecated Will be removed in 1.0
      */
     protected MediaProviderInterface $_provider;
 
     /**
      * @var string Current working dir
+     * @deprecated Will be removed in 1.0
      */
     protected string $_path;
 
@@ -27,6 +29,7 @@ class MediaManager
      * @param array|string $config Provider config
      * @return \Media\Lib\Media\Provider\MediaProviderInterface
      * @throws \Exception
+     * @deprecated Will be removed in 1.0
      */
     public static function getProvider($config): MediaProviderInterface
     {
@@ -110,22 +113,25 @@ class MediaManager
     /**
      * @param string $path Path to media
      * @return array
-     * @deprecated
+     * @deprecated Will be removed in 1.0
      */
     public function read(string $path): array
     {
-        $this->setPath($path);
-
-        return $this->_provider->read($this->_path);
+//        deprecationWarning("MediaManager::read() is deprecated.");
+//        $this->setPath($path);
+//        return $this->_provider->read($this->_path);
+        return $this->_provider->read($path);
     }
 
     /**
      * @param string $path Path to media
      * @return $this
-     * @deprecated
+     * @deprecated Will be removed in 1.0
      */
     public function setPath(string $path)
     {
+        deprecationWarning("MediaManager::setPath() is deprecated.");
+
         $this->_path = $this->_normalizePath($path);
 
         return $this;
@@ -133,26 +139,29 @@ class MediaManager
 
     /**
      * @return string
-     * @deprecated
+     * @deprecated Will be removed in 1.0
      */
     public function getPath(): string
     {
+        deprecationWarning("MediaManager::getPath() is deprecated.");
+
         return $this->_path;
     }
 
     /**
      * @return string
-     * @deprecated
+     * @deprecated Will be removed in 1.0
      */
     public function getParentPath(): string
     {
+        deprecationWarning("MediaManager::getParentPath() is deprecated.");
+
         $path = $this->_path;
         $path = trim($path, '/');
         $parts = explode('/', $path);
         if (count($parts) <= 1) {
             return '/';
         }
-
         array_pop($parts);
 
         return join('/', $parts);
@@ -164,7 +173,7 @@ class MediaManager
      */
     public function listFiles(string $path): array
     {
-        debug($path . ' -> ' . $this->_normalizePath($path));
+        //debug($path . ' -> ' . $this->_normalizePath($path));
         $path = $this->_normalizePath($path);
         [, $files] = $this->read($path);
         array_walk($files, function (&$file) use ($path): void {
@@ -395,4 +404,73 @@ class MediaManager
 
         return $list;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function createDirectory(string $path): bool
+    {
+        return $this->_provider->createDirectory($path);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function directoryExists(string $path): bool
+    {
+        return $this->_provider->directoryExists($path);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function fileExists(string $path): bool
+    {
+        return $this->_provider->fileExists($path);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function writeFile(string $path, string $contents): bool
+    {
+        return $this->_provider->writeFile($path, $contents);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteFile(string $path): bool
+    {
+        return $this->_provider->deleteFile($path);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function renameDirectory(string $path, string $newPath): bool
+    {
+        if ($this->fileExists($newPath)) {
+            throw new MediaException("File already exists");
+        }
+        if ($this->directoryExists($newPath)) {
+            throw new MediaException("Folder already exists");
+        }
+        return $this->_provider->move($path, $newPath);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function renameFile(string $path, string $newPath): bool
+    {
+        if ($this->fileExists($newPath)) {
+            throw new MediaException("File already exists: $newPath");
+        }
+        if ($this->directoryExists($newPath)) {
+            throw new MediaException("Folder already exists");
+        }
+        return $this->_provider->move($path, $newPath);
+    }
+
 }
