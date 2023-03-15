@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-03-13 00:14+0000\n"
-"PO-Revision-Date: 2023-03-13 01:46+0100\n"
+"POT-Creation-Date: 2023-03-15 15:45+0000\n"
+"PO-Revision-Date: 2023-03-15 16:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -15,21 +15,73 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: mnt/DATA/workspaces/php/cakephp-media/src/Admin.php:94
-msgid "Media upload directory not found at {0} or not writeable"
-msgstr ""
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:97
+msgid "File does not exist"
+msgstr "Die Datei existiert nicht"
 
-#: mnt/DATA/workspaces/php/cakephp-media/src/Admin.php:105
-msgid "Media cache directory not found at {0} or not writeable"
-msgstr ""
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:107
+msgid "This file type can not be viewed"
+msgstr "Dieser Dateityp kann nicht angesehen werden"
 
-#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:125
-msgid "File renamed from {0} to {1}"
-msgstr ""
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:126
+msgid "File editing is not supported yet"
+msgstr "Bearbeiten der Datei ist noch nicht möglich"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:144
+msgid "Failed to rename folder"
+msgstr "Fehler beim Umbenennen des Ordners"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:147
+msgid "Folder renamed"
+msgstr "Ordner umbenannt"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:177
+msgid "Failed to rename file"
+msgstr "Fehler beim Umbenennen der Datei"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:180
+msgid "File renamed"
+msgstr "Datei umbenannt"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:210
+msgid "Failed to delete file"
+msgstr "Fehler beim Löschen der Datei"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:213
+msgid "File deleted"
+msgstr "Datei gelöscht"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:270
+msgid "Upload successful"
+msgstr "Upload erfolgreich"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:296
+msgid "Folder does not exist: {0}"
+msgstr "Ordner existiert nicht: {0}"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:304
+msgid "Failed to create folder"
+msgstr "Fehler beim Erstellen des Ordners"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:307
+msgid "Folder created"
+msgstr "Ordner erstellt"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:335
+msgid "Parent folder does not exist: {0}"
+msgstr "Übergeordneter Ordner nicht gefunden: {0}"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:343
+msgid "Failed to create file"
+msgstr "Fehler beim Erstellen der Datei"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/FilesController.php:345
+msgid "File created"
+msgstr "Datei erstellt"
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:124
 msgid "The {0} has been saved."
-msgstr ""
+msgstr "{0} wurde gespeichert"
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:124
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:126
@@ -38,19 +90,19 @@ msgstr ""
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:126
 msgid "The {0} could not be saved. Please, try again."
-msgstr ""
+msgstr "{0} konnte nicht gespeichert werden. Bitte nochmals versuchen."
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:190
 msgid "The {0} has been removed."
-msgstr ""
+msgstr "{0} wurde entfernt."
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/MediaManagerController.php:192
 msgid "The {0} could not be removed. Please, try again."
-msgstr ""
+msgstr "{0} konnte nicht entfernt werden. Bitte nochmals versuchen."
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Controller/Admin/UploadController.php:22
 msgid "Plugin `{0}` not installed"
-msgstr ""
+msgstr "Plugin `{0}` nicht installiert"
 
 #: mnt/DATA/workspaces/php/cakephp-media/src/Lib/Image/ImageProcessor.php:232
 msgid "You have to pass size in the options!"
@@ -86,71 +138,117 @@ msgstr ""
 msgid "LocalStorage: Root path *{0}* is not accessible"
 msgstr ""
 
-#: mnt/DATA/workspaces/php/cakephp-media/src/View/Cell/MediaUploadCell.php:99
+#: mnt/DATA/workspaces/php/cakephp-media/src/MediaAdmin.php:106
+msgid "Media upload directory not found at {0} or not writeable"
+msgstr ""
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/MediaAdmin.php:117
+msgid "Media cache directory not found at {0} or not writeable"
+msgstr ""
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/View/Cell/MediaUploadCell.php:110
 msgid "Can not load upload form"
 msgstr "Upload konnte nicht geladen werden"
 
-#: mnt/DATA/workspaces/php/cakephp-media/src/View/Widget/MediaPickerWidget.php:89
+#: mnt/DATA/workspaces/php/cakephp-media/src/View/Widget/MediaPickerWidget.php:100
 msgid "Select Media"
-msgstr ""
+msgstr "Medien auswählen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:26
+#: mnt/DATA/workspaces/php/cakephp-media/src/View/Widget/MediaSelectWidget.php:100
+msgid "File missing"
+msgstr "Datei nicht gefunden"
+
+#: mnt/DATA/workspaces/php/cakephp-media/src/View/Widget/MediaSelectWidget.php:103
+msgid "File OK"
+msgstr "Datei OK"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/delete.php:10
+msgid "Delete File"
+msgstr "Datei löschen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/delete.php:18
+msgid "Delete file"
+msgstr "Datei löschen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:61
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/new_folder.php:8
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:12
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:11
 msgid "New Folder"
 msgstr "Neuer Ordner"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:31
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:67
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/new_file.php:9
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:15
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:14
 msgid "New File"
 msgstr "Neue Datei"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:36
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:73
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/upload.php:11
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/upload.php:61
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Media/index.php:13
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.bak.php:18
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaBrowser/index.php:17
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Upload/index.php:2
-#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:53
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:69
 msgid "Upload"
 msgstr "Hochladen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:85
-msgid "View"
-msgstr "Ansehen"
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/new_file.php:17
+msgid "Create file"
+msgstr "Datei erstellen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:90
-msgid "Edit"
-msgstr "Bearbeiten"
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/new_folder.php:16
+msgid "Create folder"
+msgstr "Order erstellen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:95
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename.php:12
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename.php:10
+msgid "Rename File"
+msgstr "Datei umbenennen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename.php:19
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename_folder.php:17
+msgid "Rename file"
+msgstr "Datei umbenennen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename1.php:12
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/DirectoryListing/display.php:52
 msgid "Rename"
 msgstr "Umbenennen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:100
-msgid "Delete"
-msgstr "Löschen"
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/rename_folder.php:9
+msgid "Rename folder"
+msgstr "Ordner umbnennen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/index.php:138
-msgid "View Original"
-msgstr "Original ansehen"
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/upload.php:25
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Media/index.php:23
+#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Upload/index.php:8
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:23
+msgid "Upload file"
+msgstr "Datei hochladen"
 
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Files/view.php:2
 msgid "View file"
 msgstr "Datei ansehen"
-
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Media/index.php:23
-#: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/Upload/index.php:8
-#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:18
-msgid "Upload file"
-msgstr "Datei hochladen"
 
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/image_select.php:39
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/set_image.bak.php:30
 #: mnt/DATA/workspaces/php/cakephp-media/templates/Admin/MediaManager/set_image.php:42
 msgid "- Choose Image -"
 msgstr "- Bild wählen -"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/DirectoryListing/display.php:40
+msgid "View"
+msgstr "Ansehen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/DirectoryListing/display.php:46
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/DirectoryListing/display.php:60
+msgid "Delete"
+msgstr "Löschen"
 
 #: mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:9
 #: mnt/DATA/workspaces/php/cakephp-media/templates/cell/ImageSelect/display.php:34
@@ -165,6 +263,10 @@ msgstr "Bild hinzufügen"
 msgid "Select Image"
 msgstr "Bild wählen"
 
-#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:29
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaFile/display.php:40
+msgid "View Original"
+msgstr "Original ansehen"
+
+#: mnt/DATA/workspaces/php/cakephp-media/templates/cell/MediaUpload/display.php:34
 msgid "Uploaded: {0}"
 msgstr "Hochgeladen: {0}"
