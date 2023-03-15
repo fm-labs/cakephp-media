@@ -190,21 +190,22 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
     {
         \Admin\View\Helper\FormatterHelper::register('media_file', function ($val, $extra, $params, $view) {
             if ($val instanceof MediaFile) {
-                return $view->Media->thumbnail($val->getFilePath(), ['height' => 50, 'width' => 75]);
+                return $view->Image->thumbnail($val->getFilePath(), ['height' => 50, 'width' => 75]);
             }
 
             return h($val);
         });
 
         \Admin\View\Helper\FormatterHelper::register('media_files', function ($val, $extra, $params) {
+            // @todo Implement formatter for media_files
             return h($val);
         });
 
         /** @var \Cake\View\View $view */
         $view = $event->getSubject();
-        //$view->loadHelper('Media.Media');
         $view->getEventManager()->on('View.beforeRender', function ($ev) {
             $ev->getSubject()->loadHelper('Media.Media');
+            $ev->getSubject()->loadHelper('Media.Image');
         });
     }
 
