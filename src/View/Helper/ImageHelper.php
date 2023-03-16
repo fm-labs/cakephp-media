@@ -23,9 +23,9 @@ class ImageHelper extends Helper
     public $helpers = ['Html', 'Url', 'Form'];
 
     /**
-     * @var \Media\Lib\Image\ImageProcessor
+     * @var \Media\Lib\Image\ImageProcessor|null
      */
-    protected $_processor;
+    protected ?ImageProcessor $_processor;
 
     /**
      * @inheritDoc
@@ -82,6 +82,8 @@ class ImageHelper extends Helper
         try {
             $thumbUrl = $this->_generateThumbnail($source, $options);
             if ($thumbUrl) {
+                $attr['alt'] = $attr['alt'] ?? basename($source);
+                $attr['title'] = $attr['title'] ?? basename($source);
                 return $this->Html->image($thumbUrl, $attr);
             }
 
@@ -89,6 +91,7 @@ class ImageHelper extends Helper
             return $this->_error($ex);
         }
 
+        // @todo Thumbnail fallback
         return '<i class="fa fa-5x fa-image text-muted"></i>';
     }
 
