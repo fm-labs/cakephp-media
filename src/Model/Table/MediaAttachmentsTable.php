@@ -5,6 +5,7 @@ namespace Media\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Media\Model\Entity\MediaAttachment;
 
 /**
  * Attachments Model
@@ -33,7 +34,7 @@ class MediaAttachmentsTable extends Table
     {
         $this->addBehavior('Translate', [
             'fields' => ['title', 'desc_text'],
-            'translationTable' => 'AttachmentsI18n',
+            'translationTable' => 'Media.MediaAttachmentsI18n',
         ]);
     }
 
@@ -87,10 +88,10 @@ class MediaAttachmentsTable extends Table
     }
 
     /**
-     * @param \Media\Model\Table\Attachment $entity
+     * @param \Media\Model\Entity\MediaAttachment $entity
      * @return bool|\Cake\Datasource\EntityInterface
      */
-    public function saveAttachment(Attachment $entity)
+    public function saveAttachment(MediaAttachment $entity)
     {
         return $this->save($entity);
     }
