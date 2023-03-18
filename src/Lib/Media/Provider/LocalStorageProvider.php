@@ -39,6 +39,9 @@ class LocalStorageProvider extends AbstractMediaProvider
      */
     protected $_Folder;
 
+    /**
+     * @throws \Exception
+     */
     public function initialize()
     {
         $basePath = $this->getConfig('basePath');
@@ -74,7 +77,7 @@ class LocalStorageProvider extends AbstractMediaProvider
      * @return array List of files and directories
      * @throws \Exception
      */
-    public function read($path)
+    public function read(string $path): array
     {
         $this->_connect();
 
@@ -113,6 +116,51 @@ class LocalStorageProvider extends AbstractMediaProvider
     public function createFile(string $path): bool
     {
         // TODO: Implement createFile() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function fileExists(string $path): bool
+    {
+        // TODO: Implement fileExists() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function writeFile(string $path, string $contents): bool
+    {
+        // TODO: Implement writeFile() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteDirectory(string $path): bool
+    {
+        // TODO: Implement deleteDirectory() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteFile(string $path): bool
+    {
+        // TODO: Implement deleteFile() method.
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function move(string $source, string $destination): bool
+    {
+        // TODO: Implement move() method.
         return false;
     }
 }
