@@ -25,7 +25,7 @@ class ImageHelper extends Helper
     /**
      * @var \Media\Lib\Image\ImageProcessor|null
      */
-    protected ?ImageProcessor $_processor;
+    protected ?ImageProcessor $_processor = null;
 
     /**
      * @inheritDoc

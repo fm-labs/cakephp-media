@@ -216,6 +216,18 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
      */
     public function adminMenuInit(EventInterface $event, \Cupcake\Menu\MenuItemCollection $menu): void
     {
+        $buildChildrenMenu = function () {
+            $items = [];
+            foreach (Configure::read('Media.Files', []) as $mediaConfigName => $mediaConfig) {
+                $items[] = [
+                    'title' => $mediaConfig['label'] ?? $mediaConfigName,
+                    'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index', 'config' => $mediaConfigName],
+                    'data-icon' => $mediaConfig['icon'] ?? 'hdd-o',
+                ];
+            }
+            return $items;
+        };
+
         $menu->addItem([
             'title' => 'Media',
             'url' => ['plugin' => 'Media', 'controller' => 'Files', 'action' => 'index', 'config' => 'default'],
@@ -227,6 +239,7 @@ class MediaAdmin extends BaseAdminPlugin implements EventListenerInterface
 //                    'data-icon' => 'upload',
 //                ],
 //            ],
+            'children' => $buildChildrenMenu()
         ]);
     }
 }

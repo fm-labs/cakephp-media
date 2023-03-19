@@ -2,7 +2,7 @@
 /** @var \Media\Model\Entity\MediaFile $mediaFile */
 $mediaFile = $this->get('mediaFile');
 if (!$mediaFile) {
-    echo "No media file set";
+    echo __d('media', "No file selected");
     return;
 }
 ?>
