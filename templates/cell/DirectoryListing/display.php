@@ -14,7 +14,7 @@ $files = $this->get('files', []);
         <?php foreach ($folders as $folder) : ?>
             <tr>
                 <td width="20">
-                    <i class="fa fa-folder"></i>
+                    <i class="fa fa-folder-o"></i>
                 </td>
                 <td>
                     <?= $this->FileBrowser->directoryLink($folder, 'index', $path . $folder); ?>
